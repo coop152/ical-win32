@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{71c70dcf-4a1b-4097-bd90-99111cbff0b7}</ProjectGuid>
+    <RootNamespace>icalwin32</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>lib/IronTcl/include;types;calendar;time</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="calendar\arrays.cpp" />
+    <ClCompile Include="calendar\calendar.cpp" />
+    <ClCompile Include="calendar\calfile.cpp" />
+    <ClCompile Include="calendar\dateset.cpp" />
+    <ClCompile Include="calendar\dstest.cpp" />
+    <ClCompile Include="calendar\item.cpp" />
+    <ClCompile Include="calendar\lexer.cpp" />
+    <ClCompile Include="calendar\misc.cpp" />
+    <ClCompile Include="calendar\options.cpp" />
+    <ClCompile Include="calendar\smallintset.cpp" />
+    <ClCompile Include="calendar\uid.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib/IronTcl/include;types;calendar;time;$(ProjectDir)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="cal_tcl.cpp" />
+    <ClCompile Include="dateeditor.cpp" />
+    <ClCompile Include="dispatch.cpp" />
+    <ClCompile Include="ical.cpp" />
+    <ClCompile Include="ical_tcl.cpp" />
+    <ClCompile Include="item_tcl.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="time\Date.cpp" />
+    <ClCompile Include="time\Month.cpp" />
+    <ClCompile Include="time\parse.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib/IronTcl/include;types;calendar;time;$(ProjectDir)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="time\testparse.cpp" />
+    <ClCompile Include="time\Time.cpp" />
+    <ClCompile Include="time\WeekDay.cpp" />
+    <ClCompile Include="time\Year.cpp" />
+    <ClCompile Include="time_tcl.cpp" />
+    <ClCompile Include="types\bitvec.cpp" />
+    <ClCompile Include="types\hashfuncs.cpp" />
+    <ClCompile Include="types\intset.cpp" />
+    <ClCompile Include="types\testarray.cpp" />
+    <ClCompile Include="types\testbv.cpp" />
+    <ClCompile Include="types\testhash.cpp" />
+    <ClCompile Include="types\testmap.cpp" />
+    <ClCompile Include="types\testomap.cpp" />
+    <ClCompile Include="types\testoset.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="calendar.h" />
+    <ClInclude Include="calendar\arrays.h" />
+    <ClInclude Include="calendar\calendar.h" />
+    <ClInclude Include="calendar\calfile.h" />
+    <ClInclude Include="calendar\dateset.h" />
+    <ClInclude Include="calendar\item.h" />
+    <ClInclude Include="calendar\itemmap.h" />
+    <ClInclude Include="calendar\lexer.h" />
+    <ClInclude Include="calendar\misc.h" />
+    <ClInclude Include="calendar\options.h" />
+    <ClInclude Include="calendar\smallintset.h" />
+    <ClInclude Include="calendar\statfix.h" />
+    <ClInclude Include="calendar\uid.h" />
+    <ClInclude Include="calendar\version.h" />
+    <ClInclude Include="cal_tcl.h" />
+    <ClInclude Include="collect.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="dispatch.h" />
+    <ClInclude Include="ical.h" />
+    <ClInclude Include="item_tcl.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="time\Date.h" />
+    <ClInclude Include="time\Month.h" />
+    <ClInclude Include="time\parse.h" />
+    <ClInclude Include="time\Time_.h" />
+    <ClInclude Include="time\WeekDay.h" />
+    <ClInclude Include="time\Year.h" />
+    <ClInclude Include="types\Array.h" />
+    <ClInclude Include="types\basic.h" />
+    <ClInclude Include="types\bitvec.h" />
+    <ClInclude Include="types\hashfuncs.h" />
+    <ClInclude Include="types\htable.h" />
+    <ClInclude Include="types\htable_p.h" />
+    <ClInclude Include="types\intset.h" />
+    <ClInclude Include="types\ohashmap.h" />
+    <ClInclude Include="types\ohashset.h" />
+    <ClInclude Include="types\tablerep.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bitmaps\dleft.xbm" />
+    <None Include="bitmaps\done.xbm" />
+    <None Include="bitmaps\dright.xbm" />
+    <None Include="bitmaps\ical.xbm" />
+    <None Include="bitmaps\left.xbm" />
+    <None Include="bitmaps\right.xbm" />
+    <None Include="bitmaps\sleft.xbm" />
+    <None Include="bitmaps\sright.xbm" />
+    <None Include="bitmaps\todo.xbm" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
