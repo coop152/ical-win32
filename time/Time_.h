@@ -4,7 +4,7 @@
 #define TIMEH
 
 #include <time.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 
 class Time;
 class Duration;

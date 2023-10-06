@@ -1,12 +1,10 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
 #include <sys/types.h>
-#include <sys/file.h>
 #include <stdlib.h>
 
 #include <stddef.h>
 #include <errno.h>
-#include <sys/time.h>
 #include <sys/stat.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,8 +18,9 @@
 #include "misc.h"
 #include "statfix.h"
 #include "uid.h"
+#include <processthreadsapi.h>
+#include <io.h>
 
-#include <unistd.h>
 
 // Only use "fsync" if it is available.
 #ifdef HAVE_FSYNC
@@ -75,7 +74,7 @@ CalFile::CalFile(int ro, const char* name) {
     // Get temporary file name.  Make sure it works even
     // on systems with a 14 character file name limit.
     tmp = new char[strlen(dirName)+20];
-    sprintf(tmp, "%sical%d~", dirName, getpid());
+    sprintf(tmp, "%sical%d~", dirName, GetCurrentProcessId());
     tmpName = tmp;
 
     lastModifyValid = 0;
@@ -100,14 +99,14 @@ void CalFile::Modified() {
 
 int CalFile::Write() {
     // Get information about the calendar file
-    struct stat buf;
+    struct _stat64i32 buf;
     int is_slink = 0;
 
-    int result = lstat(fileName, &buf);
+    int result = _stat(fileName, &buf);
     if ((result >= 0) && S_ISLNK(buf.st_mode)) {
         // Get mode for real referenced file
         is_slink = 1;
-        result = stat(fileName, &buf);
+        result = _stat(fileName, &buf);
     }
 
     if (result < 0) {
@@ -125,7 +124,7 @@ int CalFile::Write() {
     long mode = buf.st_mode & 07777;
 
     // See if file is a link, or if the containing directory is write-protected
-    if (is_slink || (buf.st_nlink > 1) || (access(dirName, W_OK) < 0)) {
+    if (is_slink || (buf.st_nlink > 1) || (_access(dirName, 2 /* Write permissions */) < 0)) {
         // Backup by copying to preserve links
         return WriteInPlace(mode);
     }
@@ -140,15 +139,15 @@ int CalFile::Write() {
 // file name.
 
 int CalFile::WriteNew(long mode) {
-    if (! WriteTo(calendar, tmpName)) {
-        unlink(tmpName);
+    if (!WriteTo(calendar, tmpName)) {
+        remove(tmpName);
         return 0;
     }
 
     if (chmod(tmpName, mode) < 0) {
         /* Could not set new file mode */
         lastError = strerror (errno);
-        unlink(tmpName);
+        remove(tmpName);
         return 0;
     }
 
@@ -156,13 +155,14 @@ int CalFile::WriteNew(long mode) {
 
     // Create backup file.
     // We could check for errors and fail here, but that seems too paranoid.
-    unlink(backupName);
-    link(fileName, backupName);
+    //unlink(backupName);
+    //link(fileName, backupName);
+    rename(fileName, backupName);
 
     // Now rename the new version
     if (rename(tmpName, fileName) < 0) {
         lastError = strerror (errno);
-        unlink(tmpName);
+        remove(tmpName);
         return 0;
     }
 
@@ -277,9 +277,9 @@ int CalFile::WriteTo(Calendar* cal, const char* name) {
 }
 
 int CalFile::GetModifyTime(char const* file, Time& t) {
-    struct stat buf;
+    struct _stat64i32 buf;
 
-    int ret = stat(file, &buf);
+    int ret = _stat(file, &buf);
     if (ret < 0) return 0;
 
     struct timeval tv;
@@ -293,7 +293,7 @@ int CalFile::GetModifyTime(char const* file, Time& t) {
 void CalFile::PerformAccessCheck() {
     calendar->SetReadOnly(readOnly);
 
-    if (access(fileName, W_OK) < 0) {
+    if (_access(fileName, 2 /* Write permissions */) < 0) {
         switch (errno) {
           case ENOENT:
             /* File does not exist */

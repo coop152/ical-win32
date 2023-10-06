@@ -102,9 +102,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>lib/IronTcl/include;types;calendar;time</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>lib/IronTcl/include;types;calendar;time;$(ProjectDir)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,7 +155,6 @@
     <ClCompile Include="time\parse.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib/IronTcl/include;types;calendar;time;$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="time\testparse.cpp" />
     <ClCompile Include="time\Time.cpp" />
     <ClCompile Include="time\WeekDay.cpp" />
     <ClCompile Include="time\Year.cpp" />
@@ -162,12 +162,6 @@
     <ClCompile Include="types\bitvec.cpp" />
     <ClCompile Include="types\hashfuncs.cpp" />
     <ClCompile Include="types\intset.cpp" />
-    <ClCompile Include="types\testarray.cpp" />
-    <ClCompile Include="types\testbv.cpp" />
-    <ClCompile Include="types\testhash.cpp" />
-    <ClCompile Include="types\testmap.cpp" />
-    <ClCompile Include="types\testomap.cpp" />
-    <ClCompile Include="types\testoset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="calendar.h" />
