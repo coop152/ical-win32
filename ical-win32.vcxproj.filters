@@ -51,24 +51,6 @@
     <ClCompile Include="types\intset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="types\testarray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="types\testbv.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="types\testhash.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="types\testmap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="types\testomap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="types\testoset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="calendar\arrays.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -79,9 +61,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="calendar\dateset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\dstest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="calendar\item.cpp">
@@ -109,9 +88,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="time\parse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="time\testparse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="time\Time.cpp">

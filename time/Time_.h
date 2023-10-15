@@ -4,12 +4,16 @@
 #define TIMEH
 
 #include <time.h>
-#include <sys/time.h>
 
 class Time;
 class Duration;
 class WeekDay;
 class Month;
+
+struct win_timeval {
+    int tv_sec;
+    int tv_usec;
+};
 
 /*
  * A class to represent system time.
@@ -70,8 +74,8 @@ class Time {
 
     /* UN*X specific */
     /* Copy UN*X time structure */
-    Time(struct timeval const&);
-    void Convert(struct timeval&) const;
+    Time(struct win_timeval const&);
+    void Convert(struct win_timeval&) const;
 
     double EpochSeconds() const;        /* Return seconds since epoch */
   private:
@@ -145,8 +149,8 @@ class Duration {
     double MicroSeconds() const;
 
     /* UN*X Specific */
-    Duration(struct timeval const&);
-    void Convert(struct timeval&) const;
+    Duration(struct win_timeval const&);
+    void Convert(struct win_timeval&) const;
   private:
     /*
      * REP is the number of seconds in the Duration.

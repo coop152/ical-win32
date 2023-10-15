@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include <pwd.h>
-#include <unistd.h>
 #include <errno.h>
 #include "basic.h"
 #include "arrays.h"
 #include "misc.h"
+
+#include <Windows.h>
+
+#define MAXUNLENGTH 256 + 1
 
 char* copy_string(char const* str) {
     char* out = new char[strlen(str)+1];
@@ -16,15 +18,17 @@ char* copy_string(char const* str) {
 }
 
 char const* my_name() {
-    static char const* name = 0;        // My user name
+    auto len = MAXUNLENGTH;
+    char* name = new char[len];
 
-    if (! name) {
-        // Fetch my name from user database
-        struct passwd* pw = getpwuid(getuid());
-        name = pw ? copy_string(pw->pw_name) : "???";
+    // Fetch my name
+    if (GetUserNameA((LPTSTR)name, (LPDWORD)&len)) {
+        return name;
     }
+    else {
+        return "???";
 
-    return name;
+    }
 }
 
 int copy_file(char const* src, char const* dst) {

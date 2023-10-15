@@ -13,7 +13,6 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 inline unsigned int htable_hash_elem(HKEY x) {
     // The multiplier used below is "int(PHI * 2^k)" where PHI denotes

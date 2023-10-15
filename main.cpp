@@ -14,6 +14,7 @@
  * as well to avoid depending on external files being installed correctly.
  */
 
+#include <Windows.h>
 #include <stdlib.h>
 #include <string.h>
 #include <tcl.h>
@@ -40,8 +41,7 @@ static int eval_list(Tcl_Interp*, const char** list);
 static int app_init(Tcl_Interp*);
 extern int Ical_Init(Tcl_Interp*);
 
-int
-main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
     // XXX Hacky scanning of argument list to figure out whether
     // or not Tk is needed, and also if a script is specified on the
     // command line.
@@ -98,7 +98,6 @@ main(int argc, char* argv[]) {
             break;
         }
     }
-
 
     if (use_tk)
         Tk_Main(argc, argv, app_init);
@@ -165,8 +164,9 @@ int Ical_Init(Tcl_Interp* tcl) {
     Tcl_CreateCommand(tcl, "ical_expand_file_name", Cmd_ExpandFileName, 0, 0);
 
     // Initialize ical stuff
-    if (Tcl_EvalFile(tcl, "startup.tcl") != TCL_OK)
+    if (Tcl_EvalFile(tcl, "./tcl/startup.tcl") != TCL_OK) {
         return TCL_ERROR;
+    }
 
     if (Tcl_Eval(tcl, "ical_init") == TCL_ERROR)
         return TCL_ERROR;

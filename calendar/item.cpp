@@ -1,9 +1,9 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
+#include <Windows.h>
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "basic.h"
 #include "Array.h"
@@ -401,27 +401,29 @@ void Appointment::convert_tz(Date &d, int &min, bool to_tz) const {
     t.tm_isdst = -1;
 
     char* old=getenv("TZ");
-    if (old) old=strdup(old);
+    if (old) old=_strdup(old);
 
     if (!to_tz) {
-        setenv("TZ", timezone, 1);
-        tzset();
+        SetEnvironmentVariable("TZ", timezone);
+        _tzset();
     }
 
     time_t clock=mktime(&t);
 
     if (to_tz) {
-        setenv("TZ", timezone, 1);
+        SetEnvironmentVariable("TZ", timezone);
     } else {
-        if (old) setenv("TZ", old, 1); else unsetenv("TZ");
+        if (old) SetEnvironmentVariable("TZ", old);
+        else SetEnvironmentVariable("TZ", nullptr); // unset timezone var
     }
-    tzset();
+    _tzset();
 
     struct tm *t1=localtime(&clock);
 
     if (to_tz) {
-        if (old) setenv("TZ", old, 1); else unsetenv("TZ");
-        tzset();
+        if (old) SetEnvironmentVariable("TZ", old);
+        else SetEnvironmentVariable("TZ", nullptr);
+        _tzset();
     }
     d=Date(t1->tm_mday, Month::January()+t1->tm_mon, t1->tm_year+1900);
     min=t1->tm_min+t1->tm_hour*60;

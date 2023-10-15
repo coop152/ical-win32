@@ -4,13 +4,13 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
 #include "basic.h"
 #include "arrays.h"
 #include "lexer.h"
+#include <io.h>
 
 char const* Lexer::lastError = "";
 
@@ -23,45 +23,45 @@ Lexer::Lexer(char const* file) {
     index = 0;
     length = 0;
 
-    int fd = open((char*)file, O_RDONLY, 0);
-    if (fd < 0) {
+    //int fd = _open((char*)file, O_RDONLY, 0);
+    //if (fd < 0) {
+    //    SetError("could not open file");
+    //    return;
+    //}
+
+    FILE* f = fopen(file, "rb"); // open in binary mode to stop stripping of \r characters
+    if (f == nullptr) {
         SetError("could not open file");
         return;
     }
 
-    struct stat fs;
-    if (fstat(fd, &fs) < 0) {
-        SetError("could not get file size");
-        return;
-    }
+    //struct stat fs;
+    //if (fstat(fd, &fs) < 0) {
+    //    SetError("could not get file size");
+    //    return;
+    //}
 
+    // seek to the end of the file to get size
+    fseek(f, 0, SEEK_END);
+    int filesize = ftell(f); 
+    fseek(f, 0, SEEK_SET);
+    
     /* Read the contents of the file */
     delete [] buf;
-    buf = new char[fs.st_size+1];
-    length = 0;
-    while (length < fs.st_size) {
-        int result = read(fd, buf+length, fs.st_size - length);
-        if (result == 0) {
-            /* Early EOF! */
-            SetError("could not read file");
-            break;
-        }
-        if (result < 0) {
-            /* Ignore EINTR errors */
-            if (errno == EINTR) {
-                continue;
-            }
-            SetError("could not read file");
-            break;
-        }
-        length += result;
+    buf = new char[filesize + 1];
+    int result = fread(buf, sizeof(char), filesize + 1, f);
+    if (result == 0 && errno == EINVAL) {
+        // an empty file is fine, it only matters if errno is set
+        SetError("Could not read file");
     }
+    length = result;
+  
 
     /* Null-terminate the array for fast scanning */
-    buf[fs.st_size] = '\0';
+    buf[filesize] = '\0';
 
     /* Close the file */
-    close(fd);
+    fclose(f);
 }
 
 Lexer::Lexer(charArray* text) {

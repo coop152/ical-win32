@@ -1,18 +1,17 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
+#include <Windows.h>
 #include <sys/types.h>
-#include <sys/file.h>
+#include <io.h>
 #include <stdlib.h>
 
 #include <stddef.h>
 #include <errno.h>
-#include <sys/time.h>
 #include <sys/stat.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "basic.h"
-#include "config.h"
 
 #include "calfile.h"
 #include "calendar.h"
@@ -21,14 +20,14 @@
 #include "statfix.h"
 #include "uid.h"
 
-#include <unistd.h>
-
 // Only use "fsync" if it is available.
 #ifdef HAVE_FSYNC
 extern "C" int fsync(int);
 #else
 static int fsync(int) {return 0;}
 #endif
+
+#define W_OK 2 // flag for write access using access()
 
 // Get various file names
 static char const* home_backup_file();  // Backup file in home dir
@@ -75,7 +74,7 @@ CalFile::CalFile(int ro, const char* name) {
     // Get temporary file name.  Make sure it works even
     // on systems with a 14 character file name limit.
     tmp = new char[strlen(dirName)+20];
-    sprintf(tmp, "%sical%d~", dirName, getpid());
+    sprintf(tmp, "%sical%d~", dirName, GetCurrentProcessId());
     tmpName = tmp;
 
     lastModifyValid = 0;
@@ -100,14 +99,13 @@ void CalFile::Modified() {
 
 int CalFile::Write() {
     // Get information about the calendar file
-    struct stat buf;
+    struct _stat buf;
     int is_slink = 0;
 
-    int result = lstat(fileName, &buf);
+    int result = _stat(fileName, &buf);
     if ((result >= 0) && S_ISLNK(buf.st_mode)) {
         // Get mode for real referenced file
         is_slink = 1;
-        result = stat(fileName, &buf);
     }
 
     if (result < 0) {
@@ -125,7 +123,7 @@ int CalFile::Write() {
     long mode = buf.st_mode & 07777;
 
     // See if file is a link, or if the containing directory is write-protected
-    if (is_slink || (buf.st_nlink > 1) || (access(dirName, W_OK) < 0)) {
+    if (is_slink || (buf.st_nlink > 1) || (_access(dirName, W_OK) < 0)) {
         // Backup by copying to preserve links
         return WriteInPlace(mode);
     }
@@ -140,15 +138,15 @@ int CalFile::Write() {
 // file name.
 
 int CalFile::WriteNew(long mode) {
-    if (! WriteTo(calendar, tmpName)) {
-        unlink(tmpName);
+    if (!WriteTo(calendar, tmpName)) {
+        remove(tmpName);
         return 0;
     }
 
-    if (chmod(tmpName, mode) < 0) {
+    if (_chmod(tmpName, mode) < 0) {
         /* Could not set new file mode */
         lastError = strerror (errno);
-        unlink(tmpName);
+        remove(tmpName);
         return 0;
     }
 
@@ -156,13 +154,14 @@ int CalFile::WriteNew(long mode) {
 
     // Create backup file.
     // We could check for errors and fail here, but that seems too paranoid.
-    unlink(backupName);
-    link(fileName, backupName);
+    //link(fileName, backupName);
+    remove(backupName);
+    rename(fileName, backupName);
 
     // Now rename the new version
     if (rename(tmpName, fileName) < 0) {
         lastError = strerror (errno);
-        unlink(tmpName);
+        remove(tmpName);
         return 0;
     }
 
@@ -266,7 +265,7 @@ int CalFile::WriteTo(Calendar* cal, const char* name) {
 
     cal->Write(output);
     fflush(output);
-    if (ferror(output) || (fsync(fileno(output)) < 0)) {
+    if (ferror(output) || (fsync(_fileno(output)) < 0)) {
         lastError = "error writing calendar file";
         fclose(output);
         return 0;
@@ -282,7 +281,7 @@ int CalFile::GetModifyTime(char const* file, Time& t) {
     int ret = stat(file, &buf);
     if (ret < 0) return 0;
 
-    struct timeval tv;
+    struct win_timeval tv;
     tv.tv_sec  = buf.st_mtime;
     tv.tv_usec = 0;
 
@@ -293,7 +292,7 @@ int CalFile::GetModifyTime(char const* file, Time& t) {
 void CalFile::PerformAccessCheck() {
     calendar->SetReadOnly(readOnly);
 
-    if (access(fileName, W_OK) < 0) {
+    if (_access(fileName, W_OK) < 0) {
         switch (errno) {
           case ENOENT:
             /* File does not exist */
@@ -321,7 +320,7 @@ static int backup_file(char const* src, char const* dst, long mode) {
     if (!copy_file(src, dst)) return 0;
 
     // XXX Ignoring error while changing mode of backup file
-    chmod(dst, mode);
+    _chmod(dst, mode);
     return 1;
 }
 

@@ -144,7 +144,7 @@ static void parse_token(char const* string, Token& t) {
 
     // Parse range separator
     for (int seplen = 1; seplen <= 3; seplen++) {
-        if (strncasecmp(string, "---", seplen) == 0) {
+        if (strncmp(string, "---", seplen) == 0) {
             t.ptr = string;
             t.len = seplen;
             t.ttype = TO_TOKEN;
@@ -230,7 +230,7 @@ static int parse_word(char const* str, int len, Token& t) {
     for (int i = 0; words[i].ptr != 0; i++) {
         if (len < words[i].len) continue;
         if (len > strlen(words[i].ptr)) continue;
-        if (strncasecmp(str, words[i].ptr, len) != 0) continue;
+        if (_strnicmp(str, words[i].ptr, len) != 0) continue;
 
         // Found it
         t.ptr = str;

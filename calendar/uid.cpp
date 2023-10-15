@@ -1,9 +1,8 @@
 /* Copyright (c) 1996  by Sanjay Ghemawat */
-#include <sys/param.h>
+#include <Windows.h>
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "basic.h"
 #include "config.h"
@@ -19,7 +18,7 @@ char const* uid_new() {
     static char  hostname[MAXHOSTNAMELEN+1];
     static char  buffer[MAXHOSTNAMELEN+1000];
     static int   hostid = 0;
-    static pid_t pid = 0;
+    static int   pid = 0;
     static int   counter = 0;
 
     if (! inited) {
@@ -27,8 +26,8 @@ char const* uid_new() {
             // Error?
             strcpy(hostname, "unknownhost");
         }
-        hostid = gethostid();
-        pid = getpid();
+        hostid = 42;
+        pid = GetCurrentProcessId();
         counter = 0;
         inited = 1;
     }

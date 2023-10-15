@@ -1,5 +1,6 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
+#include <Windows.h>
 #include <stddef.h>
 #include <sys/types.h>
 #include <math.h>
@@ -12,7 +13,9 @@
 #include "Month.h"
 #include "WeekDay.h"
 #include "Time_.h"
+#include <chrono>
 
+using namespace std::chrono;
 /*
  * Want to get high resolution for region of time that will be most
  * heavily used.  This region will probably be around now. Therefore,
@@ -24,17 +27,23 @@ int    Time::initialized = 0;   /* Initialized yet? */
 double Time::offset = 0.0;      /* Offset for time values */
 int    Time::junkInt = 0;
 
-void Time::Initialize() {
-    struct timeval buf;
-    gettimeofday(&buf, 0);
+void gettimeofday(struct win_timeval *tv) {
+    auto now = system_clock::now().time_since_epoch();
+    auto us = duration_cast<microseconds>(now).count();
+    tv->tv_sec = us / 1000000;
+    tv->tv_usec = us % 1000000;
+}
 
+void Time::Initialize() {
+    struct win_timeval buf;
+    gettimeofday(&buf);
     offset = buf.tv_sec;
     initialized = 1;
 }
 
 Time Time::Now() {
-    struct timeval buf;
-    gettimeofday(&buf, 0);
+    struct win_timeval buf;
+    gettimeofday(&buf);
     return Time(buf);
 }
 
@@ -54,22 +63,25 @@ void Time::BreakDown(int& mday, WeekDay& wday, Month& month, int& year,
                      int& hour, int& min, int& sec, int& milli,
                      const char *tz) const
 {
-    char *old;
+    char *old = getenv("TZ");
     if (! initialized) Initialize();
 
     time_t clock = (time_t) round(rep + offset);
 
     if (tz) {
-        if ((old=getenv("TZ"))) old=strdup(old);
-        setenv("TZ", tz, 1);
-        tzset();
+        if ((old=getenv("TZ"))) old=_strdup(old);
+        //setenv("TZ", tz, 1);
+        SetEnvironmentVariable("TZ", tz);
+        _tzset();
     }
 
     struct tm* t = localtime(&clock);
 
     if (tz) {
-        if (old) setenv("TZ", old, 1); else unsetenv("TZ");
-        tzset();
+        //if (old) setenv("TZ", old, 1); else unsetenv("TZ");
+        if (old) SetEnvironmentVariable("TZ", old);
+        else SetEnvironmentVariable("TZ", nullptr);
+        _tzset();
         free(old);
     }
 
@@ -83,55 +95,24 @@ void Time::BreakDown(int& mday, WeekDay& wday, Month& month, int& year,
     milli = (int)round((rep - floor(rep)) * 1000);
 }
 
-Time::Time(const struct timeval& tv) {
+Time::Time(const struct win_timeval& tv) {
     if (! initialized) Initialize();
     rep = (tv.tv_sec - offset) + ((double) tv.tv_usec) / 1000000.0;
 }
 
-void Time::Convert(struct timeval& tv) const {
+
+void Time::Convert(struct win_timeval& tv) const {
     if (! initialized) Initialize();
 
     tv.tv_sec  = (long) floor(rep + offset);
     tv.tv_usec = (long) round((rep + offset - tv.tv_sec) * 1000000.0);
 }
 
-#if 0
-time_t timezone_to_local(time_t clock, const char *tz) {
-    const char *old=getenv("TZ");
-    if (old) old=strdupa(old);
-    
-    struct tm* t = localtime(&clock);
-    setenv("TZ", tz, 1);
-    tzset();
-    
-    clock = mktime(t);
-    if (old) setenv("TZ", old, 1); else unsetenv("TZ");
-    tzset();
-
-    return clock;
-}
-
-time_t local_to_timezone(time_t clock, const char *tz) {
-    const char *old=getenv("TZ");
-    if (old) old=strdupa(old);
-    
-    setenv("TZ", tz, 1);
-    tzset();
-    struct tm* t = localtime(&clock);
-    
-    if (old) setenv("TZ", old, 1); else unsetenv("TZ");
-    tzset();
-    clock = mktime(t);
-
-    return clock;
-}
-#endif
-
-Duration::Duration(const struct timeval& tv) {
+Duration::Duration(const struct win_timeval& tv) {
     rep = tv.tv_sec + ((double) tv.tv_usec) / 1000000.0;
 }
 
-void Duration::Convert(struct timeval& tv) const {
+void Duration::Convert(struct win_timeval& tv) const {
     tv.tv_sec  = (long) floor(rep);
     tv.tv_usec = (long) round((rep - tv.tv_sec) / 1000000.0);
 }
