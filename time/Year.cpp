@@ -2,40 +2,28 @@
 
 #include "Year.h"
 
-#define FIRST_YEAR      1900
-#define LAST_YEAR       2400
-#define FIRST_CENTURY   ((FIRST_YEAR - 1) / 100)
-#define FIRST_YEAR_OFF  (FIRST_YEAR - 100*FIRST_CENTURY)
+#include <chrono>
+using namespace std::chrono;
 
-int Year::first                 = FIRST_YEAR;
-int Year::last                  = LAST_YEAR;
-int Year::first_century         = FIRST_CENTURY;
-int Year::first_year_off        = FIRST_YEAR_OFF;
-long Year::first_day_off        = (long((FIRST_YEAR_OFF - 1) / 4) +
-                                   365L * long(FIRST_YEAR_OFF - 1));
+#define first_year 1900
+#define last_year 2400
 
-unsigned long Year::Century_Size(int c) {
-    return (((c + 1) % 4) == 0) ? 36525L : 36524L;
+long Year::Offset(int y) {
+    return round<days>(year(y) - year(first_year)).count();
 }
 
-long Year::Century_Offset(int c) {
-    long offset = 0L;
-    int i;
-
-    for (i = Year::FirstCentury(); i < c; i++) {
-        offset += Century_Size(i);
-    }
-
-    for (i = Year::FirstCentury() - 1; i >= c; i--) {
-        offset -= Century_Size(i);
-    }
-
-    return offset - first_day_off;
+int Year::IsLeap(int y) {
+    return year(y).is_leap();
 }
 
-long Year::Offset(int year) {
-    int c = (year - 1) / 100;
-    int z = year - 100 * c;
+int Year::Size(int y) {
+    return IsLeap(y) ? 366 : 365;
+}
 
-    return Century_Offset(c) + ((z - 1) / 4) + 365 * (z - 1);
+int Year::First() {
+    return first_year;
+}
+
+int Year::Last() {
+    return last_year;
 }

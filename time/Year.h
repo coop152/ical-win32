@@ -2,7 +2,6 @@
 
 #ifndef _YEARH
 #define _YEARH
-
 class Year {
   public:
     static int IsLeap(int);
@@ -20,38 +19,6 @@ class Year {
      * year is equal to the size of the first year.
      */
     static long Offset(int year);
-  private:
-    static int           FirstCentury();
-    static long          Century_Offset(int);
-    static unsigned long Century_Size(int);
-
-    static int  first;
-    static int  last;
-    static int  first_century;
-    static int  first_year_off; /* Diff between first, first_century */
-    static long first_day_off;
 };
-
-inline int Year::IsLeap(int y) {
-    return (((y % 4) == 0) &&
-            (((y % 100) != 0) || ((y % 400) == 0))
-            );
-}
-
-inline int Year::Size(int y) {
-    return IsLeap(y) ? 366 : 365;
-}
-
-inline int Year::First() {
-    return first;
-}
-
-inline int Year::Last() {
-    return last;
-}
-
-inline int Year::FirstCentury() {
-    return first_century;
-}
 
 #endif /* _YEARH */
