@@ -243,10 +243,10 @@ inline bool HashMap::fetch(Key k, Val& v) const {                             \
     int i = find_index(k);                                                    \
     if (typ[i] == occupied) {                                                 \
         v = val[i];                                                           \
-        return TRUE;                                                          \
+        return true;                                                          \
     }                                                                         \
     else {                                                                    \
-        return FALSE;                                                         \
+        return false;                                                         \
     }                                                                         \
 }                                                                             \
                                                                               \
@@ -489,7 +489,7 @@ void HashMap::check() {                                                       \
                                                                               \
         bool* marked = new bool[tsize];                                       \
         for (j = 0; j < tsize; j++) {                                         \
-            marked[j] = FALSE;                                                \
+            marked[j] = false;                                                \
         }                                                                     \
                                                                               \
         int h1 = hasher(key[i]);                                              \
@@ -499,7 +499,7 @@ void HashMap::check() {                                                       \
         for (j = 0; j < tsize; j++) {                                         \
             int index = (first + h2*j) & mask;                                \
             assert(! marked[index]);                                          \
-            marked[index] = TRUE;                                             \
+            marked[index] = true;                                             \
         }                                                                     \
                                                                               \
         delete [] marked;                                                     \
