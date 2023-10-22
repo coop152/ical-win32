@@ -4,92 +4,45 @@
 
 /*
  * Epoch is Thursday January 1, 1970.
- */ 
-int Date::epochRep = 25567; // 70*365.25
-int Date::epochWDayIndex = 5;
+ */
+year_month_day Date::epoch = 1970y / January / 1;
+
 
 Date::Date(Time t) {
-    int mday, year;
-    month month;
-    weekday wday;
+	int mday, yr;
+	month m;
+	weekday wday;
 
-    t.BreakDownDate(mday, wday, month, year);
-    rep = GetRep(mday, month, year);
+	t.BreakDownDate(mday, wday, m, yr);
+	rep = year_month_day{ year{yr}, m, day{unsigned(mday)} };
 }
 
 Date Date::Last() {
-    Month lastMonth = Month::Last();
-    int   lastYear  = Year::Last();
-
-    return Date(lastMonth.Size(lastYear), lastMonth, lastYear);
+	year_month_day_last ymdl = year{ Year::Last() } / December / last;
+	 
+	return Date(year_month_day{ymdl});
 }
 
 void Date::BreakDown(int& d, WeekDay& wd, Month& m, int& y) const {
-    long days = rep;
-
-    /* Find year */
-    int year = Year::First();
-    while (1) {
-        int size = Year::Size(year);
-
-        if (days < size) {
-            /* Date occurs in year */
-            break;
-        }
-        days -= size;
-        year++;
-    }
-    y = year;
-
-    /* Find month within year */
-    int leap = Year::IsLeap(y);
-    Month month = Month::First();
-    while (month != Month::Last()) {
-        int msize = (leap ? month.LeapSize() : month.NormalSize());
-        if (days < msize) {
-            /* Found month */
-            break;
-        }
-        days -= msize;
-        month += 1;
-    }
-    m = month;
-
-    d = days + 1;
-    wd = GetWDay();
+	d = GetMDay();
+	wd = GetWDay();
+	m = GetMonth();
+	y = GetYear();
 }
 
 int Date::GetMDay() const {
-    int d;
-    WeekDay wd;
-    Month m;
-    int y;
-
-    BreakDown(d, wd, m, y);
-    return d;
+	return unsigned(rep.day());
 }
 
 WeekDay Date::GetWDay() const {
-    return WeekDay::First() + epochWDayIndex - 1 + rep - epochRep;
+	return WeekDay::First() + year_month_weekday{rep}.weekday().c_encoding();
 }
 
 Month Date::GetMonth() const {
-    int d;
-    WeekDay wd;
-    Month m;
-    int y;
-
-    BreakDown(d, wd, m, y);
-    return m;
+	return Month::First() + unsigned(rep.month()) - 1;
 }
 
 int Date::GetYear() const {
-    int d;
-    WeekDay wd;
-    Month m;
-    int y;
-
-    BreakDown(d, wd, m, y);
-    return y;
+	return int(rep.year());
 }
 

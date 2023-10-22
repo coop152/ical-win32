@@ -21,92 +21,80 @@ class WeekDay;
  * Date class.
  */
 class Date {
-  public:
-    /*
-     * Constructors and assignments.
-     */
-    Date() : rep(0) {}
-    Date(Date const& d) : rep(d.rep){}
-    Date(int day, Month month, int year) { rep = GetRep(day, month, year); }
-    Date(int day, month month, int year) { rep = GetRep(day, month, year); }
-    Date(Time);
-    Date(long days) : rep(days) {}
+public:
+	/*
+	 * Constructors and assignments.
+	 */
+	Date() : rep{epoch} {} 
+	Date(Date const& d) : rep{ d.rep } {}
+	Date(year_month_day ymd) : rep{ ymd } {}
+	Date(int d, Month m, int yr) { rep = year_month_day{ year{yr}, month{unsigned(m.Index())}, day{unsigned(d)} }; }
+	Date(int d, month m, int yr) { rep = year_month_day{ year{yr}, m, day{unsigned(d)} }; }
+	Date(Time);
 
-    Date& operator=(Date const& d) { rep = d.rep; return *this; }
-    Date& operator += (int days) { rep += days; return *this; }
-    Date& operator -= (int days) { rep -= days; return *this; }
+	// DO NOT REMOVE, or the interface just freezes up and doesnt change date. for some reason.
+	Date(long d) { rep = sys_days{ epoch } + days{ d }; }
 
-    static Date Today() { return Date(Time::Now()); }
-    static Date First() { return Date(1, Month::First(), Year::First()); }
-    static Date Last();
+	Date& operator=(Date const& d) { rep = d.rep; return *this; }
+	Date& operator += (int d) { rep = sys_days{ rep } + days{unsigned( d )}; return *this; }
+	Date& operator -= (int d) { rep = sys_days{ rep } - days{unsigned( d )}; return *this; }
 
-    /*
-     * Addition and subtraction - number of days represents interval
-     * between two dates.
-     */
-    inline friend Date  operator + (Date, int days);
-    inline friend Date  operator - (Date, int days);
-    inline friend int   operator - (Date, Date);
+	static Date Today() { return Date(Time::Now()); }
+	static Date First() { return Date(1, January, Year::First()); }
+	static Date Last();
+
+	/*
+	 * Addition and subtraction - number of days represents interval
+	 * between two dates.
+	 */
+	inline friend Date  operator + (Date, int days);
+	inline friend Date  operator - (Date, int days);
+	inline friend int   operator - (Date, Date);
 
 
-    /*
-     * Comparisons.
-     */
-    inline friend int operator == (Date, Date);
-    inline friend int operator != (Date, Date);
-    inline friend int operator <  (Date, Date);
-    inline friend int operator <= (Date, Date);
-    inline friend int operator >  (Date, Date);
-    inline friend int operator >= (Date, Date);
+	/*
+	 * Comparisons.
+	 */
+	inline friend int operator == (Date, Date);
+	inline friend int operator != (Date, Date);
+	inline friend int operator <  (Date, Date);
+	inline friend int operator <= (Date, Date);
+	inline friend int operator >  (Date, Date);
+	inline friend int operator >= (Date, Date);
 
-    /*
-     * Conversions.
-     */
-    int         GetMDay()  const;       /* Day of the month. */
-    WeekDay     GetWDay()  const;       /* Day of the week. */
-    Month       GetMonth() const;
-    int         GetYear()  const;
+	/*
+	 * Conversions.
+	 */
+	int         GetMDay()  const;       /* Day of the month. */
+	WeekDay     GetWDay()  const;       /* Day of the week. */
+	Month       GetMonth() const;
+	int         GetYear()  const;
 
-    void BreakDown(int&, WeekDay&, Month&, int&) const;
+	void BreakDown(int&, WeekDay&, Month&, int&) const;
 
-    /*
-     * This needs to be implemented.
-     *
-     * Time Midnight() const;
-     */
-
-    int EpochDays() const { return rep; }
-    static int epochRep;
-  private:
-    static int epochWDayIndex;
-    /*
-     * Rep is number of days since some epoch.
-     */
-    long rep;
-
-    static int GetRep(int d, Month m, int y)
-    { return Year::Offset(y) + m.Offset(y) + d - 1; }
-
-    static int GetRep(int d, month m, int y)
-    {
-        //auto ymd = year_month_day{ year(y), m, day(d) };
-        //return sys_days{ ymd }.time_since_epoch().count();
-        // be careful; this program uses an epoch of 1900 instead of 1970
-        auto epoch = year_month_day{ 1900y, January, day(1) };
-        auto ymd = year_month_day{ year(y), m, day(d)};
-        auto diff = sys_days{ ymd } - sys_days{ epoch };
-        return diff.count();
-    }
+	int EpochDays() const { return (sys_days{ rep } - sys_days{ epoch }).count(); }
+	static year_month_day epoch;
+private:
+	/*
+	 * Rep (was) the number of days since some epoch.
+	 */
+	year_month_day rep;
 };
 
-inline Date operator +  (Date d, int days) { return Date(d.rep + days); }
-inline Date operator -  (Date d, int days) { return Date(d.rep - days); }
-inline int  operator -  (Date a, Date b) { return (a.rep -  b.rep); }
+inline Date operator +  (Date date, int d) {
+	auto res = year_month_day{ sys_days{ date.rep } + days{ unsigned(d) } };
+	return Date(res);
+}
+inline Date operator -  (Date date, int d) {
+	auto res = year_month_day{ sys_days{ date.rep } - days{ unsigned(d) } };
+	return Date(res);
+}
+inline int  operator -  (Date a, Date b) { return (a.rep - b.rep); }
 inline int  operator == (Date a, Date b) { return (a.rep == b.rep); }
 inline int  operator != (Date a, Date b) { return (a.rep != b.rep); }
-inline int  operator <  (Date a, Date b) { return (a.rep <  b.rep); }
+inline int  operator <  (Date a, Date b) { return (a.rep < b.rep); }
 inline int  operator <= (Date a, Date b) { return (a.rep <= b.rep); }
-inline int  operator >  (Date a, Date b) { return (a.rep >  b.rep); }
+inline int  operator >  (Date a, Date b) { return (a.rep > b.rep); }
 inline int  operator >= (Date a, Date b) { return (a.rep >= b.rep); }
 
 #endif /* _DATEH */
