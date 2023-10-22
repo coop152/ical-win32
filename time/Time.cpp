@@ -8,10 +8,6 @@
 #include <malloc.h>
 #include <stdlib.h>
 
-//#include "config.h"
-
-#include "Month.h"
-#include "WeekDay.h"
 #include "Time_.h"
 #include <chrono>
 
@@ -47,19 +43,19 @@ Time Time::Now() {
     return Time(buf);
 }
 
-void Time::BreakDownDate(int& mday,WeekDay& wday,Month& month, int& year) const
+void Time::BreakDownDate(int& mday,weekday& wday,month& month, int& year) const
 {
     this->BreakDown(mday, wday, month, year);
 }
 
 void Time::BreakDownClock(int& hour, int& min, int& sec, int& milli) const {
-    WeekDay junkWDay;
-    Month   junkMonth;
+    weekday junkWDay;
+    month   junkMonth;
 
     BreakDown(junkInt,junkWDay,junkMonth,junkInt, hour, min, sec, milli);
 }
 
-void Time::BreakDown(int& mday, WeekDay& wday, Month& month, int& year,
+void Time::BreakDown(int& mday, weekday& wday, month& mon, int& year,
                      int& hour, int& min, int& sec, int& milli,
                      const char *tz) const
 {
@@ -86,8 +82,8 @@ void Time::BreakDown(int& mday, WeekDay& wday, Month& month, int& year,
     }
 
     mday  = t->tm_mday;                         /* tm_mday in 1..31 */
-    wday  = WeekDay::Sunday() + t->tm_wday;     /* tm_wday in 0..6.  Sun = 0 */
-    month = Month::January() + t->tm_mon;       /* tm_mon  in 0..11. Jan = 0 */
+    wday = weekday( t->tm_wday );     /* tm_wday in 0..6.  Sun = 0 */
+    mon = month( t->tm_mon + 1 );       /* tm_mon  in 0..11. Jan = 0 */
     year  = t->tm_year + 1900;
     hour  = t->tm_hour;
     min   = t->tm_min;
@@ -106,13 +102,4 @@ void Time::Convert(struct win_timeval& tv) const {
 
     tv.tv_sec  = (long) floor(rep + offset);
     tv.tv_usec = (long) round((rep + offset - tv.tv_sec) * 1000000.0);
-}
-
-Duration::Duration(const struct win_timeval& tv) {
-    rep = tv.tv_sec + ((double) tv.tv_usec) / 1000000.0;
-}
-
-void Duration::Convert(struct win_timeval& tv) const {
-    tv.tv_sec  = (long) floor(rep);
-    tv.tv_usec = (long) round((rep - tv.tv_sec) / 1000000.0);
 }

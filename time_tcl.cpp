@@ -169,8 +169,8 @@ int Cmd_Time(ClientData, Tcl_Interp* tcl, int argc, const char** argv) {
     Time t;
     int hour, minute, second, millisecond;
     int day, year;
-    Month month;
-    WeekDay wday;
+    month month;
+    weekday wday;
 
     if (strcmp(cmd, "split") == 0) {
         bool all=false;
@@ -196,7 +196,7 @@ int Cmd_Time(ClientData, Tcl_Interp* tcl, int argc, const char** argv) {
                 hour, minute, second, millisecond, tz);
         if (all)
             sprintf(buffer, "%d %d %d %d %d %d %d %d",
-                    day, wday.Index(), month.Index(), year,
+                    day, wday.c_encoding() + 1, unsigned(month), year,
                     hour, minute, second, millisecond);
         else
             sprintf(buffer, "%d %d %d %d",

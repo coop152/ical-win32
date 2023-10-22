@@ -10,8 +10,8 @@ int Date::epochWDayIndex = 5;
 
 Date::Date(Time t) {
     int mday, year;
-    Month month;
-    WeekDay wday;
+    month month;
+    weekday wday;
 
     t.BreakDownDate(mday, wday, month, year);
     rep = GetRep(mday, month, year);

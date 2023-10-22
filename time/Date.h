@@ -9,6 +9,10 @@
 #include "WeekDay.h"
 #include "Time_.h"
 
+#include <chrono>
+
+using namespace std::chrono;
+
 class Time;
 class Month;
 class WeekDay;
@@ -24,6 +28,7 @@ class Date {
     Date() : rep(0) {}
     Date(Date const& d) : rep(d.rep){}
     Date(int day, Month month, int year) { rep = GetRep(day, month, year); }
+    Date(int day, month month, int year) { rep = GetRep(day, month, year); }
     Date(Time);
     Date(long days) : rep(days) {}
 
@@ -81,6 +86,17 @@ class Date {
 
     static int GetRep(int d, Month m, int y)
     { return Year::Offset(y) + m.Offset(y) + d - 1; }
+
+    static int GetRep(int d, month m, int y)
+    {
+        //auto ymd = year_month_day{ year(y), m, day(d) };
+        //return sys_days{ ymd }.time_since_epoch().count();
+        // be careful; this program uses an epoch of 1900 instead of 1970
+        auto epoch = year_month_day{ 1900y, January, day(1) };
+        auto ymd = year_month_day{ year(y), m, day(d)};
+        auto diff = sys_days{ ymd } - sys_days{ epoch };
+        return diff.count();
+    }
 };
 
 inline Date operator +  (Date d, int days) { return Date(d.rep + days); }
