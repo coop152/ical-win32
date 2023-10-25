@@ -23,6 +23,13 @@ Date Date::Last() {
 	return Date(year_month_day{ymdl});
 }
 
+void Date::BreakDown(int& d, weekday& wd, month& m, int& y) const {
+	d = GetMDay();
+	wd = GetWDayNew();
+	m = GetMonthNew();
+	y = GetYear();
+}
+
 void Date::BreakDown(int& d, WeekDay& wd, Month& m, int& y) const {
 	d = GetMDay();
 	wd = GetWDay();
@@ -35,11 +42,19 @@ int Date::GetMDay() const {
 }
 
 WeekDay Date::GetWDay() const {
-	return WeekDay::First() + year_month_weekday{rep}.weekday().c_encoding();
+	return WeekDay::First() + year_month_weekday{ rep }.weekday().c_encoding();
+}
+
+weekday Date::GetWDayNew() const {
+	return year_month_weekday{ rep }.weekday();
 }
 
 Month Date::GetMonth() const {
 	return Month::First() + unsigned(rep.month()) - 1;
+}
+
+month Date::GetMonthNew() const {
+	return rep.month();
 }
 
 int Date::GetYear() const {

@@ -3,19 +3,18 @@
 #ifndef _DATEH
 #define _DATEH
 
-#include "Month.h"
-#include "WeekDay.h"
 #include "Year.h"
-#include "WeekDay.h"
 #include "Time_.h"
+#include "WeekDay.h"
+#include "Month.h"
 
 #include <chrono>
 
 using namespace std::chrono;
 
 class Time;
-class Month;
 class WeekDay;
+class Month;
 
 /*
  * Date class.
@@ -28,11 +27,11 @@ public:
 	Date() : rep{epoch} {} 
 	Date(Date const& d) : rep{ d.rep } {}
 	Date(year_month_day ymd) : rep{ ymd } {}
-	Date(int d, Month m, int yr) { rep = year_month_day{ year{yr}, month{unsigned(m.Index())}, day{unsigned(d)} }; }
 	Date(int d, month m, int yr) { rep = year_month_day{ year{yr}, m, day{unsigned(d)} }; }
+	Date(int d, Month m, int yr) { rep = year_month_day{ year{yr}, month{unsigned(m.Index())}, day{unsigned(d)}}; }
 	Date(Time);
 
-	// DO NOT REMOVE, or the interface just freezes up and doesnt change date. for some reason.
+	// DO NOT REMOVE, or the interface just freezes up and won't change date. for some reason.
 	Date(long d) { rep = sys_days{ epoch } + days{ d }; }
 
 	Date& operator=(Date const& d) { rep = d.rep; return *this; }
@@ -65,15 +64,21 @@ public:
 	/*
 	 * Conversions.
 	 */
-	int         GetMDay()  const;       /* Day of the month. */
-	WeekDay     GetWDay()  const;       /* Day of the week. */
-	Month       GetMonth() const;
-	int         GetYear()  const;
+	int         GetMDay()    const;       /* Day of the month. */
+	WeekDay     GetWDay()    const;       /* Day of the week. */
+	weekday		GetWDayNew() const;
+	Month       GetMonth()   const;
+	month		GetMonthNew() const;
+	int         GetYear()    const;
 
+	void BreakDown(int&, weekday&, month&, int&) const;
 	void BreakDown(int&, WeekDay&, Month&, int&) const;
 
 	int EpochDays() const { return (sys_days{ rep } - sys_days{ epoch }).count(); }
 	static year_month_day epoch;
+
+	// implicit conversion to year_month_day
+	operator year_month_day() { return rep; }
 private:
 	/*
 	 * Rep (was) the number of days since some epoch.

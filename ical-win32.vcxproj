@@ -113,7 +113,10 @@
       <AdditionalDependencies>lib/IronTcl/lib/tcl86t.lib;lib/IronTcl/lib/tk86t.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /S /Y /I "$(ProjectDir)tcl" "$(TargetDir)tcl"</Command>
+      <Command>xcopy /S /Y /I "$(ProjectDir)tcl" "$(TargetDir)tcl"
+xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tcl86t.dll" "$(TargetDir)"
+xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"
+xcopy /Y /I "$(ProjectDir)zone.tab" "$(TargetDir)"</Command>
       <Message>Copy tcl files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -216,162 +219,162 @@
     <None Include="bitmaps\sleft.xbm" />
     <None Include="bitmaps\sright.xbm" />
     <None Include="bitmaps\todo.xbm" />
-    <CopyFileToFolders Include="tcl\actions.tcl">
+    <None Include="tcl\actions.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\alarm.tcl">
+    </None>
+    <None Include="tcl\alarm.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\apptlist.tcl">
+    </None>
+    <None Include="tcl\apptlist.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\canvsup.tcl">
+    </None>
+    <None Include="tcl\canvsup.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dateeditor.tcl">
+    </None>
+    <None Include="tcl\dateeditor.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dayview.tcl">
+    </None>
+    <None Include="tcl\dayview.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_alarms.tcl">
+    </None>
+    <None Include="tcl\dg_alarms.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_colors.tcl">
+    </None>
+    <None Include="tcl\dg_colors.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_item.tcl">
+    </None>
+    <None Include="tcl\dg_item.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_key.tcl">
+    </None>
+    <None Include="tcl\dg_key.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_monthr.tcl">
+    </None>
+    <None Include="tcl\dg_monthr.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_print.tcl">
+    </None>
+    <None Include="tcl\dg_print.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_range.tcl">
+    </None>
+    <None Include="tcl\dg_range.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_wdays.tcl">
+    </None>
+    <None Include="tcl\dg_wdays.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\help.tcl">
+    </None>
+    <None Include="tcl\help.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\ical_doc.tcl">
+    </None>
+    <None Include="tcl\ical_doc.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\ical_text.tcl">
+    </None>
+    <None Include="tcl\ical_text.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\ical_x.tcl">
+    </None>
+    <None Include="tcl\ical_x.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\interface_doc.tcl">
+    </None>
+    <None Include="tcl\interface_doc.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\io.tcl">
+    </None>
+    <None Include="tcl\io.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\itemlist.tcl">
+    </None>
+    <None Include="tcl\itemlist.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\itemwindow.tcl">
+    </None>
+    <None Include="tcl\itemwindow.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\link.tcl">
+    </None>
+    <None Include="tcl\link.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\listing.tcl">
+    </None>
+    <None Include="tcl\listing.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\notelist.tcl">
+    </None>
+    <None Include="tcl\notelist.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\parse.tcl">
+    </None>
+    <None Include="tcl\parse.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\pref.tcl">
+    </None>
+    <None Include="tcl\pref.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\print.tcl">
+    </None>
+    <None Include="tcl\print.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\ps_header.tcl">
+    </None>
+    <None Include="tcl\ps_header.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\startup.tcl">
+    </None>
+    <None Include="tcl\startup.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\support.tcl">
+    </None>
+    <None Include="tcl\support.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tclIndex">
+    </None>
+    <None Include="tcl\tclIndex">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\canvas.tcl">
+    </None>
+    <None Include="tcl\tcllib\canvas.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\class.tcl">
+    </None>
+    <None Include="tcl\tcllib\class.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_bug.tcl">
+    </None>
+    <None Include="tcl\tcllib\dg_bug.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_error.tcl">
+    </None>
+    <None Include="tcl\tcllib\dg_error.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_file.tcl">
+    </None>
+    <None Include="tcl\tcllib\dg_file.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_num.tcl">
+    </None>
+    <None Include="tcl\tcllib\dg_num.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_string.tcl">
+    </None>
+    <None Include="tcl\tcllib\dg_string.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_yn.tcl">
+    </None>
+    <None Include="tcl\tcllib\dg_yn.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_ync.tcl">
+    </None>
+    <None Include="tcl\tcllib\dg_ync.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\filesel.tcl">
+    </None>
+    <None Include="tcl\tcllib\filesel.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\hooks.tcl">
+    </None>
+    <None Include="tcl\tcllib\hooks.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\key.tcl">
+    </None>
+    <None Include="tcl\tcllib\key.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\label.tcl">
+    </None>
+    <None Include="tcl\tcllib\label.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\menus.tcl">
+    </None>
+    <None Include="tcl\tcllib\menus.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\ruler.tcl">
+    </None>
+    <None Include="tcl\tcllib\ruler.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\support.tcl">
+    </None>
+    <None Include="tcl\tcllib\support.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\tclIndex">
+    </None>
+    <None Include="tcl\tcllib\tclIndex">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\textwin.tcl">
+    </None>
+    <None Include="tcl\tcllib\textwin.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\timerange.tcl">
+    </None>
+    <None Include="tcl\timerange.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\trigger.tcl">
+    </None>
+    <None Include="tcl\trigger.tcl">
       <FileType>Document</FileType>
-    </CopyFileToFolders>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

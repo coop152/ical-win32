@@ -388,48 +388,18 @@ void Appointment::convert_tz(Date &d, int &min, bool to_tz) const {
     cache.from_d=d;
     cache.to_tz=to_tz;
 
-    struct tm t;
-    WeekDay wd;
-    Month m;
-    d.BreakDown(t.tm_mday, wd, m, t.tm_year);
-    t.tm_year-=1900;
-    if (t.tm_year < 0) return; /* cannot do, sorry */
-    t.tm_mon=m.Index()-1;
-    t.tm_sec  = 0;
-    t.tm_min  = min % 60;
-    t.tm_hour = min / 60;
-    t.tm_isdst = -1;
+    // time that appointment begins, as a time_point<minutes>, according to system clock
+    auto start_time = sys_days{ year_month_day{d} } + minutes{ min };
+    zoned_time zoned{ timezone, start_time };
+    local_time converted = zoned.get_local_time();
+    // get date by truncating to days and converting to year_month_day
+    d = Date(year_month_day{ floor<days>(converted) });
+    // get time by taking the remainder (in seconds)
+    seconds remainder = converted - floor<days>(converted);
+    min = floor<minutes>(remainder).count();
 
-    char* old=getenv("TZ");
-    if (old) old=_strdup(old);
-
-    if (!to_tz) {
-        SetEnvironmentVariable("TZ", timezone);
-        _tzset();
-    }
-
-    time_t clock=mktime(&t);
-
-    if (to_tz) {
-        SetEnvironmentVariable("TZ", timezone);
-    } else {
-        if (old) SetEnvironmentVariable("TZ", old);
-        else SetEnvironmentVariable("TZ", nullptr); // unset timezone var
-    }
-    _tzset();
-
-    struct tm *t1=localtime(&clock);
-
-    if (to_tz) {
-        if (old) SetEnvironmentVariable("TZ", old);
-        else SetEnvironmentVariable("TZ", nullptr);
-        _tzset();
-    }
-    d=Date(t1->tm_mday, Month::January()+t1->tm_mon, t1->tm_year+1900);
-    min=t1->tm_min+t1->tm_hour*60;
-    cache.to_d=d;
-    cache.to_min=min;
-    free(old);
+    cache.to_d = d;
+    cache.to_min = min;
 }
 
 int Appointment::contains(Date d) const {
