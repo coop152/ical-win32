@@ -28,7 +28,6 @@ public:
 	Date(Date const& d) : rep{ d.rep } {}
 	Date(year_month_day ymd) : rep{ ymd } {}
 	Date(int d, month m, int yr) { rep = year_month_day{ year{yr}, m, day{unsigned(d)} }; }
-	Date(int d, Month m, int yr) { rep = year_month_day{ year{yr}, month{unsigned(m.Index())}, day{unsigned(d)}}; }
 	Date(Time);
 
 	// DO NOT REMOVE, or the interface just freezes up and won't change date. for some reason.

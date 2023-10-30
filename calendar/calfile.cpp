@@ -281,11 +281,7 @@ int CalFile::GetModifyTime(char const* file, Time& t) {
     int ret = stat(file, &buf);
     if (ret < 0) return 0;
 
-    struct win_timeval tv;
-    tv.tv_sec  = buf.st_mtime;
-    tv.tv_usec = 0;
-
-    t = Time(tv);
+    t = Time(buf.st_mtime);
     return 1;
 }
 

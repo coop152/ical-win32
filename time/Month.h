@@ -3,6 +3,10 @@
 #ifndef _MONTHH
 #define _MONTHH
 
+#include <chrono>;
+
+using namespace std::chrono;
+
 class Month {
   public:
     /* Constructors */
@@ -41,6 +45,9 @@ class Month {
     /* Arithemtic - wraps around. */
     Month& operator += (int);
     Month& operator -= (int);
+
+    /* Conversions */
+    operator month() { return month{ unsigned(rep) }; };
 
     /* Comparison */
     inline friend int operator == (Month, Month);

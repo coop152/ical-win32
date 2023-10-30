@@ -22,18 +22,9 @@ using namespace std::chrono;
 
 int    Time::junkInt = 0;
 
-void gettimeofday(struct win_timeval *tv) {
-    auto now = system_clock::now().time_since_epoch();
-    auto us = duration_cast<microseconds>(now).count();
-    tv->tv_sec = us / 1000000;
-    tv->tv_usec = us % 1000000;
-}
-
-
 Time Time::Now() {
-    struct win_timeval buf;
-    gettimeofday(&buf);
-    return Time(buf);
+    sys_time t = time_point_cast<microseconds>(system_clock::now());
+    return Time(t);
 }
 
 void Time::BreakDownDate(int& mday,weekday& wday,month& month, int& year) const
@@ -63,21 +54,4 @@ void Time::BreakDown(int& mday, weekday& wday, month& mon, int& year,
     min = duration_cast<minutes>( remainder % 1h ).count(); // mins into last hour
     sec = duration_cast<seconds>( remainder % 1min ).count(); // seconds into last minute
     milli = (remainder % 1s).count();
-}
-
-Time::Time(const struct win_timeval& tv) {
-    //rep = (tv.tv_sec - offset) + ((double) tv.tv_usec) / 1000000.0;
-    auto sec = seconds{ tv.tv_sec };
-    auto us = microseconds{ tv.tv_usec };
-    rep = sys_time<microseconds>{ sec + us };
-}
-
-
-void Time::Convert(struct win_timeval& tv) const {
-    //tv.tv_sec  = (long) floor(rep + offset);
-    //tv.tv_usec = (long) round((rep + offset - tv.tv_sec) * 1000000.0);
-    auto sec = floor<seconds>(rep);
-    auto us = rep - sec;
-    tv.tv_sec = sec.time_since_epoch().count();
-    tv.tv_usec = us.count();
 }
