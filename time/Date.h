@@ -3,7 +3,6 @@
 #ifndef _DATEH
 #define _DATEH
 
-#include "Year.h"
 #include "Time_.h"
 #include "WeekDay.h"
 #include "Month.h"
@@ -28,6 +27,7 @@ public:
 	Date(Date const& d) : rep{ d.rep } {}
 	Date(year_month_day ymd) : rep{ ymd } {}
 	Date(int d, month m, int yr) { rep = year_month_day{ year{yr}, m, day{unsigned(d)} }; }
+	Date(int d, month m, year yr) { rep = year_month_day{ yr, m, day{unsigned(d)} }; }
 	Date(Time);
 
 	// DO NOT REMOVE, or the interface just freezes up and won't change date. for some reason.
@@ -38,7 +38,7 @@ public:
 	Date& operator -= (int d) { rep = sys_days{ rep } - days{unsigned( d )}; return *this; }
 
 	static Date Today() { return Date(Time::Now()); }
-	static Date First() { return Date(1, January, Year::First()); }
+	static Date First() { return Date(epoch); }
 	static Date Last();
 
 	/*

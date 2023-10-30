@@ -5,7 +5,6 @@
 #include "arrays.h"
 #include "Month.h"
 #include "WeekDay.h"
-#include "Year.h"
 
 #include "dateset.h"
 #include "lexer.h"
@@ -792,8 +791,8 @@ static int read_date(Lexer* lexer, Date& date) {
         ! lexer->GetNumber(m) ||
         ! lexer->Skip('/') ||
         ! lexer->GetNumber(y) ||
-        (y < Year::First()) ||
-        (y > Year::Last()) ||
+        (y < int(year::min())) ||
+        (y > int(year::max())) ||
         (m < 1) ||
         (m > 12) ||
         (d < 1) ||
@@ -1434,7 +1433,7 @@ int WeekSetDateSetRep::search(Date date, Date& result) const {
 
     date.BreakDown(d, wd, m, y);
 
-    int last = Year::Last();
+    int last = int(year::max());
     while (y <= last) {
         /* Search in month m */
         int mSize = m.Size(y);
@@ -1586,7 +1585,7 @@ int MonthSetDateSetRep::search(Date date, Date& result) const {
 
     date.BreakDown(d, wd, m, y);
 
-    int last = Year::Last();
+    int last = int(year::max());
     while (y <= last) {
         /* Search in month m */
         int mSize = m.Size(y);

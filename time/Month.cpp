@@ -1,7 +1,6 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
 #include "Month.h"
-#include "Year.h"
 
 char const* Month::name[13] = {
     0,
@@ -70,12 +69,12 @@ int Month::leapOffset[13] = {
     335         /* Dec */
     };
 
-int Month::Size(int year) const {
-    return (Year::IsLeap(year) ? LeapSize() : NormalSize());
+int Month::Size(int yr) const {
+    return (year{yr}.is_leap() ? LeapSize() : NormalSize());
 }
 
-int Month::Offset(int year) const {
-    return (Year::IsLeap(year) ? LeapOffset() : NormalOffset());
+int Month::Offset(int yr) const {
+    return (year{ yr }.is_leap() ? LeapOffset() : NormalOffset());
 }
 
 void Month::Normalize() {

@@ -8,7 +8,6 @@
 #include "Date.h"
 #include "Month.h"
 #include "WeekDay.h"
-#include "Year.h"
 #include "config.h"
 
 // Token types
@@ -216,7 +215,7 @@ static int build_date(int m, int d, int y, Date& result) {
     if (y < 100) y += (Date::Today().GetYear() / 100) * 100;
 
     // Check range
-    if ((y < Year::First()) || (y > Year::Last())) return 0;
+    if ((y < int(year::min())) || (y > int(year::max()))) return 0;
     if ((m < 1) || (m > 12)) return 0;
 
     Month month = Month::First() + (m - 1);

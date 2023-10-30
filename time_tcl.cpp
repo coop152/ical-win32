@@ -15,7 +15,6 @@ extern "C" {
 
 #include "Month.h"
 #include "WeekDay.h"
-#include "Year.h"
 #include "parse.h"
 
 #include "ical.h"
@@ -114,8 +113,8 @@ int Cmd_Date(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
                 (month < 1) ||
                 (month > 12) ||
                 (Tcl_GetInt(tcl, argv[4], &year) != TCL_OK) ||
-                (year < Year::First()) ||
-                (year > Year::Last())) {
+                (year < int(year::min())) ||
+                (year > int(year::max()))) {
                 TCL_Error(tcl, "illegal date specification");
             }
 

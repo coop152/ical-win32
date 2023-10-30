@@ -164,7 +164,6 @@ xcopy /Y /I "$(ProjectDir)zone.tab" "$(TargetDir)"</Command>
     </ClCompile>
     <ClCompile Include="time\Time.cpp" />
     <ClCompile Include="time\WeekDay.cpp" />
-    <ClCompile Include="time\Year.cpp" />
     <ClCompile Include="time_tcl.cpp" />
     <ClCompile Include="types\bitvec.cpp" />
     <ClCompile Include="types\hashfuncs.cpp" />
@@ -197,7 +196,6 @@ xcopy /Y /I "$(ProjectDir)zone.tab" "$(TargetDir)"</Command>
     <ClInclude Include="time\parse.h" />
     <ClInclude Include="time\Time_.h" />
     <ClInclude Include="time\WeekDay.h" />
-    <ClInclude Include="time\Year.h" />
     <ClInclude Include="types\Array.h" />
     <ClInclude Include="types\basic.h" />
     <ClInclude Include="types\bitvec.h" />
