@@ -78,51 +78,51 @@ Lexer::~Lexer() {
     delete tmp;
 }
 
-int Lexer::Skip(char const* str) {
+bool Lexer::Skip(char const* str) {
     int len = strlen(str);
 
     if ((index + len) <= length) {
         /* Still have enough chars left */
         if (strncmp(buf+index, str, len) == 0) {
             index += len;
-            return 1;
+            return true;
         }
         SetError("unexpected string");
-        return 0;
+        return false;
     }
 
     /* EOF */
     index = length;
-    return 0;
+    return false;
 }
 
-int Lexer::SkipWS() {
+bool Lexer::SkipWS() {
     while (index < length) {
         char c = buf[index];
-        if (!isspace(c)) return 1;
+        if (!isspace(c)) return true;
  index++;
     }
 
-    return 0;
+    return false;
 }
 
-static inline int is_letter(char c) {
+static inline bool is_letter(char c) {
     return ((c == '_') || isalpha(c));
 }
 
-static inline int is_numletter(char c) {
+static inline bool is_numletter(char c) {
     return ((c == '_') || isalnum(c));
 }
 
-int Lexer::GetId(char const*& x) {
+bool Lexer::GetId(char const*& x) {
     if (index >= length) {
-        return 0;
+        return false;
     }
 
     /* Check first character */
     if (! is_letter(buf[index])) {
         SetError("illegal character when expecting id");
-        return 0;
+        return false;
     }
 
     int start = index;
@@ -134,12 +134,12 @@ int Lexer::GetId(char const*& x) {
     tmp->concat(buf+start, index - start);
     tmp->append('\0');
     x = tmp->as_pointer();
-    return 1;
+    return true;
 }
 
-int Lexer::GetUntil(char terminator, char const*& x) {
+bool Lexer::GetUntil(char terminator, char const*& x) {
     if (index >= length) {
-        return 0;
+        return false;
     }
 
     int start = index;
@@ -151,35 +151,35 @@ int Lexer::GetUntil(char terminator, char const*& x) {
     tmp->concat(buf+start, index - start);
     tmp->append('\0');
     x = tmp->as_pointer();
-    return 1;
+    return true;
 }
  
-int Lexer::GetNumber(int& x) {
+bool Lexer::GetNumber(int& x) {
     if (index >= length) {
-        return 0;
+        return false;
     }
 
     char* finish;
     long result = strtol(buf+index, &finish, 10);
     if (finish == (buf+index)) {
         SetError("error while reading number");
-        return 0;
+        return false;
     }
 
     x = result;
     index = (finish - buf);
-    return 1;
+    return true;
 }
 
-int Lexer::GetString(char const*& x) {
-    if (index >= length) return 0;
+bool Lexer::GetString(char const*& x) {
+    if (index >= length) return false;
 
     tmp->clear();
 
     while ((index < length) && (buf[index] != ']')) {
         if (buf[index] == '\\') {
             index++;
-            if (index >= length) return 0;
+            if (index >= length) return false;
         }
         tmp->append(buf[index]);
         index++;
@@ -187,7 +187,7 @@ int Lexer::GetString(char const*& x) {
 
     tmp->append('\0');
     x = tmp->as_pointer();
-    return 1;
+    return true;
 }
 
 void Lexer::PutString(charArray* out, char const* x) {

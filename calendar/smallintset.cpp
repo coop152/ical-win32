@@ -13,20 +13,20 @@ unsigned int SmallIntSet::Size() const {
         if (Member(i)) size++;
     return size;
 }
-int SmallIntSet::Read(Lexer* lex) {
+bool SmallIntSet::Read(Lexer* lex) {
     Clear();
     while (1) {
         char c;
 
         lex->SkipWS();
-        if (! lex->Peek(c)) return 0;
-        if (!isdigit(c)) return 1;
+        if (! lex->Peek(c)) return false;
+        if (!isdigit(c)) return true;
 
         int num;
-        if (! lex->GetNumber(num)) return 0;
+        if (! lex->GetNumber(num)) return false;
         if ((num < 0) || (num > SISetLargestMember)) {
             lex->SetError("illegal smallintset member");
-            return 0;
+            return false;
         }
         Insert(num);
     }

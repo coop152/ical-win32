@@ -8,7 +8,7 @@
 
 // Routines to parse dates and times
 
-extern int find_date(char const* string,Date& date,int& start,int& length);
+extern bool find_date(char const* string,Date& date,int& start,int& length);
         // modifies     "date", "start", "finish".
         // effects      Returns true iff a date is found in "string".
         //              If a date is found, it is parsed and stored into
@@ -20,7 +20,7 @@ extern int find_date(char const* string,Date& date,int& start,int& length);
         //              the parsed date occupies
         //                      "string[start..(start+length-1)]"
 
-extern int find_timeofday(char const* string,int& time,int& start,int& length);
+extern bool find_timeofday(char const* string,int& time,int& start,int& length);
         // modifies     "time", "start", "finish".
         // effects      Returns true iff a time of day is found in "string".
         //              If a tod is found, it is parsed and stored into
@@ -36,7 +36,7 @@ extern int find_timeofday(char const* string,int& time,int& start,int& length);
         //              since midnight.
 
 
-extern int find_timerange(char const* string,
+extern bool find_timerange(char const* string,
                           int& starttime, int& finishtime,
                           int& start,int& length);
         // modifies     "starttime", "finishtime", "start", "finish".

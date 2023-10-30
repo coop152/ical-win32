@@ -41,21 +41,21 @@ class Lexer {
     /*
      * Character operations.
      */
-    int Peek(char&);            /* Return next char without advancing */
-    int Next(char&);            /* Return next char and advance over it */
-    int Advance(char&);         /* Advance and then Peek() */
+    bool Peek(char&);            /* Return next char without advancing */
+    bool Next(char&);            /* Return next char and advance over it */
+    bool Advance(char&);         /* Advance and then Peek() */
 
 
     /*
      * Skip past expected text.
      */
-    int Skip(char);
-    int Skip(char const*);
+    bool Skip(char);
+    bool Skip(char const*);
 
     /*
      * Skip all whitespace.
      */
-    int SkipWS();
+    bool SkipWS();
 
     /*
      * Read an identifier.
@@ -67,18 +67,18 @@ class Lexer {
      * The next GetId operation on the lexer will invalidate this
      * temporary buffer.
      */
-    int GetId(char const*& x);
+    bool GetId(char const*& x);
 
     /*
      * Read text until the specified character is hit.
      * X is set as by GetId(char const*&).
      */
-    int GetUntil(char, char const*& x);
+    bool GetUntil(char, char const*& x);
 
     /*
      * Read number.
      */
-    int GetNumber(int& num);
+    bool GetNumber(int& num);
 
     /*
      * Read a string.  The string read by this method terminates
@@ -91,7 +91,7 @@ class Lexer {
      *
      * X is set as by GetId(char const*&).
      */
-    int GetString(char const*& x);
+    bool GetString(char const*& x);
 
     /*
      * Write "string" to out so that it can be later read back with
@@ -142,47 +142,47 @@ inline void Lexer::Reset(int i) {
     index = i;
 }    
 
-inline int Lexer::Peek(char& c) {
+inline bool Lexer::Peek(char& c) {
     if (index < length) {
         c = buf[index];
-        return 1;
+        return true;
     }
     else
-        return 0;
+        return false;
 }
 
-inline int Lexer::Next(char& c) {
+inline bool Lexer::Next(char& c) {
     if (index < length) {
         c = buf[index];
         index++;
-        return 1;
+        return true;
     }
     else
-        return 0;
+        return false;
 }
 
-inline int Lexer::Advance(char& c) {
+inline bool Lexer::Advance(char& c) {
     index++;
 
     if (index < length) {
         c = buf[index];
-        return 1;
+        return true;
     }
     else {
         /* Undo advance */
         index = length;
-        return 0;
+        return false;
     }
 }
 
-inline int Lexer::Skip(char c) {
+inline bool Lexer::Skip(char c) {
     if ((index < length) && (buf[index] == c)) {
         index++;
-        return 1;
+        return true;
     }
     else {
         SetError("unexpected character");
-        return 0;
+        return false;
     }
 }
         

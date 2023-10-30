@@ -57,12 +57,12 @@ class HTABLE {
     // effects  Returns number of entries in the table.
     //          This is an O(1) operation.
 
-    int contains(HKEY x) const;
+    bool contains(HKEY x) const;
     // effects  Returns true iff the table contains the specified element.
     //          This is an O(1) operation.
 
 #ifdef HVAL
-    int find(HKEY key, HVAL& result) const;
+    bool find(HKEY key, HVAL& result) const;
     // modifies "result"
     // effects  If an element matching "key" exists in the table,
     //          store the corresponding value into "result" and return true.
@@ -71,9 +71,9 @@ class HTABLE {
 #endif
 
 #ifdef HVAL
-    int insert(HKEY key, HVAL v);
+    bool insert(HKEY key, HVAL v);
 #else
-    int insert(HKEY key);
+    bool insert(HKEY key);
 #endif
     // modifies "this"
     // effects  If table contains an element matching "key", replace its
@@ -83,7 +83,7 @@ class HTABLE {
     //          Individual operations may cost upto O(n).
     //          If the size has been predicted correctly, the cost is O(1).
 
-    int remove(HKEY x);
+    bool remove(HKEY x);
     // modifies "this"
     // effects  If table contains an element matching "x", remove that
     //          element and return true.  Else return false.
@@ -124,9 +124,9 @@ class HTABLE {
         // effects   Initializes "this" to generate elements from "table".
 
 #ifdef HVAL
-        int get(HKEY& key, HVAL& val);
+        bool get(HKEY& key, HVAL& val);
 #else
-        int get(HKEY& key);
+        bool get(HKEY& key);
 #endif
         // modifies  "this", "key", "val".
         // effects    If more elements can be generated from the table,
@@ -160,7 +160,7 @@ class HTABLE {
     // effects  ignores old state and sets new empty state to hold at
     //          least "s" elements.
 
-    void resize(int n);
+    void resize(unsigned int n);
     // effects  Resizes the table to an appropriate size to hold "n" entries.
 
     unsigned int find_index(HKEY key) const;
@@ -208,20 +208,20 @@ inline void HTABLE::Elements::operator = (HTABLE const* t) {
 }
 
 #ifdef HVAL
-inline int HTABLE::Elements::get(HKEY& key, HVAL& val)
+inline bool HTABLE::Elements::get(HKEY& key, HVAL& val)
 #else
-inline int HTABLE::Elements::get(HKEY& key)
+inline bool HTABLE::Elements::get(HKEY& key)
 #endif
 {
     while (1) {
         index--;
-        if (index < 0) return 0;
+        if (index < 0) return false;
         if (table->table->is_full(index)) {
             key = table->table->key(index);
 #ifdef HVAL
             val = table->table->val(index);
 #endif
-            return 1;
+            return true;
         }
     }
 }

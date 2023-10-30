@@ -27,8 +27,8 @@
 declareArray(HiliteList,char const*)
 implementArray(HiliteList,char const*)
 
-static int monday_first(Calendar_Tcl*);
-static int contains(HiliteList const&, char const*);
+static bool monday_first(Calendar_Tcl*);
+static bool contains(HiliteList const&, char const*);
 
 static Calendar_Tcl* find_cal(Tcl_Interp*, char const* name);
 
@@ -173,21 +173,21 @@ int Cmd_HiliteLoop(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
     TCL_Return(tcl, "");
 }
 
-static int monday_first(Calendar_Tcl* cal) {
+static bool monday_first(Calendar_Tcl* cal) {
     Calendar* c = cal->main->GetCalendar();
-    return ((strcmp(c->GetOption("MondayFirst"), "1") == 0) ? 1 : 0);
+    return ((strcmp(c->GetOption("MondayFirst"), "1") == 0) ? true : false);
 }
 
-static int contains(HiliteList const& list, char const* hilite) {
+static bool contains(HiliteList const& list, char const* hilite) {
     for (int i = 0; i < list.size(); i++) {
-        if (strcmp(list[i], hilite) == 0) return 1;
+        if (strcmp(list[i], hilite) == 0) return true;
     }
-    return 0;
+    return false;
 }
 
 static Calendar_Tcl* find_cal(Tcl_Interp* tcl, char const* name) {
     Tcl_CmdInfo info;
 
-    if (! Tcl_GetCommandInfo(tcl, (char*)name, &info)) return 0;
+    if (! Tcl_GetCommandInfo(tcl, (char*)name, &info)) return nullptr;
     return ((Calendar_Tcl*) info.clientData);
 }

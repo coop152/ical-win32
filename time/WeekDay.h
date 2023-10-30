@@ -52,7 +52,9 @@ class WeekDay {
     static char const* shortName[8];
 };
 
-inline WeekDay::WeekDay() { }
+inline WeekDay::WeekDay() {
+    rep = 0;
+}
 
 inline WeekDay::WeekDay(int number) {
     rep = number;

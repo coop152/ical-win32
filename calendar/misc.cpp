@@ -31,14 +31,14 @@ char const* my_name() {
     }
 }
 
-int copy_file(char const* src, char const* dst) {
+bool copy_file(char const* src, char const* dst) {
     FILE* in = fopen(src, "r");
-    if (in == 0) return 0;
+    if (in == 0) return false;
 
     FILE* out = fopen(dst, "w");
     if (out == 0) {
         fclose(in);
-        return 0;
+        return false;
     }
 
     static const int bufsize = 1024;
@@ -54,13 +54,13 @@ int copy_file(char const* src, char const* dst) {
     if (ferror(in) || ferror(out)) {
         fclose(in);
         fclose(out);
-        return 0;
+        return false;
     }
 
     fclose(in);
-    if (fclose(out) < 0) return 0;
+    if (fclose(out) < 0) return false;
 
-    return 1;
+    return true;
 }
 
 void append_string(charArray* cbuf, char const* str) {

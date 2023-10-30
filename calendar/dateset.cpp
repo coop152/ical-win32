@@ -47,21 +47,21 @@ class DateSetRep {
     virtual DateSet::RepeatType type() const = 0;
     virtual void describe(charArray*) const = 0;
     virtual void describe_terse(charArray*) const = 0;
-    virtual int contains(Date) const = 0;
-    virtual int search(Date, Date&) const = 0;
+    virtual bool contains(Date) const = 0;
+    virtual bool search(Date, Date&) const = 0;
 
-    virtual int  read(Lexer*) = 0;
+    virtual bool read(Lexer*) = 0;
     virtual void write(charArray*) const = 0;
 
 
-    virtual int search(Date anchor, Date& result,
+    virtual bool search(Date anchor, Date& result,
                        Date start, Date finish, DateList const& deleted) const;
     /*
      * modifies result
      * effects  Find smallest d such that d occurs in *this and d >= anchor
      *          and d is in [start..finish] and d is not in deleted.
-     *          Set result to d and return 1 if successful.
-     *          If no d could be found, return 0 without modifying result.
+     *          Set result to d and return true if successful.
+     *          If no d could be found, return false without modifying result.
      */
 
     /* Default normalization does nothing */
@@ -82,10 +82,10 @@ class EmptyDateSetRep : public DateSetRep {
     virtual DateSet::RepeatType type() const;
     virtual void describe(charArray*) const;
     virtual void describe_terse(charArray*) const;
-    virtual int contains(Date) const;
-    virtual int search(Date, Date&) const;
+    virtual bool contains(Date) const;
+    virtual bool search(Date, Date&) const;
 
-    virtual int read(Lexer*);
+    virtual bool read(Lexer*);
     virtual void write(charArray*) const;
 };
 
@@ -101,10 +101,10 @@ class SingleDateSetRep : public DateSetRep {
     virtual DateSet::RepeatType type() const;
     virtual void describe(charArray*) const;
     virtual void describe_terse(charArray*) const;
-    virtual int contains(Date) const;
-    virtual int search(Date, Date&) const;
+    virtual bool contains(Date) const;
+    virtual bool search(Date, Date&) const;
 
-    virtual int read(Lexer*);
+    virtual bool read(Lexer*);
     virtual void write(charArray*) const;
   private:
     Date date;          /* Actual date */
@@ -123,10 +123,10 @@ class DayBasedDateSetRep : public DateSetRep {
     virtual DateSet::RepeatType type() const;
     virtual void describe(charArray*) const;
     virtual void describe_terse(charArray*) const;
-    virtual int contains(Date) const;
-    virtual int search(Date, Date&) const;
+    virtual bool contains(Date) const;
+    virtual bool search(Date, Date&) const;
 
-    virtual int read(Lexer*);
+    virtual bool read(Lexer*);
     virtual void write(charArray*) const;
   private:
     int interval;
@@ -155,10 +155,10 @@ class MonthBasedDateSetRep : public DateSetRep {
     virtual DateSet::RepeatType type() const;
     virtual void describe(charArray*) const;
     virtual void describe_terse(charArray*) const;
-    virtual int contains(Date) const;
-    virtual int search(Date, Date&) const;
+    virtual bool contains(Date) const;
+    virtual bool search(Date, Date&) const;
 
-    virtual int read(Lexer*);
+    virtual bool read(Lexer*);
     virtual void write(charArray*) const;
   protected:
     int find_in_month(Month m, int y) const;
@@ -184,7 +184,7 @@ class MonthDateSetRep : public MonthBasedDateSetRep {
     // from Ical charArray format 1.6.
     virtual DateSetRep* copy() const;
 
-    virtual int read(Lexer*);
+    virtual bool read(Lexer*);
     virtual void write(charArray*) const;
 };
 
@@ -201,10 +201,10 @@ class WeekSetDateSetRep : public DateSetRep {
     virtual DateSet::RepeatType type() const;
     virtual void describe(charArray*) const;
     virtual void describe_terse(charArray*) const;
-    virtual int contains(Date) const;
-    virtual int search(Date, Date&) const;
+    virtual bool contains(Date) const;
+    virtual bool search(Date, Date&) const;
 
-    virtual int read(Lexer*);
+    virtual bool read(Lexer*);
     virtual void write(charArray*) const;
 
     virtual DateSetRep* normalize(Date&, Date&, DateList&) const;
@@ -226,10 +226,10 @@ class MonthSetDateSetRep : public DateSetRep {
     virtual DateSet::RepeatType type() const;
     virtual void describe(charArray*) const;
     virtual void describe_terse(charArray*) const;
-    virtual int contains(Date) const;
-    virtual int search(Date, Date&) const;
+    virtual bool contains(Date) const;
+    virtual bool search(Date, Date&) const;
 
-    virtual int read(Lexer*);
+    virtual bool read(Lexer*);
     virtual void write(charArray*) const;
 
     virtual DateSetRep* normalize(Date&, Date&, DateList&) const;
@@ -238,13 +238,13 @@ class MonthSetDateSetRep : public DateSetRep {
     SmallIntSet months;
 };
 
-static int contains_date(DateList const& list, Date d) {
+static bool contains_date(DateList const& list, Date d) {
     for (int i = 0; i < list.size(); i++) {
         if (list[i] == d) {
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
 DateSet::DateSet() : normalized(1) {
@@ -279,7 +279,7 @@ void DateSet::operator = (DateSet const& d) {
     deleted = d.deleted;
 }
 
-int DateSet::contains(Date d) const {
+bool DateSet::contains(Date d) const {
     normalize();
     return (rep->contains(d) &&
             (d >= start) &&
@@ -287,62 +287,62 @@ int DateSet::contains(Date d) const {
             !contains_date(deleted, d));
 }
 
-int DateSet::repeats() const {
+bool DateSet::repeats() const {
     normalize();
 
     return ((rep->type() != DateSet::None) && !empty());
 }
 
-int DateSet::empty() const {
+bool DateSet::empty() const {
     normalize();
 
     Date d;
     return (!first(d));
 }
 
-int DateSet::get_range(Date& s, Date& f) const {
+bool DateSet::get_range(Date& s, Date& f) const {
     normalize();
 
     // Fail if no occurrences
     Date d;
-    if (!first(d)) return 0;
+    if (!first(d)) return false;
 
     // Singleton range for singleton item
     if (!repeats()) {
         s = d;
         f = d;
-        return 1;
+        return true;
     }
 
     // Otherwise use the clipping range
     s = start;
     f = finish;
-    return 1;
+    return true;
 }
 
-int DateSet::first(Date& d) const {
+bool DateSet::first(Date& d) const {
     return (rep->search(start, d, start, finish, deleted));
 }
 
-int DateSet::next(Date d, Date& result) const {
+bool DateSet::next(Date d, Date& result) const {
     if (d == Date::Last()) {
-        return 0;
+        return false;
     }
     else {
         return (rep->search(d+1, result, start, finish, deleted));
     }
 }
 
-int DateSet::occurs_before(DateSet const& d1, DateSet const& d2) {
+bool DateSet::occurs_before(DateSet const& d1, DateSet const& d2) {
     Date x1, x2;
 
     if (! d1.first(x1)) {
         /* No way d1 occurs before d2 */
-        return 0;
+        return false;
     }
     if (! d2.first(x2)) {
         /* D1 has occurrence, D2 does not */
-        return 1;
+        return true;
     }
 
     return (x1 < x2);
@@ -612,12 +612,12 @@ void DateSet::write(charArray* output) const {
     append_string(output, " End\n");
 }
 
-int DateSet::read(Lexer* lexer) {
+bool DateSet::read(Lexer* lexer) {
     char const* keyword;
 
     if (! lexer->SkipWS() ||
         ! lexer->GetId(keyword)) {
-        return 0;
+        return false;
     }
 
     Date date = Date::First();
@@ -648,12 +648,12 @@ int DateSet::read(Lexer* lexer) {
         newRep = new MonthSetDateSetRep(set, set);
     }
     else {
-        return 0;
+        return false;
     }
 
     if (! newRep->read(lexer)) {
         delete newRep;
-        return 0;
+        return false;
     }
 
     delete rep;
@@ -665,11 +665,11 @@ int DateSet::read(Lexer* lexer) {
         char const* keyword;
         if (! lexer->SkipWS() ||
             ! lexer->GetId(keyword)) {
-            return 0;
+            return false;
         }
 
         if (strcmp(keyword, "End") == 0) {
-            return 1;
+            return true;
         }
 
         if (strcmp(keyword, "Start") == 0) {
@@ -677,7 +677,7 @@ int DateSet::read(Lexer* lexer) {
 
             if (! lexer->SkipWS() ||
                 ! read_date(lexer, s)) {
-                return 0;
+                return false;
             }
             start = s;
             continue;
@@ -688,7 +688,7 @@ int DateSet::read(Lexer* lexer) {
 
             if (! lexer->SkipWS() ||
                 ! read_date(lexer, f)) {
-                return 0;
+                return false;
             }
             finish = f;
             continue;
@@ -699,16 +699,16 @@ int DateSet::read(Lexer* lexer) {
 
             if (! lexer->SkipWS() ||
                 ! read_date(lexer, d)) {
-                return 0;
+                return false;
             }
             deleted.append(d);
             continue;
         }
 
-        return 0;
+        return false;
     }
 
-    return 1;
+    return true;
 }
 
 /*
@@ -797,11 +797,11 @@ static int read_date(Lexer* lexer, Date& date) {
         (m > 12) ||
         (d < 1) ||
         (d > (Month::First() + (m - 1)).Size(y))) {
-        return 0;
+        return false;
     }
 
     date = Date(d, Month::First() + (m - 1), y);
-    return 1;
+    return true;
 }
 
 static void write_date(charArray* output, Date date) {
@@ -824,7 +824,7 @@ DateSetRep::DateSetRep() {
 DateSetRep::~DateSetRep() {
 }
 
-int DateSetRep::search(Date anchor, Date& result,
+bool DateSetRep::search(Date anchor, Date& result,
                        Date start, Date finish, DateList const& deleted) const
 {
     Date d = anchor;
@@ -835,15 +835,15 @@ int DateSetRep::search(Date anchor, Date& result,
     while (search(d, d) && (d <= finish)) {
         if (!contains_date(deleted, d)) {
             result = d;
-            return 1;
+            return true;
         }
         d += 1;
     }
-    return 0;
+    return false;
 }
 
 DateSetRep* DateSetRep::normalize(Date&, Date&, DateList&) const {
-    return 0;
+    return nullptr;
 }
 
 /*
@@ -872,16 +872,16 @@ void EmptyDateSetRep::describe_terse(charArray* buffer) const {
     append_string(buffer, "empty");
 }
 
-int EmptyDateSetRep::contains(Date) const {
-    return 0;
+bool EmptyDateSetRep::contains(Date) const {
+    return false;
 }
 
-int EmptyDateSetRep::search(Date, Date&) const {
-    return 0;
+bool EmptyDateSetRep::search(Date, Date&) const {
+    return false;
 }
 
-int EmptyDateSetRep::read(Lexer* lexer) {
-    return 1;
+bool EmptyDateSetRep::read(Lexer* lexer) {
+    return true;
 }
 
 void EmptyDateSetRep::write(charArray* output) const {
@@ -916,19 +916,19 @@ void SingleDateSetRep::describe_terse(charArray* buffer) const {
     format(buffer, "single");
 }
 
-int SingleDateSetRep::contains(Date d) const {
+bool SingleDateSetRep::contains(Date d) const {
     return (!deleted && (d == date));
 }
 
-int SingleDateSetRep::search(Date d, Date& result) const {
+bool SingleDateSetRep::search(Date d, Date& result) const {
     if (!deleted && (d <= date)) {
         result = date;
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-int SingleDateSetRep::read(Lexer* lexer) {
+bool SingleDateSetRep::read(Lexer* lexer) {
     return (lexer->SkipWS() && read_date(lexer, date));
 }
 
@@ -998,12 +998,12 @@ void DayBasedDateSetRep::describe_terse(charArray* buffer) const {
     format(buffer, "daily %d", interval);
 }
 
-int DayBasedDateSetRep::contains(Date d) const {
+bool DayBasedDateSetRep::contains(Date d) const {
     int diff = ABS(d - anchor);
     return ((diff % interval) == 0);
 }
 
-int DayBasedDateSetRep::search(Date d, Date& result) const {
+bool DayBasedDateSetRep::search(Date d, Date& result) const {
     /* Adjust d to match anchor */
     int diff = anchor - d;
     if (diff >= 0) {
@@ -1016,10 +1016,10 @@ int DayBasedDateSetRep::search(Date d, Date& result) const {
     }
 
     result = d;
-    return 1;
+    return true;
 }
 
-int DayBasedDateSetRep::read(Lexer* lexer) {
+bool DayBasedDateSetRep::read(Lexer* lexer) {
     return (lexer->SkipWS() &&
             read_date(lexer, anchor) &&
             lexer->SkipWS() &&
@@ -1119,7 +1119,6 @@ void MonthBasedDateSetRep::describe(charArray* buffer) const {
 }
 
 void MonthBasedDateSetRep::describe_terse(charArray* buffer) const {
-    int index;
     format(buffer, "monthly %d", interval);
     switch(mtype) {
       case ByDay:
@@ -1134,7 +1133,7 @@ void MonthBasedDateSetRep::describe_terse(charArray* buffer) const {
       }
 }
 
-int MonthBasedDateSetRep::contains(Date d) const {
+bool MonthBasedDateSetRep::contains(Date d) const {
     int dDay, dYear;
     Month dMonth;
     WeekDay dWDay;
@@ -1142,24 +1141,24 @@ int MonthBasedDateSetRep::contains(Date d) const {
     d.BreakDown(dDay, dWDay, dMonth, dYear);
 
     if (find_in_month(dMonth, dYear) != dDay)
-        return 0;
+        return false;
 
     int diff = ABS((dYear - anchorYear) * 12 + (dMonth - anchorMonth));
     return ((diff % interval) == 0);
 }
 
-int MonthBasedDateSetRep::search(Date d, Date& result) const {
+bool MonthBasedDateSetRep::search(Date d, Date& result) const {
     // Special checks for empty date set
-    if (count < 1) return 0;
+    if (count < 1) return false;
     switch (mtype) {
       case ByDay:
-        if (count > 31) return 0;
+        if (count > 31) return false;
         break;
       case ByWorkDay:
-        if (count > 23) return 0;
+        if (count > 23) return false;
         break;
       case ByWeek:
-        if (count > 5) return 0;
+        if (count > 5) return false;
         break;
     }
 
@@ -1189,12 +1188,12 @@ int MonthBasedDateSetRep::search(Date d, Date& result) const {
         int x = find_in_month(dMonth, dYear);
         if (x > 0) {
             result = Date(x, dMonth, dYear);
-            return 1;
+            return true;
         }
         advance_months(dMonth, dYear, interval);
     }
 
-    return 0;
+    return false;
 }
 
 void MonthBasedDateSetRep::write(charArray* output) const {
@@ -1214,44 +1213,44 @@ void MonthBasedDateSetRep::write(charArray* output) const {
     }
 }
 
-int MonthBasedDateSetRep::read(Lexer* lexer) {
+bool MonthBasedDateSetRep::read(Lexer* lexer) {
     if (!(lexer->SkipWS() &&
           lexer->GetNumber(interval) &&
           lexer->SkipWS() &&
           lexer->GetNumber(count) &&
           lexer->SkipWS() &&
           read_date(lexer, anchor)))
-        return 0;
+        return false;
 
     int junk1;
     WeekDay junk2;
     anchor.BreakDown(junk1, junk2, anchorMonth, anchorYear);
 
     char const* key;
-    if (!(lexer->SkipWS() && lexer->GetId(key))) return 0;
+    if (!(lexer->SkipWS() && lexer->GetId(key))) return false;
     if (strcmp(key, "Backward") == 0)
         backward = 1;
     else if (strcmp(key, "Forward") == 0)
         backward = 0;
     else
-        return 0;
+        return false;
 
-    if (!(lexer->SkipWS() && lexer->GetId(key))) return 0;
+    if (!(lexer->SkipWS() && lexer->GetId(key))) return false;
     if (strcmp(key, "ByDay") == 0)
         mtype = ByDay;
     else if (strcmp(key, "ByWorkDay") == 0)
         mtype = ByWorkDay;
     else if (strcmp(key, "ByWeek") == 0) {
         int wday;
-        if (!(lexer->SkipWS() && lexer->GetNumber(wday))) return 0;
-        if ((wday < 1) || (wday > 7)) return 0;
+        if (!(lexer->SkipWS() && lexer->GetNumber(wday))) return false;
+        if ((wday < 1) || (wday > 7)) return false;
         mtype = ByWeek;
         weekday = WeekDay::First() + (wday - 1);
     }
     else
-        return 0;
+        return false;
 
-    return 1;
+    return true;
 }
 
 // effects      Return occurrence for this set in specified "m/y".
@@ -1352,7 +1351,7 @@ DateSetRep* MonthDateSetRep::copy() const {
     return new MonthDateSetRep(interval, anchor);
 }
 
-int MonthDateSetRep::read(Lexer* lexer) {
+bool MonthDateSetRep::read(Lexer* lexer) {
     if (lexer->SkipWS() && read_date(lexer, anchor)) {
         WeekDay junk;
         anchor.BreakDown(count, junk, anchorMonth, anchorYear);
@@ -1363,7 +1362,7 @@ int MonthDateSetRep::read(Lexer* lexer) {
                 lexer->GetNumber(interval) &&
                 (interval > 0));
     }
-    return 0;
+    return false;
 }
 
 void MonthDateSetRep::write(charArray* output) const {
@@ -1417,7 +1416,7 @@ void WeekSetDateSetRep::describe_terse(charArray* buffer) const {
     append_string(buffer, " }");
 }
 
-int WeekSetDateSetRep::contains(Date date) const {
+bool WeekSetDateSetRep::contains(Date date) const {
     int d, y;
     Month m;
     WeekDay w;
@@ -1426,7 +1425,7 @@ int WeekSetDateSetRep::contains(Date date) const {
     return (days.Member(w.Index()) && months.Member(m.Index()));
 }
 
-int WeekSetDateSetRep::search(Date date, Date& result) const {
+bool WeekSetDateSetRep::search(Date date, Date& result) const {
     int d, y;
     Month m;
     WeekDay wd;
@@ -1444,7 +1443,7 @@ int WeekSetDateSetRep::search(Date date, Date& result) const {
                 if (days.Member(wd.Index())) {
                     Date xdate = Date(d, m, y);
                     result = xdate;
-                    return 1;
+                    return true;
                 }
                 d++;
                 wd += 1;
@@ -1465,10 +1464,10 @@ int WeekSetDateSetRep::search(Date date, Date& result) const {
     }
 
     /* No occurrence */
-    return 0;
+    return false;
 }
 
-int WeekSetDateSetRep::read(Lexer* lexer) {
+bool WeekSetDateSetRep::read(Lexer* lexer) {
     char const* keyword;
 
     return (lexer->SkipWS() &&
@@ -1528,7 +1527,7 @@ DateSetRep* WeekSetDateSetRep::normalize(Date& start, Date& finish,
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 /*
@@ -1569,7 +1568,7 @@ void MonthSetDateSetRep::describe_terse(charArray* buffer) const {
     append_string(buffer, "}");
 }
 
-int MonthSetDateSetRep::contains(Date date) const {
+bool MonthSetDateSetRep::contains(Date date) const {
     int d, y;
     Month m;
     WeekDay w;
@@ -1578,7 +1577,7 @@ int MonthSetDateSetRep::contains(Date date) const {
     return (days.Member(d) && months.Member(m.Index()));
 }
 
-int MonthSetDateSetRep::search(Date date, Date& result) const {
+bool MonthSetDateSetRep::search(Date date, Date& result) const {
     int d, y;
     Month m;
     WeekDay wd;
@@ -1595,7 +1594,7 @@ int MonthSetDateSetRep::search(Date date, Date& result) const {
             while (d <= mSize) {
                 if (days.Member(d)) {
                     result = Date(d, m, y);
-                    return 1;
+                    return true;
                 }
                 d++;
             }
@@ -1614,10 +1613,10 @@ int MonthSetDateSetRep::search(Date date, Date& result) const {
     }
 
     /* No occurrence */
-    return 0;
+    return false;
 }
 
-int MonthSetDateSetRep::read(Lexer* lexer) {
+bool MonthSetDateSetRep::read(Lexer* lexer) {
     char const* keyword;
 
     return (lexer->SkipWS() &&
@@ -1718,7 +1717,7 @@ DateSetRep* MonthSetDateSetRep::normalize(Date& start, Date& finish,
         return new DayBasedDateSetRep(1, firstDate);
     }
 
-    return 0;
+    return nullptr;
 }
 
 implementArray(DateList,Date)

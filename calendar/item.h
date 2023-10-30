@@ -43,8 +43,8 @@ class Item {
     Item();
     virtual ~Item();
 
-    virtual int Read(Lexer*);
-    virtual int Parse(Lexer*, char const* keyword);
+    virtual bool Read(Lexer*);
+    virtual bool Parse(Lexer*, char const* keyword);
     virtual void Write(charArray*) const;
 
     virtual Item* Clone() const = 0;
@@ -53,16 +53,16 @@ class Item {
     void SetText(const char*s) { delete [] text; text = copy_string(s); }
 
     // DateSet interface
-    virtual int contains(Date d) const;
-    int repeats() const { return date->repeats(); }
-    int empty() const { return date->empty(); }
+    virtual bool contains(Date d) const;
+    bool repeats() const { return date->repeats(); }
+    bool empty() const { return date->empty(); }
     DateSet::RepeatType repeat_type() const { return date->type(); }
     void describe(charArray* buffer) const { date->describe(buffer); }
     void describe_terse(charArray* buffer) const {date->describe_terse(buffer); }
 
-    int first(Date& result) const;
-    int next(Date d, Date& result) const;
-    int range(Date&, Date&) const;
+    bool first(Date& result) const;
+    bool next(Date d, Date& result) const;
+    bool range(Date&, Date&) const;
 
     void set_empty() { date->set_empty(); }
     void set_date(Date d) { date->set_date(d); }
@@ -103,7 +103,7 @@ class Item {
     // modifies - this
     // effects  - Make the current user the owner of this item.
 
-    int IsMine() const { return strcmp(my_name(), owner) == 0; }
+    bool IsMine() const { return strcmp(my_name(), owner) == 0; }
     // effects  - Returns true iff this item is owned by the current user.
 
     char const* GetUid() const { return uid; }
@@ -115,27 +115,27 @@ class Item {
     // modifies - this
     // effects  - Sets uid to specified value.
 
-    int IsUidPersistent() const { return uid_persistent; }
+    bool IsUidPersistent() const { return uid_persistent; }
     // effects - Return true iff uid is also stored persistently
 
-    virtual Notice* AsNotice() { return 0; }
-    virtual Appointment* AsAppointment() { return 0; }
+    virtual Notice* AsNotice() { return nullptr; }
+    virtual Appointment* AsAppointment() { return nullptr; }
 
     /* Mark deleted */
-    int Deleted() { return deleted; }
-    void MarkDeleted() { deleted = 1; }
+    bool Deleted() { return deleted; }
+    void MarkDeleted() { deleted = true; }
 
     /* Hilite mode */
     char const* Hilite() const { return hilite; }
     void Hilite(char const* s) { delete [] hilite; hilite = copy_string(s); }
 
     /* Todo? */
-    int IsTodo() const { return todo; }
-    void SetTodo(int t) { todo = t; if (!t) done = 0; }
+    bool IsTodo() const { return todo; }
+    void SetTodo(bool t) { todo = t; if (!t) done = false; }
 
     /* Done? */
-    int IsDone() const { return done; }
-    void SetDone(int d) { done = todo && d; }
+    bool IsDone() const { return done; }
+    void SetDone(bool d) { done = todo && d; }
 
     /* Options */
     char const* GetOption(char const* key) const;
@@ -151,7 +151,7 @@ class Item {
     // effects  - Remove any option associated with "key"
 
     /* Comparison */
-    int similar(Item const* x) const;
+    bool similar(Item const* x) const;
     // effects  Returns true iff this has same contents as x.
 
     static const int defaultRemindStart;
@@ -160,13 +160,13 @@ class Item {
     char*       text;
     char*       owner;
     char*       uid;
-    int         uid_persistent;
+    bool        uid_persistent;
     int         remindStart;    /* Start reminding early */
-    int         deleted;
+    bool        deleted;
     DateSet*    date;
     char*       hilite;
-    int         todo;
-    int         done;
+    bool        todo;
+    bool        done;
     OptionMap*  options;
 
     void CopyTo(Item*) const;
@@ -208,12 +208,12 @@ class Appointment : public Item {
         if (alarms != 0) delete alarms;
     }
 
-    virtual int Parse(Lexer*, char const* keyword);
+    virtual bool Parse(Lexer*, char const* keyword);
     virtual void Write(charArray*) const;
 
     virtual Item* Clone() const;
 
-    virtual int contains(Date d) const;
+    virtual bool contains(Date d) const;
 
     int GetStart(int d) const { return d < 0 ? start : time_from_tz(Date(d), start); }
     void SetStart(int d, int s) { start = d < 0 ? s : time_to_tz(Date(d), s); }

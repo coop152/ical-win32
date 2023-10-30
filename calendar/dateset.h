@@ -40,19 +40,19 @@ class DateSet {
     /*
      * effects  Returns true iff d is in *this.
      */
-    int contains(Date d) const;
+    bool contains(Date d) const;
 
     /*
      * effects  Returns true iff *this has more than one element.
      */
-    int repeats() const;
+    bool repeats() const;
 
     /*
      * effects  Returns true iff *this has zero elements
      */
-    int empty() const;
+    bool empty() const;
 
-    int get_range(Date&, Date&) const;
+    bool get_range(Date&, Date&) const;
     // Return date clipping range
 
     /*
@@ -60,7 +60,7 @@ class DateSet {
      * effects  If *this is not empty, sets result to the smallest element in
      *          *this and returns true.  Else returns false.
      */
-    int  first(Date& result) const;
+    bool  first(Date& result) const;
 
     /*
      * modifies result
@@ -68,7 +68,7 @@ class DateSet {
      *          result to the smallest such date and returns true.
      *          Else returns false.
      */
-    int next(Date d, Date& result) const;
+    bool next(Date d, Date& result) const;
 
     /*
      * effects  Returns true iff first occurrence of s1 occurs strictly
@@ -76,7 +76,7 @@ class DateSet {
      *          its first occurrence is assumed to occur after all legal
      *          dates.
      */
-    static int occurs_before(DateSet const& s1, DateSet const& s2);
+    static bool occurs_before(DateSet const& s1, DateSet const& s2);
 
     /*
      * effects  Returns -1, 0, +1 depending on whether the first
@@ -249,7 +249,7 @@ class DateSet {
      *          Returns true iff successful.  If not successful, *this may
      *          have arbitrary contents.
      */
-    int read(Lexer* lexer);
+    bool read(Lexer* lexer);
 
     /*
      * effects  Appendsa string representation of *this to buffer.
@@ -257,7 +257,7 @@ class DateSet {
     void write(charArray* buffer) const;
   private:
     DateSetRep* rep;            /* Type specific representation */
-    int         normalized;     /* Rep has been normalized? */
+    bool        normalized;     /* Rep has been normalized? */
     DateList    deleted;        /* List of deleted dates */
 
     /* Range limit on dates */

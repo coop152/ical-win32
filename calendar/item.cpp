@@ -51,7 +51,7 @@ Item::~Item() {
     if (options != 0) delete options;
 }
 
-int Item::Read(Lexer* lex) {
+bool Item::Read(Lexer* lex) {
     while (1) {
         char c;
         char const* keyword;
@@ -59,69 +59,69 @@ int Item::Read(Lexer* lex) {
         if (! lex->SkipWS() ||
             ! lex->Peek(c)) {
             lex->SetError("incomplete item");
-            return 0;
+            return false;
         }
 
         if (c == ']')
-            return 1;
+            return true;
 
         if (! lex->GetId(keyword) ||
             ! lex->SkipWS() ||
             ! lex->Skip('[')) {
             lex->SetError("error reading item property name");
-            return 0;
+            return false;
         }
 
         if (! Parse(lex, keyword) ||
             ! lex->SkipWS() ||
             ! lex->Skip(']')) {
             lex->SetError("error reading item property");
-            return 0;
+            return false;
         }
     }
 }
 
-int Item::Parse(Lexer* lex, char const* keyword) {
+bool Item::Parse(Lexer* lex, char const* keyword) {
     if (strcmp(keyword, "Remind") == 0) {
         if (! lex->SkipWS() ||
             ! lex->GetNumber(remindStart)) {
             lex->SetError("error reading remind level");
-            return 0;
+            return false;
         }
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Owner") == 0) {
         char const* x;
         if (!lex->GetString(x)) {
             lex->SetError("error reading owner information");
-            return 0;
+            return false;
         }
         delete [] owner;
         owner = copy_string(x);
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Uid") == 0) {
         char const* x;
         if (!lex->SkipWS() || !lex->GetUntil(']', x)) {
             lex->SetError("error reading unique id");
-            return 0;
+            return false;
         }
         delete [] uid;
         uid = copy_string(x);
         uid_persistent = 1;
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Contents") == 0) {
         char const* x;
         if (! lex->GetString(x)) {
             lex->SetError("error reading item text");
-            return 0;
+            return false;
         }
         SetText(x);
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Dates") == 0) {
@@ -133,34 +133,34 @@ int Item::Parse(Lexer* lex, char const* keyword) {
             char const* val;
             if (! lex->GetString(val)) {
                 lex->SetError("error reading date information");
-                return 0;
+                return false;
             }
             if (options == 0) options = new OptionMap;
             options->store("Dates", val);
         }
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Hilite") == 0) {
         char const* x;
         if (!lex->GetString(x)) {
             lex->SetError("error reading item hilite");
-            return 0;
+            return false;
         }
 
         delete [] hilite;
         hilite = copy_string(x);
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Todo") == 0) {
         todo = 1;
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Done") == 0) {
         done = 1;
-        return 1;
+        return true;
     }
 
     char* key = copy_string(keyword);
@@ -168,13 +168,13 @@ int Item::Parse(Lexer* lex, char const* keyword) {
     if (! lex->GetString(val)) {
         lex->SetError("error reading item property");
         delete [] key;
-        return 0;
+        return false;
     }
 
     if (options == 0) options = new OptionMap;
     options->store(key, val);
     delete [] key;
-    return 1;
+    return true;
 }
 
 void Item::Write(charArray* out) const {
@@ -251,9 +251,9 @@ void Item::SetUid(char const* u) {
 
 char const* Item::GetOption(char const* key) const {
     char const* val;
-    if (options == 0) return 0;
+    if (options == 0) return nullptr;
     if (options->fetch(key, val)) return val;
-    return 0;
+    return nullptr;
 }
 
 void Item::SetOption(char const* key, char const* val) {
@@ -265,16 +265,16 @@ void Item::RemoveOption(char const* key) {
     if (options != 0) options->remove(key);
 }
 
-int Item::similar(Item const* x) const {
+bool Item::similar(Item const* x) const {
     // Fast check
-    if (this == x) return 1;
+    if (this == x) return true;
 
     // XXX Just compare unparsing: only works if it is deterministic
     charArray aval, bval;
     this->Write(&aval);
     x->Write(&bval);
 
-    if (aval.size() != bval.size()) return 0;
+    if (aval.size() != bval.size()) return false;
     return strncmp(aval.as_pointer(), bval.as_pointer(), aval.size());
 }
 
@@ -285,34 +285,34 @@ Item* Notice::Clone() const {
     return copy;
 }
 
-int Appointment::Parse(Lexer* lex, char const* keyword) {
+bool Appointment::Parse(Lexer* lex, char const* keyword) {
     if (strcmp(keyword, "Start") == 0) {
         if (! lex->SkipWS() ||
             ! lex->GetNumber(start)) {
             lex->SetError("error reading appointment start time");
-            return 0;
+            return false;
         }
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Length") == 0) {
         if (! lex->SkipWS() ||
             ! lex->GetNumber(length)) {
             lex->SetError("error reading appointment length");
-            return 0;
+            return false;
         }
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Timezone") == 0) {
         char const* x;
         if (!lex->SkipWS() || !lex->GetString(x)) {
             lex->SetError("error reading appointment timezone");
-            return 0;
+            return false;
         }
         delete [] timezone;
         timezone = copy_string(x);
-        return 1;
+        return true;
     }
 
     if (strcmp(keyword, "Alarms") == 0) {
@@ -325,17 +325,17 @@ int Appointment::Parse(Lexer* lex, char const* keyword) {
             lex->SkipWS();
             if (! lex->Peek(c)) {
                 lex->SetError("error reading alarm list");
-                return 0;
+                return false;
             }
 
             if (!isdigit(c)) break;
 
             int num;
-            if (! lex->GetNumber(num)) return 0;
+            if (! lex->GetNumber(num)) return false;
             alarms->append(num);
         }
 
-        return 1;
+        return true;
     }
 
     return Item::Parse(lex, keyword);
@@ -402,46 +402,46 @@ void Appointment::convert_tz(Date &d, int &min, bool to_tz) const {
     cache.to_min = min;
 }
 
-int Appointment::contains(Date d) const {
+bool Appointment::contains(Date d) const {
     if (!has_timezone()) return Item::contains(d);
     Date dd;
     int tt;
     dd=d; tt=0; datetime_to_tz(dd,tt);
-    if (Item::contains(dd) && start > tt) return 1;
+    if (Item::contains(dd) && start > tt) return true;
     dd=d; tt=24*60-1; datetime_to_tz(dd,tt);
-    if (Item::contains(dd) && start < tt) return 1;
-    return 0;
+    if (Item::contains(dd) && start < tt) return true;
+    return false;
 }
 
 // DateSet wrappers
-int Item::contains(Date d) const {
+bool Item::contains(Date d) const {
     if (!todo || done) return date->contains(d);
 
     // Special handling for todo items
     Date today = Date::Today();
-    if (d < today) return 0;
+    if (d < today) return false;
     if (d > today) return date->contains(d);
 
     // d == today
     Date f;
     return (date->first(f) && (f <= today));
 }
-int Item::first(Date& result) const {
-    if (!date->first(result)) return 0;
-    if (!todo || done) return 1;
+bool Item::first(Date& result) const {
+    if (!date->first(result)) return false;
+    if (!todo || done) return true;
 
     // Special handling for todo items
     Date today = Date::Today();
     if (result < today) result = today;
-    return 1;
+    return true;
 }
 
-int Item::range(Date& s, Date& f) const {
-    if (!date->get_range(s, f)) return 0;
-    return 1;
+bool Item::range(Date& s, Date& f) const {
+    if (!date->get_range(s, f)) return false;
+    return true;
 }
 
-int Item::next(Date d, Date& result) const {
+bool Item::next(Date d, Date& result) const {
     if (!todo || done) return date->next(d, result);
 
     // Special handling for todo items
@@ -449,9 +449,9 @@ int Item::next(Date d, Date& result) const {
     if (d >= today) return date->next(d, result);
 
     // Starting search before "today" -- just find first item
-    if (!date->first(result)) return 0;
+    if (!date->first(result)) return false;
     if (result < today) result = today;
-    return 1;
+    return true;
 }
 
 void Item::set_start(Date start) {

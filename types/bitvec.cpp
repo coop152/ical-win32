@@ -56,10 +56,10 @@ void BitVec::invert() {
     }    
 }
 
-int BitVec::empty() const {
+bool BitVec::empty() const {
     for (int i = 0; i < alloc; i++)
-        if (word[i] != 0) return 0;
-    return 1;
+        if (word[i] != 0) return false;
+    return true;
 }
 
 int BitVec::first_set() const {

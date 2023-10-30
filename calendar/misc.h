@@ -10,7 +10,7 @@ extern char* copy_string(char const* str);
 extern char const* my_name();
     // effects - Return user login name.  Returns 0 on error.
 
-extern int copy_file(char const* src, char const* dst);
+extern bool copy_file(char const* src, char const* dst);
     // effects - Copy file named by "src" to file named by "dst"
     //           Return true iff successful.
 

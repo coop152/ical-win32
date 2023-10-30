@@ -13,7 +13,7 @@ class Calendar;
 
 class CalFile {
   public:
-    CalFile(int readOnly, const char* name);
+    CalFile(bool readOnly, const char* name);
     ~CalFile();
 
     /*
@@ -29,7 +29,7 @@ class CalFile {
     /*
      * Has calendar been modified.
      */
-    int IsModified();
+    bool IsModified();
 
     /*
      * Called on each modification.
@@ -46,17 +46,17 @@ class CalFile {
      * Write calendar out to file.
      * Return true only on success.
      */
-    int Write();
+    bool Write();
 
     /*
      * Read calendar from file.
      */
-    int Read();
+    bool Read();
 
     /*
      * Has file changed since last read?
      */
-    int FileHasChanged();
+    bool FileHasChanged();
 
     /*
      * Re-read file contents from disk.
@@ -70,7 +70,7 @@ class CalFile {
      */
     static char const* LastError();
   protected:
-    int readOnly;               /* Read-only mode? */
+    bool  readOnly;             /* Read-only mode? */
     char* fileName;             /* Calendar file name */
     char* backupName;           /* Backup file name */
     char* tmpName;              /* Tmp file name */
@@ -81,12 +81,12 @@ class CalFile {
     // Called after writing to clear modify flag and also
     // update last modify time.
     void  written();
-    int   modified;             /* Has cal been modified since last write */
+    bool  modified;             /* Has cal been modified since last write */
     Time  lastModifyTime;       /* Last calendar file modify time */
-    int   lastModifyValid;      /* Is lastModifyTime valid? */
+    bool  lastModifyValid;      /* Is lastModifyTime valid? */
 
     /* Utility routines */
-    static int GetModifyTime(char const*, Time&);
+    static bool GetModifyTime(char const*, Time&);
 
     // Update calendar readonly status.
     void PerformAccessCheck();
@@ -96,12 +96,12 @@ class CalFile {
 
     // Read/Write calendar from/to named file
     static Calendar* ReadFrom(const char*);
-    static int WriteTo(Calendar*, const char*);
+    static bool WriteTo(Calendar*, const char*);
 
     // Other internal IO routines
-    int WriteNew(long mode);            // Save without writing in-place
-    int WriteInPlace(long mode);        // Write in-place to preserve links
-    int CopyBackup(long mode);          // Make a backup by copying
+    bool WriteNew(long mode);            // Save without writing in-place
+    bool WriteInPlace(long mode);        // Write in-place to preserve links
+    bool CopyBackup(long mode);          // Make a backup by copying
 };
 
 inline char const* CalFile::GetName() {
@@ -112,7 +112,7 @@ inline Calendar* CalFile::GetCalendar() {
     return calendar;
 }
 
-inline int CalFile::IsModified() {
+inline bool CalFile::IsModified() {
     return modified;
 }
 

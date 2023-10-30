@@ -114,12 +114,12 @@ void Calendar::Remove(Item* item) {
     }
 }
 
-int Calendar::Read(Lexer* lex) {
+bool Calendar::Read(Lexer* lex) {
     clear();
 
     if (lex->Status() == Lexer::Error) {
         /* No input file at all */
-        return 1;
+        return true;
     }
 
     int file_major, file_minor;
@@ -129,7 +129,7 @@ int Calendar::Read(Lexer* lex) {
         ! lex->Skip("Calendar") ||
         ! lex->SkipWS()) {
         lex->SetError("file does not contain calendar");
-        return 0;
+        return false;
     }
 
     /*
@@ -166,9 +166,9 @@ int Calendar::Read(Lexer* lex) {
 
         switch (lex->Status()) {
           case Lexer::Eof:
-            return 1;
+            return true;
           case Lexer::Error:
-            return 0;
+            return false;
           default:
             break;
         }
@@ -179,14 +179,14 @@ int Calendar::Read(Lexer* lex) {
             ! lex->SkipWS() ||
             ! lex->Skip('[')) {
             lex->SetError("error reading item header");
-            return 0;
+            return false;
         }
 
         if (strcmp(keyword, "Appt") == 0) {
             Item* item = new Appointment;
             if (! item->Read(lex)) {
                 delete item;
-                return 0;
+                return false;
             }
             Add(item);
         }
@@ -194,7 +194,7 @@ int Calendar::Read(Lexer* lex) {
             Item* item = new Notice;
             if (! item->Read(lex)) {
                 delete item;
-                return 0;
+                return false;
             }
             Add(item);
         }
@@ -203,7 +203,7 @@ int Calendar::Read(Lexer* lex) {
             char const* name;
             if (!lex->GetString(name)) {
                 lex->SetError("error reading included file name");
-                return 0;
+                return false;
             }
             Include(name);
         }
@@ -211,7 +211,7 @@ int Calendar::Read(Lexer* lex) {
             char const* x;
             if (!lex->SkipWS() || !lex->GetUntil(']', x)) {
                 lex->SetError("error reading hidden item uid");
-                return 0;
+                return false;
             }
             Hide(x);
         }
@@ -223,7 +223,7 @@ int Calendar::Read(Lexer* lex) {
             if (!lex->GetString(val)) {
                 lex->SetError("error reading calendar property");
                 delete [] key;
-                return 0;
+                return false;
             }
 
             // Enter option into this calendar
@@ -235,7 +235,7 @@ int Calendar::Read(Lexer* lex) {
         if (! lex->SkipWS() ||
             ! lex->Skip(']')) {
             lex->SetError("incomplete item");
-            return 0;
+            return false;
         }
     }
 }
@@ -310,7 +310,7 @@ Item* Calendar::Get(int i) const {
     return (Item*) items[i];
 }
 
-int Calendar::Hidden(char const* uid) const {
+bool Calendar::Hidden(char const* uid) const {
     return (hidden->contains(uid));
 }
 
@@ -341,7 +341,7 @@ char const* Calendar::GetOption(char const* key) const {
     char const* val;
     if (options->fetch(key, val)) return val;
     if (option_default->fetch(key, val)) return val;
-    return 0;
+    return nullptr;
 }
 
 void Calendar::SetOption(char const* key, char const* val) {

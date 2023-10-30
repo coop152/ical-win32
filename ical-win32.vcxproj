@@ -170,7 +170,6 @@ xcopy /Y /I "$(ProjectDir)zone.tab" "$(TargetDir)"</Command>
     <ClCompile Include="types\intset.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="calendar.h" />
     <ClInclude Include="calendar\arrays.h" />
     <ClInclude Include="calendar\calendar.h" />
     <ClInclude Include="calendar\calfile.h" />

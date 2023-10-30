@@ -47,7 +47,7 @@ implementArray(Tokens,Token)
 
 static void parse_tokens(char const*, Tokens&);
 static void parse_token(char const*, Token&);
-static int  parse_word(char const*, int, Token&);
+static bool parse_word(char const*, int, Token&);
 
 static void parse_tokens(char const* str, Tokens& list) {
     while (str[0] != '\0') {
@@ -86,7 +86,7 @@ static void parse_token(char const* string, Token& t) {
         long v = strtol(string, &endptr, 10);
         if (endptr > string) {
             t.ptr = string;
-            t.len = endptr - string;
+            t.len = int(endptr - string);
             t.ttype = INT_TOKEN;
             t.tvalue = v;
             
@@ -210,22 +210,22 @@ static Token words[] = {
     { 0,                0,      OTHER_TOKEN,    0       }
 };
 
-static int build_date(int m, int d, int y, Date& result) {
+static bool build_date(int m, int d, int y, Date& result) {
     // Fix year
     if (y < 100) y += (Date::Today().GetYear() / 100) * 100;
 
     // Check range
-    if ((y < int(year::min())) || (y > int(year::max()))) return 0;
-    if ((m < 1) || (m > 12)) return 0;
+    if ((y < int(year::min())) || (y > int(year::max()))) return false;
+    if ((m < 1) || (m > 12)) return false;
 
     Month month = Month::First() + (m - 1);
-    if ((d < 1) || (d > month.Size(y))) return 0;
+    if ((d < 1) || (d > month.Size(y))) return false;
 
     result = Date(d, month, y);
-    return 1;
+    return true;
 }
 
-static int parse_word(char const* str, int len, Token& t) {
+static bool parse_word(char const* str, int len, Token& t) {
     for (int i = 0; words[i].ptr != 0; i++) {
         if (len < words[i].len) continue;
         if (len > strlen(words[i].ptr)) continue;
@@ -237,14 +237,14 @@ static int parse_word(char const* str, int len, Token& t) {
         t.ttype = words[i].ttype;
 
         t.tvalue = words[i].tvalue;
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 // Used to ignore "am/pm" indicator from "match_timeofday"
-static int junk_ampm;
+static bool junk_ampm;
 
 // modifies     "result", "had_ampm"
 // effects      If "list" starting at "index" contains a time specification,
@@ -256,7 +256,7 @@ static int junk_ampm;
 //              found, otherwise it is set to false.
 
 static int match_timeofday(Tokens& list, int index, int& result,
-                           int& had_ampm = junk_ampm) {
+                           bool& had_ampm = junk_ampm) {
     if (index >= list.size()) return 0;
     Token t = list[index];
 
@@ -289,7 +289,7 @@ static int match_timeofday(Tokens& list, int index, int& result,
         }
 
         // See if am/pm is specified
-        int have_ampm = 0;
+        bool have_ampm = false;
         int ispm = 0;
         if (list[index+c].ttype == AMPM_TOKEN) {
             have_ampm = 1;
@@ -347,7 +347,8 @@ static int match_timerange(Tokens& list, int index, int& start, int& finish) {
     int noon = 12 * 60 * 60;
 
     // "<timeofday> <to> <timeofday>"
-    int c1, r1, c2, r2, ampm1, ampm2;
+    int c1, r1, c2, r2;
+    bool ampm1, ampm2;
     if (((c1 = match_timeofday(list, index, r1, ampm1)) != 0) &&
         (list[index+c1].ttype == TO_TOKEN) &&
         ((c2 = match_timeofday(list, index+c1+1, r2, ampm2)) != 0)) {
@@ -527,7 +528,7 @@ static int match_date(Tokens& list, int index, Date& result) {
 
 // Exported routines
 
-int find_date(char const* string, Date& result, int& start, int& length) {
+bool find_date(char const* string, Date& result, int& start, int& length) {
     Tokens list;
     parse_tokens(string, list);
 
@@ -550,13 +551,13 @@ int find_date(char const* string, Date& result, int& start, int& length) {
         for (int i = index; i < index + count; i++)
             length += list[i].len;
 
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
-int find_timeofday(char const* string, int& result, int& start, int& length) {
+bool find_timeofday(char const* string, int& result, int& start, int& length) {
     Tokens list;
     parse_tokens(string, list);
 
@@ -579,13 +580,13 @@ int find_timeofday(char const* string, int& result, int& start, int& length) {
         for (int i = index; i < index + count; i++)
             length += list[i].len;
 
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
-int find_timerange(char const* string,
+bool find_timerange(char const* string,
                    int& startresult, int& finishresult,
                    int& start, int& length)
 {
@@ -612,8 +613,8 @@ int find_timerange(char const* string,
         for (int i = index; i < index + count; i++)
             length += list[i].len;
 
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }

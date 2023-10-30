@@ -65,10 +65,10 @@ void collect_occurrences(Calendar_Tcl* cal, ItemList const& items,
     }
 }
 
-static int occurs_before(Occurrence const& xo, Occurrence const& yo) {
+static bool occurs_before(Occurrence const& xo, Occurrence const& yo) {
     // Compare by date
-    if (xo.date < yo.date) return 1;
-    if (xo.date > yo.date) return 0;
+    if (xo.date < yo.date) return true;
+    if (xo.date > yo.date) return false;
 
     Item* x = xo.item->value();
     Item* y = yo.item->value();
@@ -78,16 +78,16 @@ static int occurs_before(Occurrence const& xo, Occurrence const& yo) {
     Appointment* ya = y->AsAppointment();
     int xs = (xa == 0) ? -1 : xa->GetStart(true);
     int ys = (ya == 0) ? -1 : ya->GetStart(true);
-    if (xs < ys) return 1;
-    if (xs > ys) return 0;
+    if (xs < ys) return true;
+    if (xs > ys) return false;
 
     // Done items occur before todo items
-    if (x->IsDone() && !y->IsDone()) return 1;
-    if (y->IsDone() && !x->IsDone()) return 0;
+    if (x->IsDone() && !y->IsDone()) return true;
+    if (y->IsDone() && !x->IsDone()) return false;
 
     // Todo items occur before non-todo items
-    if (x->IsTodo() && !y->IsTodo()) return 1;
-    if (y->IsTodo() && !x->IsTodo()) return 0;
+    if (x->IsTodo() && !y->IsTodo()) return true;
+    if (y->IsTodo() && !x->IsTodo()) return false;
 
     return (strcmp(x->GetText(), y->GetText()) < 0);
 }

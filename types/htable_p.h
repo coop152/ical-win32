@@ -120,27 +120,27 @@ unsigned int HTABLE::find_index(HKEY key) const {
     }
 }
 
-int HTABLE::contains(HKEY x) const {
+bool HTABLE::contains(HKEY x) const {
     unsigned int index = find_index(x);
     return (table->is_full(index));
 }
 
 #ifdef HVAL
-int HTABLE::find(HKEY x, HVAL& result) const {
+bool HTABLE::find(HKEY x, HVAL& result) const {
     unsigned int index = find_index(x);
     if (table->is_full(index)) {
         result = table->val(index);
-        return 1;
+        return true;
     } else {
-        return 0;
+        return false;
     }
 }
 #endif
 
 #ifdef HVAL
-int HTABLE::insert(HKEY key, HVAL val)
+bool HTABLE::insert(HKEY key, HVAL val)
 #else
-int HTABLE::insert(HKEY key)
+bool HTABLE::insert(HKEY key)
 #endif
 {
     HTABLEREP* tbl = table;
@@ -151,7 +151,7 @@ int HTABLE::insert(HKEY key)
 #endif
 
     if (tbl->is_full(index)) {
-        return 0;
+        return false;
     } else {
         int is_new = tbl->is_empty(index);
         count++;
@@ -162,7 +162,7 @@ int HTABLE::insert(HKEY key)
         } else {
             delcount--;
         }
-        return 1;
+        return true;
     }
 }
 
@@ -191,7 +191,7 @@ void HTABLE::unsafe_insert(HKEY key, unsigned int h)
 #endif
 }
 
-int HTABLE::remove(HKEY key) {
+bool HTABLE::remove(HKEY key) {
     unsigned int index = find_index(key);
     if (table->is_full(index)) {
         table->kill(index);
@@ -201,15 +201,15 @@ int HTABLE::remove(HKEY key) {
         // XXX Automatically shrink?
         // if (count <= shrink_size) resize(count);
 
-        return 1;
+        return true;
     } else {
-        return 0;
+        return false;
     }
 }
 
 void HTABLE::clear() {
     HTABLEREP* tbl = table;
-    for (int i = tsize-1; i >= 0; i--)
+    for (int i = tsize - 1; i >= 0; i--)
         tbl->clear(i);
     count = 0;
     delcount = 0;
@@ -269,7 +269,7 @@ void HTABLE::init(int n) {
     table = new HTABLEREP(tsize);
 }
 
-void HTABLE::resize(int n) {
+void HTABLE::resize(unsigned int n) {
     if (n < count) n = count;
 
     // Save old contents and make new correctly sized table
@@ -294,7 +294,7 @@ void HTABLE::resize(int n) {
 }
 
 void HTABLE::check() const {
-    int i, j;
+    unsigned int i, j;
 
     /* Check for duplicates */
     for (i = 0; i < tsize; i++) {
@@ -382,7 +382,7 @@ void HTABLE::report_stats(char const* msg) const {
         if (!table->is_full(index)) continue;
         unsigned int h = htable_hash_elem(table->key(index));
         unsigned int j = htable_hash(h, slot_bits);
-        unsigned int p = 0;
+        int p = 0;
         while (j != index) {
             j = (j + 1) & mask;
             p++;

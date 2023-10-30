@@ -3,7 +3,7 @@
 #ifndef _MONTHH
 #define _MONTHH
 
-#include <chrono>;
+#include <chrono>
 
 using namespace std::chrono;
 
@@ -72,7 +72,9 @@ class Month {
     void Normalize();
 };
 
-inline Month::Month() { }
+inline Month::Month() {
+    rep = 0; // invalid default number
+}
 
 inline Month::Month(int number) {
     rep = number;

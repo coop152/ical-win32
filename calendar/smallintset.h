@@ -56,7 +56,7 @@ class SmallIntSet {
     /*
      * I/O.
      */
-    int Read(Lexer*);
+    bool Read(Lexer*);
     void Write(charArray*) const;
   protected:
     unsigned long bits;

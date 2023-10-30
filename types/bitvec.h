@@ -29,10 +29,10 @@ class BitVec {
     int length() const;
     // effects  Return bitvector length
 
-    int empty() const;
+    bool empty() const;
     // effects  Return true iff no bits are set in entire vector
 
-    int get(int i) const;
+    bool get(int i) const;
     // requires "i >= 0" and "i < length()"
     // effects  Returns true iff bit vector contains "i".
 
@@ -99,9 +99,9 @@ inline int BitVec::length() const {
     return len;
 }
 
-inline int BitVec::get(int i) const {
+inline bool BitVec::get(int i) const {
     assert((i >= 0) && (i < len));
-    return (word[word_numb(i)] & word_mask(i)) ? 1 : 0;
+    return (word[word_numb(i)] & word_mask(i)) ? true : false;
 }
 
 inline void BitVec::set(int i) {

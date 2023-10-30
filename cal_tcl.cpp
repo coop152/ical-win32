@@ -85,7 +85,7 @@ CalFile* Calendar_Tcl::name2file(char const* name) {
             return includes->slot(i);
         }
     }
-    return 0;
+    return nullptr;
 }
 
 CalFile* Calendar_Tcl::cal2file(Calendar* c) {
@@ -98,7 +98,7 @@ CalFile* Calendar_Tcl::cal2file(Calendar* c) {
             return includes->slot(i);
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void Calendar_Tcl::purge() {
@@ -182,9 +182,9 @@ void Calendar_Tcl::add_error(char const* t1, char const* t2) {
     /* Remove trailing null */
     msg->remove();
 
-    msg->concat(t1, strlen(t1));
+    msg->concat(t1, (int)strlen(t1));
     msg->concat(": ", 2);
-    msg->concat(t2, strlen(t2));
+    msg->concat(t2, (int)strlen(t2));
     msg->append('\n');
     msg->append('\0');
 }

@@ -49,7 +49,7 @@ Object* Object::find(Tcl_Interp* tcl, char const* h) {
     if (Tcl_GetCommandInfo(tcl, (char*)h, &i) && (i.proc == obj_handle))
         return ((Object*) i.clientData);
 
-    return 0;
+    return nullptr;
 }
 
 int Object::method(int, const char*[]) {

@@ -51,7 +51,7 @@ void Time::BreakDown(int& mday, weekday& wday, month& mon, int& year,
     mon = d.GetMonthNew();       /* tm_mon  in 0..11. Jan = 0 */
     year  = d.GetYear();
     hour  = floor<hours>(remainder).count();
-    min = duration_cast<minutes>( remainder % 1h ).count(); // mins into last hour
-    sec = duration_cast<seconds>( remainder % 1min ).count(); // seconds into last minute
-    milli = (remainder % 1s).count();
+    min = (int)duration_cast<minutes>( remainder % 1h ).count(); // mins into last hour
+    sec = (int)duration_cast<seconds>( remainder % 1min ).count(); // seconds into last minute
+    milli = (int)(remainder % 1s).count();
 }

@@ -20,7 +20,7 @@
 static Tcl_HashTable itemMap;
 static int itemMapInited = 0;
 
-static int check_permission(Tcl_Interp* tcl, Item_Tcl* item);
+static bool check_permission(Tcl_Interp* tcl, Item_Tcl* item);
 // effects      If "item" can be modified legally, then mark
 //              containing calendar as modified and return true.
 //              Else store an error message in "tcl->result"
@@ -928,18 +928,18 @@ static int item_wdays(ClientData c, Tcl_Interp* tcl, int argc, const char** argv
     TCL_Return(tcl, "");
 }
 
-static int check_permission(Tcl_Interp* tcl, Item_Tcl* item) {
+static bool check_permission(Tcl_Interp* tcl, Item_Tcl* item) {
     CalFile* file = item->calendar();
-    if (file == 0) return 1;
+    if (file == 0) return true;
 
     if (file->GetCalendar()->ReadOnly()) {
         Tcl_SetResult(tcl, const_cast<char*>("item is in readonly calendar"),
                 TCL_STATIC);
-        return 0;
+        return false;
     }
 
     file->Modified();
-    return 1;
+    return true;
 }
 
 static void trigger_item(Tcl_Interp* tcl, Item_Tcl* item, char const* t) {

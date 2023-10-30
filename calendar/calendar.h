@@ -38,16 +38,16 @@ class Calendar {
     /*
      * True iff this calendar is read-only.
      */
-    int ReadOnly() const { return readonly; }
-    void SetReadOnly(int t) { readonly = t; }
+    bool ReadOnly() const { return readonly; }
+    void SetReadOnly(bool t) { readonly = t; }
 
     /*
      * Read/Write.
      */
-    int Read(Lexer*);
+    bool Read(Lexer*);
     void Write(FILE*) const;
 
-    int Hidden(char const* uid) const;
+    bool Hidden(char const* uid) const;
     // effects - Returns true iff item named by uid should be hidden.
 
     void Hide(char const* uid);
@@ -75,7 +75,7 @@ class Calendar {
   protected:
     pointerArray& items;                // Items
     pointerArray& includes;             // Included calendars
-    int readonly;                       // Readonly calendar?
+    bool readonly;                      // Readonly calendar?
     UidSet*       hidden;               // Hidden items from other calendars
     OptionMap*    options;              // Calendar options
 
