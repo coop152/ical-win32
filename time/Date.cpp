@@ -9,12 +9,14 @@ year_month_day Date::epoch = 1970y / January / 1;
 
 
 Date::Date(Time t) {
-	int mday, yr;
-	month m;
-	weekday wday;
+	//int mday, yr;
+	//month m;
+	//weekday wday;
 
-	t.BreakDownDate(mday, wday, m, yr);
-	rep = year_month_day{ year{yr}, m, day{unsigned(mday)} };
+	//t.BreakDownDate(mday, wday, m, yr);
+	//rep = year_month_day{ year{yr}, m, day{unsigned(mday)} };
+	auto us = sys_time<microseconds>{ t };
+	rep = year_month_day{ floor<days>(us) };
 }
 
 Date Date::Last() {

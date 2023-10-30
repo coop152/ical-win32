@@ -9,6 +9,7 @@
 #include <stdlib.h>
 
 #include "Time_.h"
+#include "Date.h"
 #include <chrono>
 
 using namespace std::chrono;
@@ -19,8 +20,6 @@ using namespace std::chrono;
  * Time value for this run of the program.
  */
 
-int    Time::initialized = 0;   /* Initialized yet? */
-double Time::offset = 0.0;      /* Offset for time values */
 int    Time::junkInt = 0;
 
 void gettimeofday(struct win_timeval *tv) {
@@ -30,12 +29,6 @@ void gettimeofday(struct win_timeval *tv) {
     tv->tv_usec = us % 1000000;
 }
 
-void Time::Initialize() {
-    struct win_timeval buf;
-    gettimeofday(&buf);
-    offset = buf.tv_sec;
-    initialized = 1;
-}
 
 Time Time::Now() {
     struct win_timeval buf;
@@ -59,47 +52,32 @@ void Time::BreakDown(int& mday, weekday& wday, month& mon, int& year,
                      int& hour, int& min, int& sec, int& milli,
                      const char *tz) const
 {
-    char *old = getenv("TZ");
-    if (! initialized) Initialize();
-
-    time_t clock = (time_t) round(rep + offset);
-
-    if (tz) {
-        if ((old=getenv("TZ"))) old=_strdup(old);
-        //setenv("TZ", tz, 1);
-        SetEnvironmentVariable("TZ", tz);
-        _tzset();
-    }
-
-    struct tm* t = localtime(&clock);
-
-    if (tz) {
-        //if (old) setenv("TZ", old, 1); else unsetenv("TZ");
-        if (old) SetEnvironmentVariable("TZ", old);
-        else SetEnvironmentVariable("TZ", nullptr);
-        _tzset();
-        free(old);
-    }
-
-    mday  = t->tm_mday;                         /* tm_mday in 1..31 */
-    wday = weekday( t->tm_wday );     /* tm_wday in 0..6.  Sun = 0 */
-    mon = month( t->tm_mon + 1 );       /* tm_mon  in 0..11. Jan = 0 */
-    year  = t->tm_year + 1900;
-    hour  = t->tm_hour;
-    min   = t->tm_min;
-    sec   = t->tm_sec;
-    milli = (int)round((rep - floor(rep)) * 1000);
+    Date d = Date(*this);
+    // microseconds since start of day
+    microseconds remainder = rep - floor<days>(rep);
+    mday  = d.GetMDay();                         /* tm_mday in 1..31 */
+    wday = d.GetWDayNew();     /* tm_wday in 0..6.  Sun = 0 */
+    mon = d.GetMonthNew();       /* tm_mon  in 0..11. Jan = 0 */
+    year  = d.GetYear();
+    hour  = floor<hours>(remainder).count();
+    min = duration_cast<minutes>( remainder % 1h ).count(); // mins into last hour
+    sec = duration_cast<seconds>( remainder % 1min ).count(); // seconds into last minute
+    milli = (remainder % 1s).count();
 }
 
 Time::Time(const struct win_timeval& tv) {
-    if (! initialized) Initialize();
-    rep = (tv.tv_sec - offset) + ((double) tv.tv_usec) / 1000000.0;
+    //rep = (tv.tv_sec - offset) + ((double) tv.tv_usec) / 1000000.0;
+    auto sec = seconds{ tv.tv_sec };
+    auto us = microseconds{ tv.tv_usec };
+    rep = sys_time<microseconds>{ sec + us };
 }
 
 
 void Time::Convert(struct win_timeval& tv) const {
-    if (! initialized) Initialize();
-
-    tv.tv_sec  = (long) floor(rep + offset);
-    tv.tv_usec = (long) round((rep + offset - tv.tv_sec) * 1000000.0);
+    //tv.tv_sec  = (long) floor(rep + offset);
+    //tv.tv_usec = (long) round((rep + offset - tv.tv_sec) * 1000000.0);
+    auto sec = floor<seconds>(rep);
+    auto us = rep - sec;
+    tv.tv_sec = sec.time_since_epoch().count();
+    tv.tv_usec = us.count();
 }

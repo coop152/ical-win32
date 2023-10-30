@@ -67,17 +67,10 @@ class Time {
     void Convert(struct win_timeval&) const;
 
     double EpochSeconds() const;        /* Return seconds since epoch */
+    operator sys_time<microseconds>() { return rep; }
   private:
-    /*
-     * Rep is the number of seconds since some epoch.
-     */
-    double rep;
-
-    /* Time initialization stuff. */
-    static int    initialized;
-    static double offset;
-
-    static void Initialize();
+    // microseconds since the system epoch (almost definitely unix epoch)
+      sys_time<microseconds> rep;
 };
 
 /*
@@ -95,7 +88,8 @@ inline Time& Time::operator=(Time const& src) {
 }
 
 inline Time::Time(double r) {
-    rep = r;
+    // convert given second amount to microseconds
+    rep = sys_time<microseconds>{ microseconds{int(r * 1000000)} };
 }
 
 inline int operator == (Time const& a, Time const& b) {
@@ -123,7 +117,7 @@ inline int operator >= (Time const& a, Time const& b) {
 }
 
 inline double Time::EpochSeconds() const {
-    return rep;
+    return rep.time_since_epoch().count() / 1000000.0;
 }
 
 #endif /*TIMEH */
