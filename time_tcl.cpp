@@ -319,3 +319,21 @@ int Cmd_Time(ClientData, Tcl_Interp* tcl, int argc, const char** argv) {
 
     TCL_Error(tcl, "invalid arguments to time");
 }
+
+int Cmd_GetTzdb(ClientData, Tcl_Interp* tcl, int argc, const char** argv) {
+    std::string buffer;
+    if (argc != 1) {
+        TCL_Error(tcl, "invalid arguments to getTzdb");
+    }
+    else {
+        auto& tzdb = get_tzdb().zones;
+        for (const time_zone &tz : tzdb)
+        {
+            buffer.append(tz.name());
+            buffer.append("\n");
+        }
+
+        Tcl_SetResult(tcl, buffer.data(), TCL_VOLATILE);
+        return TCL_OK;
+    }
+}

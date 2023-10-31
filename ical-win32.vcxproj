@@ -115,8 +115,7 @@
     <PostBuildEvent>
       <Command>xcopy /S /Y /I "$(ProjectDir)tcl" "$(TargetDir)tcl"
 xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tcl86t.dll" "$(TargetDir)"
-xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"
-xcopy /Y /I "$(ProjectDir)zone.tab" "$(TargetDir)"</Command>
+xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
       <Message>Copy tcl files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

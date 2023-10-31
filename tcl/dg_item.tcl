@@ -179,18 +179,16 @@ proc iedit_make_tzselect {w label} {
 
     global all_timezones lru_timezones
     if {! [array exists all_timezones] } {
-        # fill in timezone array
-        set zone_tab "zone.tab"
-        catch {set zone_tab [file join $env(TZDIR) "zone.tab"]}
-
-        set f [open $zone_tab]
+        set zones_db [get_tzdb]
+        set zones_db [string trim $zones_db \n]
+        set lines [split $zones_db "\n"]
         array set all_timezones {}
-        while {[gets $f line] >= 0} {
-            if {[regexp {^[A-Z][A-Z][ \t]+[-+0-9]+[ \t]+(\S+?)/(\S+)} $line unused super sub]} {
+
+        foreach l $lines {
+            if { [regexp {^(\S+?)/(\S+)$} $l unused super sub] } {
                 lappend all_timezones($super) $sub
             }
         }
-        close $f
     }
 
     $w.m.list add separator

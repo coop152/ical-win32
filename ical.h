@@ -44,6 +44,7 @@ extern int Cmd_CreateAppt       (ClientData, Tcl_Interp*, int, const char*[]);
 
 extern int Cmd_Date             (ClientData, Tcl_Interp*, int, const char*[]);
 extern int Cmd_Time             (ClientData, Tcl_Interp*, int, const char*[]);
+extern int Cmd_GetTzdb          (ClientData, Tcl_Interp*, int, const char*[]);
 
 /* Speedup routines. */
 extern int Cmd_MonthDays        (ClientData, Tcl_Interp*, int, const char*[]);
