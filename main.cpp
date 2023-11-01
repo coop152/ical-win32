@@ -200,3 +200,9 @@ static int eval_list(Tcl_Interp* tcl, const char** list) {
     delete [] buf;
     return result;
 }
+
+// Entrypoint for a Windows desktop application (So that a console window doesn't open with the program)
+int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
+    main(__argc, __argv);
+}

@@ -108,7 +108,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>lib/IronTcl/lib/tcl86t.lib;lib/IronTcl/lib/tk86t.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>

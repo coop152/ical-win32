@@ -99,9 +99,6 @@
     <ClCompile Include="time\WeekDay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="time\Year.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h">
@@ -120,9 +117,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="collect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="types\Array.h">
@@ -209,9 +203,6 @@
     <ClInclude Include="time\WeekDay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="time\Year.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cal_tcl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -226,163 +217,57 @@
     <None Include="bitmaps\sleft.xbm" />
     <None Include="bitmaps\sright.xbm" />
     <None Include="bitmaps\todo.xbm" />
-  </ItemGroup>
-  <ItemGroup>
-    <CopyFileToFolders Include="tcl\actions.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\alarm.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\apptlist.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\canvas.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\canvsup.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\class.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dateeditor.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dayview.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_alarms.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_bug.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_colors.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_error.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_file.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_item.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_key.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_monthr.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_num.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_print.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_range.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_string.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\dg_wdays.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_yn.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\dg_ync.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\filesel.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\help.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\hooks.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\ical_doc.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\ical_text.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\ical_x.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\interface_doc.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\io.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\itemlist.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\itemwindow.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\key.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\label.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\link.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\listing.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\menus.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\notelist.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\parse.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\pref.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\print.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\ps_header.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\ruler.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\startup.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\support.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\support.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tclIndex">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\tclIndex">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\tcllib\textwin.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\timerange.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="tcl\trigger.tcl">
-      <Filter>Tcl Files</Filter>
-    </CopyFileToFolders>
+    <None Include="tcl\actions.tcl" />
+    <None Include="tcl\alarm.tcl" />
+    <None Include="tcl\apptlist.tcl" />
+    <None Include="tcl\canvsup.tcl" />
+    <None Include="tcl\dateeditor.tcl" />
+    <None Include="tcl\dayview.tcl" />
+    <None Include="tcl\dg_alarms.tcl" />
+    <None Include="tcl\dg_colors.tcl" />
+    <None Include="tcl\dg_item.tcl" />
+    <None Include="tcl\dg_key.tcl" />
+    <None Include="tcl\dg_monthr.tcl" />
+    <None Include="tcl\dg_print.tcl" />
+    <None Include="tcl\dg_range.tcl" />
+    <None Include="tcl\dg_wdays.tcl" />
+    <None Include="tcl\help.tcl" />
+    <None Include="tcl\ical_doc.tcl" />
+    <None Include="tcl\ical_text.tcl" />
+    <None Include="tcl\ical_x.tcl" />
+    <None Include="tcl\interface_doc.tcl" />
+    <None Include="tcl\io.tcl" />
+    <None Include="tcl\itemlist.tcl" />
+    <None Include="tcl\itemwindow.tcl" />
+    <None Include="tcl\link.tcl" />
+    <None Include="tcl\listing.tcl" />
+    <None Include="tcl\notelist.tcl" />
+    <None Include="tcl\parse.tcl" />
+    <None Include="tcl\pref.tcl" />
+    <None Include="tcl\print.tcl" />
+    <None Include="tcl\ps_header.tcl" />
+    <None Include="tcl\startup.tcl" />
+    <None Include="tcl\support.tcl" />
+    <None Include="tcl\tclIndex" />
+    <None Include="tcl\tcllib\canvas.tcl" />
+    <None Include="tcl\tcllib\class.tcl" />
+    <None Include="tcl\tcllib\dg_bug.tcl" />
+    <None Include="tcl\tcllib\dg_error.tcl" />
+    <None Include="tcl\tcllib\dg_file.tcl" />
+    <None Include="tcl\tcllib\dg_num.tcl" />
+    <None Include="tcl\tcllib\dg_string.tcl" />
+    <None Include="tcl\tcllib\dg_yn.tcl" />
+    <None Include="tcl\tcllib\dg_ync.tcl" />
+    <None Include="tcl\tcllib\filesel.tcl" />
+    <None Include="tcl\tcllib\hooks.tcl" />
+    <None Include="tcl\tcllib\key.tcl" />
+    <None Include="tcl\tcllib\label.tcl" />
+    <None Include="tcl\tcllib\menus.tcl" />
+    <None Include="tcl\tcllib\ruler.tcl" />
+    <None Include="tcl\tcllib\support.tcl" />
+    <None Include="tcl\tcllib\tclIndex" />
+    <None Include="tcl\tcllib\textwin.tcl" />
+    <None Include="tcl\timerange.tcl" />
+    <None Include="tcl\trigger.tcl" />
   </ItemGroup>
 </Project>
