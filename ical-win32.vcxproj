@@ -17,6 +17,14 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticTest|Win32">
+      <Configuration>StaticTest</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticTest|x64">
+      <Configuration>StaticTest</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -32,6 +40,12 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticTest|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -40,6 +54,12 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticTest|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -60,10 +80,16 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='StaticTest|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='StaticTest|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -71,6 +97,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='StaticTest|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
@@ -108,14 +146,39 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>lib/IronTcl/lib/tcl86t.lib;lib/IronTcl/lib/tk86t.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /S /Y /I "$(ProjectDir)tcl" "$(TargetDir)tcl"
 xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tcl86t.dll" "$(TargetDir)"
 xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
+      <Message>Copy tcl files</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='StaticTest|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>lib/statinclude;types;calendar;time</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/D "STATIC_BUILD" %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lib/tcl86ts.lib;lib/tclstub86.lib;lib/tk86ts.lib;Ws2_32.lib;Netapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /S /Y /I "$(ProjectDir)tcl" "$(TargetDir)tcl"</Command>
       <Message>Copy tcl files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -147,6 +210,7 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClCompile Include="calendar\smallintset.cpp" />
     <ClCompile Include="calendar\uid.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib/IronTcl/include;types;calendar;time;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='StaticTest|x64'">lib/IronTcl/include;types;calendar;time;$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="cal_tcl.cpp" />
     <ClCompile Include="dateeditor.cpp" />
@@ -160,6 +224,7 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClCompile Include="time\Month.cpp" />
     <ClCompile Include="time\parse.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib/IronTcl/include;types;calendar;time;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='StaticTest|x64'">lib/IronTcl/include;types;calendar;time;$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="time\Time.cpp" />
     <ClCompile Include="time\WeekDay.cpp" />
@@ -188,6 +253,41 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClInclude Include="dispatch.h" />
     <ClInclude Include="ical.h" />
     <ClInclude Include="item_tcl.h" />
+    <ClInclude Include="lib\IronTcl\include\tcl.h" />
+    <ClInclude Include="lib\IronTcl\include\tclDecls.h" />
+    <ClInclude Include="lib\IronTcl\include\tclOO.h" />
+    <ClInclude Include="lib\IronTcl\include\tclOODecls.h" />
+    <ClInclude Include="lib\IronTcl\include\tclPlatDecls.h" />
+    <ClInclude Include="lib\IronTcl\include\tclTomMath.h" />
+    <ClInclude Include="lib\IronTcl\include\tclTomMathDecls.h" />
+    <ClInclude Include="lib\IronTcl\include\tk.h" />
+    <ClInclude Include="lib\IronTcl\include\tkDecls.h" />
+    <ClInclude Include="lib\IronTcl\include\tkIntXlibDecls.h" />
+    <ClInclude Include="lib\IronTcl\include\tkPlatDecls.h" />
+    <ClInclude Include="lib\IronTcl\include\tommath_class.h" />
+    <ClInclude Include="lib\IronTcl\include\tommath_superclass.h" />
+    <ClInclude Include="lib\IronTcl\include\X11\cursorfont.h" />
+    <ClInclude Include="lib\IronTcl\include\X11\keysym.h" />
+    <ClInclude Include="lib\IronTcl\include\X11\keysymdef.h" />
+    <ClInclude Include="lib\IronTcl\include\X11\X.h" />
+    <ClInclude Include="lib\IronTcl\include\X11\Xatom.h" />
+    <ClInclude Include="lib\IronTcl\include\X11\Xfuncproto.h" />
+    <ClInclude Include="lib\IronTcl\include\X11\Xlib.h" />
+    <ClInclude Include="lib\IronTcl\include\X11\Xutil.h" />
+    <ClInclude Include="lib\statinclude\tcl.h" />
+    <ClInclude Include="lib\statinclude\tclDecls.h" />
+    <ClInclude Include="lib\statinclude\tclPlatDecls.h" />
+    <ClInclude Include="lib\statinclude\tk.h" />
+    <ClInclude Include="lib\statinclude\tkDecls.h" />
+    <ClInclude Include="lib\statinclude\tkIntXlibDecls.h" />
+    <ClInclude Include="lib\statinclude\X11\cursorfont.h" />
+    <ClInclude Include="lib\statinclude\X11\keysym.h" />
+    <ClInclude Include="lib\statinclude\X11\keysymdef.h" />
+    <ClInclude Include="lib\statinclude\X11\X.h" />
+    <ClInclude Include="lib\statinclude\X11\Xatom.h" />
+    <ClInclude Include="lib\statinclude\X11\Xfuncproto.h" />
+    <ClInclude Include="lib\statinclude\X11\Xlib.h" />
+    <ClInclude Include="lib\statinclude\X11\Xutil.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="time\Date.h" />
     <ClInclude Include="time\Month.h" />
@@ -215,6 +315,9 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <None Include="bitmaps\sleft.xbm" />
     <None Include="bitmaps\sright.xbm" />
     <None Include="bitmaps\todo.xbm" />
+    <None Include="lib\IronTcl\lib\tls1.8.0\tls.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="tcl\actions.tcl">
       <FileType>Document</FileType>
     </None>
@@ -371,6 +474,12 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <None Include="tcl\trigger.tcl">
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\tcl86ts.lib" />
+    <Library Include="lib\tcldde14s.lib" />
+    <Library Include="lib\tclreg13s.lib" />
+    <Library Include="lib\tk86ts.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

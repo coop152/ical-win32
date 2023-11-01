@@ -41,6 +41,7 @@ static int eval_list(Tcl_Interp*, const char** list);
 static int app_init(Tcl_Interp*);
 extern int Ical_Init(Tcl_Interp*);
 
+
 int main(int argc, char* argv[]) {
     // XXX Hacky scanning of argument list to figure out whether
     // or not Tk is needed, and also if a script is specified on the
@@ -199,4 +200,10 @@ static int eval_list(Tcl_Interp* tcl, const char** list) {
     int result = Tcl_Eval(tcl, buf);
     delete [] buf;
     return result;
+}
+
+// Entrypoint for a Windows desktop application (So that a console window doesn't open with the program)
+int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
+                     _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
+    main(__argc, __argv);
 }
