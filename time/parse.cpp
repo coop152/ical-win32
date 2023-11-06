@@ -8,7 +8,6 @@
 #include "Date.h"
 #include "Month.h"
 #include "WeekDay.h"
-#include "config.h"
 
 // Token types
 enum Token_Type {

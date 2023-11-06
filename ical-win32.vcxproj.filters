@@ -206,6 +206,9 @@
     <ClInclude Include="cal_tcl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="bitmaps\dleft.xbm" />
@@ -269,5 +272,15 @@
     <None Include="tcl\tcllib\textwin.tcl" />
     <None Include="tcl\timerange.tcl" />
     <None Include="tcl\trigger.tcl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ical-win32.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bitmaps\ical_icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

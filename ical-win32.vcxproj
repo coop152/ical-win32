@@ -50,7 +50,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -104,8 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>lib/IronTcl/include;types;calendar;time</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>lib/IronTcl/include;types;calendar;time</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,7 +116,7 @@
       <Command>xcopy /S /Y /I "$(ProjectDir)tcl" "$(TargetDir)tcl"
 xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tcl86t.dll" "$(TargetDir)"
 xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
-      <Message>Copy tcl files</Message>
+      <Message>Copy required files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -125,15 +125,26 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>lib/IronTcl/include;types;calendar;time</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lib/IronTcl/lib/tcl86t.lib;lib/IronTcl/lib/tk86t.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /S /Y /I "$(ProjectDir)tcl" "$(TargetDir)tcl"
+xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tcl86t.dll" "$(TargetDir)"
+xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy required files</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="calendar\arrays.cpp" />

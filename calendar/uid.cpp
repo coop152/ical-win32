@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "basic.h"
-#include "config.h"
 #include "misc.h"
 #include "uid.h"
 

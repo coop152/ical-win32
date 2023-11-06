@@ -20,8 +20,9 @@
 *.out
 *.app
 
-# VS directory
+# VS directories
 .vs
 Debug/
+Release/
 x64/
 /ical-win32.vcxproj.user
