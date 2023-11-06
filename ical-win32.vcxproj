@@ -189,6 +189,7 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClInclude Include="ical.h" />
     <ClInclude Include="item_tcl.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="time\Date.h" />
     <ClInclude Include="time\Month.h" />
     <ClInclude Include="time\parse.h" />
@@ -371,6 +372,12 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <None Include="tcl\trigger.tcl">
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ical-win32.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bitmaps\ical_icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
