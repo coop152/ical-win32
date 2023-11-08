@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <string.h>
+#include <filesystem>
 
 #include "basic.h"
 
@@ -57,18 +58,12 @@ CalFile::CalFile(bool ro, const char* name) {
     backupName = tmp;
 
     // Get directory name for access checks
-    char* lastSlash = strrchr(const_cast<char*>(name), '/');
-    if (lastSlash == 0) {
-        /* Calendar is in current directory */
-        tmp = new char[3];
-        strcpy(tmp, "./");
-    }
-    else {
-        int dirlen = lastSlash + 1 - name;
-        tmp = new char[dirlen+1];
-        strncpy(tmp, name, dirlen);
-        tmp[dirlen] = '\0';
-    }
+    char* lastSlash = strrchr(const_cast<char*>(name), '\\');
+    int dirlen = lastSlash + 1 - name;
+    tmp = new char[dirlen+1];
+    strncpy(tmp, name, dirlen);
+    tmp[dirlen] = '\0';
+    
     dirName = tmp;
 
     // Get temporary file name.  Make sure it works even
@@ -335,7 +330,7 @@ static char const* home_backup_file() {
         char const* home = getenv("HOME");
         if (home != nullptr) {
             char* copy = new char[strlen(home) + strlen(part_name) + 2];
-            sprintf(copy, "%s/%s", home, part_name);
+            sprintf(copy, "%s\\%s", home, part_name);
             full_name = copy;
         }
     }
@@ -344,7 +339,10 @@ static char const* home_backup_file() {
 }
 
 static char const* tmp_backup_file() {
-    static char const* prefix = "/tmp/ical_";
+    // how horrible is THIS?
+    auto sys_tmp_path = std::wstring(std::filesystem::temp_directory_path().c_str());
+    auto as_ascii = std::string(sys_tmp_path.begin(), sys_tmp_path.end());
+    static char const* prefix = as_ascii.c_str();
     static char const* full_name = nullptr;
     static int inited = false;
 
