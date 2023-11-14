@@ -47,8 +47,7 @@ class DayView {} {
 
     $self reconfig
 
-    set title {Calendar - }
-    append title [cal main]
+    set title [string cat "Calendar (" [cal main] ")"]
 
     wm title $n $title
     wm iconname $n ical
@@ -269,7 +268,7 @@ method DayView build_menu {} {
     menu-entry  $b File Save                    {ical_save}
     menu-entry  $b File Re-Read                 {ical_reread}
     menu-entry  $b File Print                   {ical_print}
-    menu-entry  $b File {Load Calendar}         {ical_loadcalendar}
+    menu-entry  $b File {Switch Calendar}       {ical_switchcalendar}
     menu-sep    $b File
     menu-entry  $b File {Include Calendar}      {ical_addinclude}
     menu-pull   $b File {Configure Calendar}    {ical_fill_config}

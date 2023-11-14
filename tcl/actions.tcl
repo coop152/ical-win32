@@ -326,11 +326,11 @@ action ical_addinclude writable {Include calendar} {} {
     }
 }
 
-action ical_loadcalendar writable {Load a different calendar} {} {
+action ical_switchcalendar writable {Load a different calendar} {} {
     global ical
 
     # display file dialogue
-    if ![get_file_name [ical_leader] "Load Calendar"\
+    if ![get_file_name [ical_leader] "Switch Calendar"\
              "Select calendar file to load." filename] return
 
     # Some sanity checking
@@ -357,9 +357,8 @@ action ical_loadcalendar writable {Load a different calendar} {} {
     # change window title to indicate current main calendar
     global dayview_id
     set n .dayview$dayview_id
-    set title {Calendar - }
-    append title [cal main]
 
+    set title [string cat "Calendar (" [cal main] ")"]
     wm title $n $title
 }
 

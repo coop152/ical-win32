@@ -395,6 +395,7 @@ static int cal_load(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[])
     cal->remove_item_handles(cal->main->GetCalendar());
 
     cal->main = newFile;
+    cal->fix_includes();
 
     trigger(tcl, "flush", 0);
 
