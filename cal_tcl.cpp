@@ -61,13 +61,13 @@ void Calendar_Tcl::remove_item_handles(Calendar* cal) {
     int count = cal->Size();
     for (int i = 0; i < count; i++) {
         Item_Tcl* item = Item_Tcl::find(cal->Get(i));
-        if (item != 0)
+        if (item != nullptr)
             delete item;
     }
 }
 
 CalFile* Calendar_Tcl::name2file(char const* name) {
-    if (name == 0) {
+    if (name == nullptr) {
         return main;
     }
 
@@ -77,7 +77,7 @@ CalFile* Calendar_Tcl::name2file(char const* name) {
 
     for (int i = 0; i < includes->size(); i++) {
         /* Extra check for name2file use in fix_includes */
-        if (includes->slot(i) == 0) {
+        if (includes->slot(i) == nullptr) {
             continue;
         }
 
@@ -196,6 +196,7 @@ static int cal_delete   (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_main     (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_include  (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_exclude  (ClientData, Tcl_Interp*, int, const char*[]);
+static int cal_load     (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_forincs  (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_add      (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_remove   (ClientData, Tcl_Interp*, int, const char*[]);
@@ -219,6 +220,7 @@ static Dispatch_Entry calendar_dispatch[] = {
     { "main",           0, 0, cal_main          },
     { "include",        1, 1, cal_include       },
     { "exclude",        1, 1, cal_exclude       },
+    { "load",           1, 1, cal_load          },
     { "forincludes",    2, 2, cal_forincs       },
     { "add",            1, 2, cal_add           },
     { "remove",         1, 1, cal_remove        },
@@ -379,6 +381,24 @@ static int cal_exclude(ClientData c, Tcl_Interp* tcl, int argc, const char* argv
     }
 
     TCL_Error(tcl, "no such calendar");
+}
+
+static int cal_load(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+    Calendar_Tcl* cal = (Calendar_Tcl*)c;
+
+    CalFile* newFile = new CalFile(0, argv[0]);
+    if (!newFile->Read()) {
+        delete newFile;
+        TCL_Error(tcl, (char*)CalFile::LastError());
+    }
+    cal->add_item_handles(newFile);
+    cal->remove_item_handles(cal->main->GetCalendar());
+
+    cal->main = newFile;
+
+    trigger(tcl, "flush", 0);
+
+    TCL_Return(tcl, "");
 }
 
 static int cal_forincs(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
