@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include "basic.h"
+#include <vector>
 
 class Item;
 class Lexer;
@@ -73,8 +74,8 @@ class Calendar {
     bool Visible() const { return GetOption("Visible")[0] == '1'; }
 
   protected:
-    pointerArray& items;                // Items
-    pointerArray& includes;             // Included calendars
+    std::vector<Item*> items;           // Items
+    std::vector<char*> includes;        // Included calendars
     bool readonly;                      // Readonly calendar?
     UidSet*       hidden;               // Hidden items from other calendars
     OptionMap*    options;              // Calendar options

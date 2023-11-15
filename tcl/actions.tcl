@@ -326,6 +326,42 @@ action ical_addinclude writable {Include calendar} {} {
     }
 }
 
+action ical_switchcalendar writable {Load a different calendar} {} {
+    global ical
+
+    # display file dialogue
+    if ![get_file_name [ical_leader] "Switch Calendar"\
+             "Select calendar file to load." filename] return
+
+    # Some sanity checking
+    if [catch {set e [file exists $filename]} msg] {
+        ical_error "$filename: $msg"
+        return
+    }
+
+    if $e {
+        if ![file isfile $filename] {
+            ical_error "$filename: not a regular file"
+            return
+        }
+
+        if ![file readable $filename] {
+            ical_error "$filename: permission denied"
+            return
+        }
+    }
+
+    if [catch {cal load [ical_expand_file_name $filename]} error] {
+        ical_error $error
+    }
+    # change window title to indicate current main calendar
+    global dayview_id
+    set n .dayview$dayview_id
+
+    set title [string cat "Calendar (" [cal main] ")"]
+    wm title $n $title
+}
+
 action ical_removeinc writable {Remove included calendar} {calendar} {
     if [cal readonly] {
         ical_error "[cal main]: permission denied"

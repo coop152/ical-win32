@@ -47,7 +47,9 @@ class DayView {} {
 
     $self reconfig
 
-    wm title $n Calendar
+    set title [string cat "Calendar (" [cal main] ")"]
+
+    wm title $n $title
     wm iconname $n ical
     image create photo applicationIcon -file $ICAL_ICON;wm iconphoto $n -default applicationIcon   
 
@@ -266,6 +268,7 @@ method DayView build_menu {} {
     menu-entry  $b File Save                    {ical_save}
     menu-entry  $b File Re-Read                 {ical_reread}
     menu-entry  $b File Print                   {ical_print}
+    menu-entry  $b File {Switch Calendar}       {ical_switchcalendar}
     menu-sep    $b File
     menu-entry  $b File {Include Calendar}      {ical_addinclude}
     menu-pull   $b File {Configure Calendar}    {ical_fill_config}
@@ -275,6 +278,8 @@ method DayView build_menu {} {
     menu-sep    $b File
     menu-entry  $b File Exit                    {ical_exit}
 
+    menu-entry  $b Edit {Undo}                  {ical_undo}
+    menu-sep    $b Edit
     menu-entry  $b Edit {Cut Item}              {ical_cut_or_hide}
     menu-entry  $b Edit {Copy Item}             {ical_copy}
     menu-entry  $b Edit {Paste Item}            {ical_paste}

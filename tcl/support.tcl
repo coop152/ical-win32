@@ -117,7 +117,7 @@ proc ical_title {calendar} {
 
     # No title in calendar:  Generate title from file name.
     if ![string compare $calendar [cal main]] {
-        return "Main Calendar"
+        return [string cat [file tail $calendar] " (Current Calendar)"]
     } else {
         return [file tail $calendar]
     }

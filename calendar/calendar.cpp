@@ -45,9 +45,7 @@ static OptionDesc option_list[] = {
 
 static OptionMap* option_default = 0;
 
-Calendar::Calendar()
-     : items(*(new pointerArray)),
-       includes(*(new pointerArray))
+Calendar::Calendar(): items(), includes()
 {
     // Initialize default option map if not done already
     if (option_default == 0) {
@@ -64,8 +62,6 @@ Calendar::Calendar()
 
 Calendar::~Calendar() {
     clear();
-    delete &items;
-    delete &includes;
     delete hidden;
     delete options;
 }
@@ -97,18 +93,16 @@ void Calendar::clear() {
 }
 
 void Calendar::Add(Item* item) {
-    items.append((void*) item);
+    items.push_back(item);
 }
 
 void Calendar::Remove(Item* item) {
     for (int i = 0; i < items.size(); i++) {
-        if (items[i] == (void*) item) {
+        if (items[i] == item) {
             /* Found it */
 
             /* Shift the other items over */
-            for (int j = i + 1; j < items.size(); j++)
-                items[j - 1] = items[j];
-            items.remove();
+            items.erase(items.begin() + i);
             break;
         }
     }
@@ -279,20 +273,17 @@ int Calendar::Size() const {
 }
 
 void Calendar::Include(char const* name) {
-    includes.append((void*) copy_string(name));
+    includes.push_back(copy_string(name));
 }
 
 void Calendar::Exclude(char const* name) {
     for (int i = 0; i < includes.size(); i++) {
-        if (strcmp(name, ((char const*) includes[i])) == 0) {
-            char* includeName = (char*) includes[i];
+        if (strcmp(name, includes[i]) == 0) {
+            char* includeName = includes[i];
             delete includeName;
 
             /* Shift other includes over */
-            for (int j = i + 1; j < includes.size(); j++) {
-                includes[j - 1] = includes[j];
-            }
-            includes.remove();
+            includes.erase(includes.begin() + i);
             return;
         }
     }
