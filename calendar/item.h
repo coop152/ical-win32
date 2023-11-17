@@ -11,9 +11,9 @@
 #include "smallintset.h"
 #include "misc.h"
 #include "arrays.h"
+#include "options.h"
 
 class Lexer;
-class OptionMap;
 
 class Notice;
 class Appointment;
@@ -166,7 +166,7 @@ class Item {
     char*       hilite;
     bool        todo;
     bool        done;
-    OptionMap*  options;
+    OptionMap   options;
 
     void CopyTo(Item*) const;
 };

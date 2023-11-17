@@ -15,30 +15,17 @@
 //}
 
 void OptionMap::store(char const* key, char const* value) {
-    //char const* old_value;
-    //if (rep->fetch(key, old_value)) {
-    //    // Replace old value with new
-    //    rep->store(key, copy_string(value));
-    //    delete [] ((char*) old_value);
-    //}
-    //else {
-    //    // Insert new value
-    //    rep->store(copy_string(key), copy_string(value));
-    //}
     rep.insert_or_assign(key, value);
 }
 
 // XXX This is a memory leak of the key/value pair from the option map
 void OptionMap::remove(char const* key) {
-    //rep->remove(key);
     rep.erase(key);
 }
 
 void OptionMap::write(charArray* out) const {
     // Generated sorted list
     Array<const char*> list;
-    //for (OptionMap_Bindings b = rep; b.ok(); b.next())
-    //    list.append(b.key());
     for (auto& [k, v] : rep) {
         list.append(k.c_str());
     }

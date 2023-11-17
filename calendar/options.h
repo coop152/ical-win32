@@ -22,7 +22,7 @@
 class OptionMap {
   public:
     OptionMap();
-    OptionMap(OptionMap&); // copy constructor
+    //OptionMap(const OptionMap&); // copy constructor
     //~OptionMap();
 
     bool contains(char const* key) const;
@@ -38,7 +38,7 @@ class OptionMap {
 
 inline OptionMap::OptionMap() : rep() {}
 
-inline OptionMap::OptionMap(OptionMap &other) : rep(other.rep) {}
+//inline OptionMap::OptionMap(const OptionMap &other) : rep(other.rep) {}
 
 inline bool OptionMap::contains(char const* key) const {
     return (rep.contains(key));

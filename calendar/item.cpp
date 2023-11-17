@@ -22,7 +22,7 @@
 
 const int Item::defaultRemindStart = 1;
 
-Item::Item() {
+Item::Item(): options() {
     text = copy_string("");
     owner = copy_string("");
 
@@ -37,7 +37,6 @@ Item::Item() {
     hilite = copy_string("always");
     todo = 0;
     done = 0;
-    options = nullptr;
 }
 
 Item::~Item() {
@@ -46,8 +45,6 @@ Item::~Item() {
     delete [] uid;
     delete [] hilite;
     delete date;
-
-    if (options != nullptr) delete options;
 }
 
 bool Item::Read(Lexer* lex) {
@@ -134,8 +131,7 @@ bool Item::Parse(Lexer* lex, char const* keyword) {
                 lex->SetError("error reading date information");
                 return false;
             }
-            if (options == nullptr) options = new OptionMap;
-            options->store("Dates", val);
+            options.store("Dates", val);
         }
         return true;
     }
@@ -170,8 +166,7 @@ bool Item::Parse(Lexer* lex, char const* keyword) {
         return false;
     }
 
-    if (options == nullptr) options = new OptionMap;
-    options->store(key, val);
+    options.store(key, val);
     delete [] key;
     return true;
 }
@@ -203,9 +198,7 @@ void Item::Write(charArray* out) const {
     date->write(out);
     append_string(out, "]\n");
 
-    if (options != nullptr) {
-        options->write(out);
-    }
+    options.write(out);
 }
 
 void Item::CopyTo(Item* item) const {
@@ -220,48 +213,23 @@ void Item::CopyTo(Item* item) const {
     item->done = done;
     *item->date = *date;
     item->remindStart = remindStart;
-
     // Do NOT copy uid.  That would defeat the whole purpose of uids
 
-    // Clear any options in the destination
-    if (item->options != nullptr) {
-        delete item->options;
-        item->options = nullptr;
-    }
-
-    // Copy the option map
-    if (options != nullptr) {
-        item->options = new OptionMap(*item->options);
-        //for (OptionMap_Bindings o = options->bindings(); o.ok(); o.next()) {
-        //    item->options->store(o.key(), o.val());
-        //}
-    }
+    item->options = options;
 }
-
-#if 0
-void Item::SetUid(char const* u) {
-    // Make a copy before deleting the old uid because the old uid and "u"
-    // may be aliases of the same string.
-    char* new_uid = copy_string(u);
-    delete [] uid;
-    uid = new_uid;
-}
-#endif
 
 char const* Item::GetOption(char const* key) const {
     char const* val;
-    if (options == nullptr) return nullptr;
-    if (options->fetch(key, val)) return val;
-    return nullptr;
+    if (options.fetch(key, val)) return val;
+    else return nullptr;
 }
 
 void Item::SetOption(char const* key, char const* val) {
-    if (options == nullptr) options = new OptionMap;
-    options->store(key, val);
+    options.store(key, val);
 }
 
 void Item::RemoveOption(char const* key) {
-    if (options != nullptr) options->remove(key);
+    options.remove(key);
 }
 
 bool Item::similar(Item const* x) const {
