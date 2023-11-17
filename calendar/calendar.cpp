@@ -40,7 +40,7 @@ static OptionDesc option_list[] = {
     { "Color",            "<Default> <Default>" },
     { "Timezone",               "<Local>"       },
 
-    { 0,                        0               }
+    { nullptr,                  nullptr         }
 };
 
 static OptionMap* option_default = 0;
@@ -248,7 +248,7 @@ void Calendar::Write(FILE* file) const {
     for (int i = 0; i < items.size(); i++) {
         Item* item = (Item*) items[i];
 
-        if (item->AsNotice() != 0) {
+        if (item->AsNotice() != nullptr) {
             append_string(out, "Note [\n");
         }
         else {

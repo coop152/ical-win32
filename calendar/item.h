@@ -200,12 +200,12 @@ class Notice : public Item {
  */
 class Appointment : public Item {
   public:
-    Appointment() : start(30), length(30), alarms(0)
+    Appointment() : start(30), length(30), alarms(nullptr)
     { timezone=copy_string("<Local>"); cache.invalidate(); }
 
     ~Appointment() {
         delete [] timezone;
-        if (alarms != 0) delete alarms;
+        if (alarms != nullptr) delete alarms;
     }
 
     virtual bool Parse(Lexer*, char const* keyword);
@@ -241,7 +241,7 @@ class Appointment : public Item {
     //           valid until the item is modified or deleted.
 
     void SetAlarms(intArray* list) {
-        if (alarms == 0) alarms = new intArray;
+        if (alarms == nullptr) alarms = new intArray;
         alarms->clear();
         *alarms = *list;
     }
