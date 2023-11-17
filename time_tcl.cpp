@@ -135,19 +135,19 @@ int Cmd_Date(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
 
             // Set variables
             sprintf(buffer, "%d", result.EpochDays());
-            if (Tcl_SetVar(tcl, argv[3], buffer, 0) == NULL)
+            if (Tcl_SetVar(tcl, argv[3], buffer, 0) == nullptr)
                 TCL_Error(tcl, "could not set <date> result");
 
             char* pre = new char[start+1];
             strncpy(pre, argv[2], start);
             pre[start] = '\0';
-            if (Tcl_SetVar(tcl, argv[4], pre, 0) == NULL) {
+            if (Tcl_SetVar(tcl, argv[4], pre, 0) == nullptr) {
                 delete [] pre;
                 TCL_Error(tcl, "could not set <pre> result");
             }
             delete [] pre;
 
-            if (Tcl_SetVar(tcl, argv[5], argv[2]+start+length, 0) == NULL)
+            if (Tcl_SetVar(tcl, argv[5], argv[2]+start+length, 0) == nullptr)
                 TCL_Error(tcl, "could not set <post> result");
 
             TCL_Return(tcl, "1");
@@ -173,7 +173,7 @@ int Cmd_Time(ClientData, Tcl_Interp* tcl, int argc, const char** argv) {
 
     if (strcmp(cmd, "split") == 0) {
         bool all=false;
-        const char *tz=0;
+        const char *tz=nullptr;
         argc-=2;
         argv+=2;
 
@@ -260,19 +260,19 @@ int Cmd_Time(ClientData, Tcl_Interp* tcl, int argc, const char** argv) {
 
             // Set variables
             sprintf(buffer, "%d", result);
-            if (Tcl_SetVar(tcl, argv[3], buffer, 0) == NULL)
+            if (Tcl_SetVar(tcl, argv[3], buffer, 0) == nullptr)
                 TCL_Error(tcl, "could not set <time of day> result");
 
             char* pre = new char[start+1];
             strncpy(pre, argv[2], start);
             pre[start] = '\0';
-            if (Tcl_SetVar(tcl, argv[4], pre, 0) == NULL) {
+            if (Tcl_SetVar(tcl, argv[4], pre, 0) == nullptr) {
                 delete [] pre;
                 TCL_Error(tcl, "could not set <pre> result");
             }
             delete [] pre;
 
-            if (Tcl_SetVar(tcl, argv[5], argv[2]+start+length, 0) == NULL)
+            if (Tcl_SetVar(tcl, argv[5], argv[2]+start+length, 0) == nullptr)
                 TCL_Error(tcl, "could not set <post> result");
 
             TCL_Return(tcl, "1");
@@ -290,24 +290,24 @@ int Cmd_Time(ClientData, Tcl_Interp* tcl, int argc, const char** argv) {
 
             // Set variables
             sprintf(buffer, "%d", r1);
-            if (Tcl_SetVar(tcl, argv[3], buffer, 0) == NULL)
+            if (Tcl_SetVar(tcl, argv[3], buffer, 0) == nullptr)
                 TCL_Error(tcl, "could not set <start time> result");
 
             // Set variables
             sprintf(buffer, "%d", r2);
-            if (Tcl_SetVar(tcl, argv[4], buffer, 0) == NULL)
+            if (Tcl_SetVar(tcl, argv[4], buffer, 0) == nullptr)
                 TCL_Error(tcl, "could not set <finish time> result");
 
             char* pre = new char[start+1];
             strncpy(pre, argv[2], start);
             pre[start] = '\0';
-            if (Tcl_SetVar(tcl, argv[5], pre, 0) == NULL) {
+            if (Tcl_SetVar(tcl, argv[5], pre, 0) == nullptr) {
                 delete [] pre;
                 TCL_Error(tcl, "could not set <pre> result");
             }
             delete [] pre;
 
-            if (Tcl_SetVar(tcl, argv[6], argv[2]+start+length, 0) == NULL)
+            if (Tcl_SetVar(tcl, argv[6], argv[2]+start+length, 0) == nullptr)
                 TCL_Error(tcl, "could not set <post> result");
 
             TCL_Return(tcl, "1");

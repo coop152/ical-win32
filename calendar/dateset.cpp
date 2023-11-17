@@ -524,7 +524,7 @@ void DateSet::normalize() const {
         DateSetRep* newRep;
         while ((newRep = self->rep->normalize(self->start,
                                               self->finish,
-                                              self->deleted)) != 0) {
+                                              self->deleted)) != nullptr) {
             delete self->rep;
             self->rep = newRep;
         }

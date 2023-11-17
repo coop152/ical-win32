@@ -51,13 +51,13 @@ Item_Tcl::Item_Tcl(Tcl_Interp* tcl, Item* i, CalFile* c)
 
 Item_Tcl::~Item_Tcl() {
     Tcl_HashEntry* entry = Tcl_FindHashEntry(&itemMap, (char*)item);
-    assert((entry != 0) && (Tcl_GetHashValue(entry) == ((ClientData) this)));
+    assert((entry != nullptr) && (Tcl_GetHashValue(entry) == ((ClientData) this)));
     Tcl_DeleteHashEntry(entry);
 }
 
 Item_Tcl* Item_Tcl::find(Item* item) {
     Tcl_HashEntry* entry = Tcl_FindHashEntry(&itemMap, (char*)item);
-    return ((entry == 0) ? 0 : ((Item_Tcl*) Tcl_GetHashValue(entry)));
+    return ((entry == nullptr) ? nullptr : ((Item_Tcl*) Tcl_GetHashValue(entry)));
 }
 
 /*
@@ -155,7 +155,7 @@ static Dispatch_Entry item_dispatch[] = {
     { "finish",                 1,  2, item_finish      },
     { "deleteon",               1,  1, item_ondel       },
 
-    { 0,                        0, 0, 0                 }
+    { nullptr,                  0, 0, nullptr           }
 };
 
 int Item_Tcl::method(int argc, const char** argv) {
@@ -170,7 +170,7 @@ static int item_length(ClientData c, Tcl_Interp* tcl, int argc, const char** arg
     Item_Tcl* item = (Item_Tcl*) c;
 
     Appointment* appt = item->value()->AsAppointment();
-    if (appt != 0) {
+    if (appt != nullptr) {
         if (argc == 0) {
             char buffer[100];
             sprintf(buffer, "%d", appt->GetLength());
@@ -200,7 +200,7 @@ static int item_starttime(ClientData c, Tcl_Interp* tcl, int argc, const char** 
     int date;
 
     Appointment* appt = item->value()->AsAppointment();
-    if (appt == 0) {
+    if (appt == nullptr) {
         TCL_Error(tcl, "unknown command");
     }
 
@@ -237,7 +237,7 @@ static int item_timezone(ClientData c, Tcl_Interp* tcl, int argc, const char** a
     bool convert_remote=false;
 
     Appointment* appt = item->value()->AsAppointment();
-    if (appt == 0) {
+    if (appt == nullptr) {
         TCL_Error(tcl, "unknown command");
     }
 
@@ -260,18 +260,18 @@ static int item_timezone(ClientData c, Tcl_Interp* tcl, int argc, const char** a
 
 static int item_clone(ClientData c, Tcl_Interp* tcl, int argc, const char** argv) {
     Item_Tcl* item = (Item_Tcl*) c;
-    Item_Tcl* clone = new Item_Tcl(tcl, item->value()->Clone(), 0);
+    Item_Tcl* clone = new Item_Tcl(tcl, item->value()->Clone(), nullptr);
     TCL_Return(tcl, (char*) clone->handle());
 }
 
 static int item_is(ClientData c, Tcl_Interp* tcl, int argc, const char** argv) {
     Item_Tcl* item = (Item_Tcl*) c;
 
-    if ((strcmp(argv[0], "note") == 0) && (item->value()->AsNotice() != 0)) {
+    if ((strcmp(argv[0], "note") == 0) && (item->value()->AsNotice() != nullptr)) {
         TCL_Return(tcl, "1");
     }
 
-    if ((strcmp(argv[0], "appt") == 0) && (item->value()->AsAppointment()!=0)){
+    if ((strcmp(argv[0], "appt") == 0) && (item->value()->AsAppointment()!=nullptr)){
         TCL_Return(tcl, "1");
     }
 
@@ -283,8 +283,8 @@ static int item_delete(ClientData c, Tcl_Interp* tcl, int argc, const char** arg
     if (! check_permission(tcl, item)) return TCL_ERROR;
 
     CalFile* file = item->calendar();
-    if (file != 0) {
-        item->set_calendar(0);
+    if (file != nullptr) {
+        item->set_calendar(nullptr);
         file->GetCalendar()->Remove(item->value());
         file->Modified();
 
@@ -302,7 +302,7 @@ static int item_cal(ClientData c, Tcl_Interp* tcl, int argc, const char** argv) 
     Item_Tcl* item = (Item_Tcl*) c;
 
     CalFile* cal = item->calendar();
-    if (cal == 0) {
+    if (cal == nullptr) {
         TCL_Error(tcl, "item not in calendar");
     }
     TCL_Return(tcl, (char*)(cal->GetName()));
@@ -434,13 +434,13 @@ static int item_alarms(ClientData c, Tcl_Interp* tcl, int argc, const char** arg
     Item_Tcl* item = (Item_Tcl*) c;
 
     Appointment* appt = item->value()->AsAppointment();
-    if (appt == 0) {
+    if (appt == nullptr) {
         TCL_Error(tcl, "unknown command");
     }
 
     if (argc == 0) {
         intArray* alarms = appt->GetAlarms();
-        if (alarms == 0) {
+        if (alarms == nullptr) {
             TCL_Error(tcl, "no alarms");
         }
 
@@ -501,7 +501,7 @@ static int item_option(ClientData c, Tcl_Interp* tcl, int argc, const char** arg
 
     if (argc == 1) {
         char const* val = item->value()->GetOption(argv[0]);
-        if (val == 0) TCL_Error(tcl, "unknown item option");
+        if (val == nullptr) TCL_Error(tcl, "unknown item option");
         Tcl_SetResult(tcl, (char*) val, TCL_VOLATILE);
         return TCL_OK;
     }
@@ -519,7 +519,7 @@ static int item_doption(ClientData c, Tcl_Interp* tcl, int argc,const char* argv
 
     // Check whether option exists
     char const* val = item->value()->GetOption(argv[0]);
-    if (val == 0) TCL_Error(tcl, "unknown item option");
+    if (val == nullptr) TCL_Error(tcl, "unknown item option");
 
     item->value()->RemoveOption(argv[0]);
     trigger_item(tcl, item);
@@ -647,10 +647,10 @@ static int item_range(ClientData c, Tcl_Interp* tcl, int argc, const char** argv
     if (item->value()->range(s, f)) {
         char buffer[100];
         sprintf(buffer, "%d", s.EpochDays());
-        if (Tcl_SetVar(tcl, argv[0], buffer, 0) == NULL)
+        if (Tcl_SetVar(tcl, argv[0], buffer, 0) == nullptr)
             TCL_Error(tcl, "could not set range start variable");
         sprintf(buffer, "%d", f.EpochDays());
-        if (Tcl_SetVar(tcl, argv[1], buffer, 0) == NULL)
+        if (Tcl_SetVar(tcl, argv[1], buffer, 0) == nullptr)
             TCL_Error(tcl, "could not set range finish variable");
         TCL_Return(tcl, "1");
     }
@@ -930,7 +930,7 @@ static int item_wdays(ClientData c, Tcl_Interp* tcl, int argc, const char** argv
 
 static bool check_permission(Tcl_Interp* tcl, Item_Tcl* item) {
     CalFile* file = item->calendar();
-    if (file == 0) return true;
+    if (file == nullptr) return true;
 
     if (file->GetCalendar()->ReadOnly()) {
         Tcl_SetResult(tcl, const_cast<char*>("item is in readonly calendar"),
@@ -943,6 +943,6 @@ static bool check_permission(Tcl_Interp* tcl, Item_Tcl* item) {
 }
 
 static void trigger_item(Tcl_Interp* tcl, Item_Tcl* item, char const* t) {
-    if (item->calendar() != 0)
+    if (item->calendar() != nullptr)
         trigger(tcl, t, item->handle());
 }

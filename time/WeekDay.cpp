@@ -3,7 +3,7 @@
 #include "WeekDay.h"
 
 char const* WeekDay::name[8] = {
-    0,
+    nullptr,
     "Sunday",
     "Monday",
     "Tuesday",
@@ -14,7 +14,7 @@ char const* WeekDay::name[8] = {
     };
 
 char const* WeekDay::shortName[8] = {
-    0,
+    nullptr,
     "Sun",
     "Mon",
     "Tue",

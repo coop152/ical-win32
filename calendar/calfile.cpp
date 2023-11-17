@@ -211,8 +211,8 @@ Calendar* CalFile::ReRead() {
     int gotTime = GetModifyTime(fileName, newFileTime);
 
     Calendar* cal = ReadFrom(fileName);
-    Calendar* old = 0;
-    if (cal != 0) {
+    Calendar* old = nullptr;
+    if (cal != nullptr) {
         old = calendar;
         calendar = cal;
         calendar->SetReadOnly(readOnly);
@@ -311,7 +311,7 @@ void CalFile::written() {
 }
 
 static bool backup_file(char const* src, char const* dst, long mode) {
-    if (dst == 0) return false;
+    if (dst == nullptr) return false;
     if (!copy_file(src, dst)) return false;
 
     // XXX Ignoring error while changing mode of backup file
@@ -350,7 +350,7 @@ static char const* tmp_backup_file() {
     if (!inited) {
         inited = true;
         char const* uid = my_name();
-        if (uid != 0) {
+        if (uid != nullptr) {
             char* copy = new char[strlen(prefix) + strlen(uid) + 2];
             sprintf(copy, "%s%s~", prefix, uid);
             full_name = copy;

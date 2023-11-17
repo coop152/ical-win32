@@ -52,7 +52,7 @@ int Cmd_MonthDays(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
     }
 
     Calendar_Tcl* cal = find_cal(tcl, argv[1]);
-    if (cal == 0) {TCL_Error(tcl, "illegal calendar");}
+    if (cal == nullptr) {TCL_Error(tcl, "illegal calendar");}
 
     int dateDays;
     if (Tcl_GetInt(tcl, argv[3], &dateDays) != TCL_OK) {
@@ -100,7 +100,7 @@ int Cmd_HiliteLoop(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
     }
 
     Calendar_Tcl* cal = find_cal(tcl, argv[1]);
-    if (cal == 0) {TCL_Error(tcl, "illegal calendar");}
+    if (cal == nullptr) {TCL_Error(tcl, "illegal calendar");}
 
     int startDays;
     if (Tcl_GetInt(tcl, argv[3], &startDays) != TCL_OK) {
@@ -146,12 +146,12 @@ int Cmd_HiliteLoop(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]) {
 
         char buffer[20];
         sprintf(buffer, "%d", list[i].date.EpochDays());
-        if (Tcl_SetVar(tcl, dvar, buffer, 0) == NULL) {
+        if (Tcl_SetVar(tcl, dvar, buffer, 0) == nullptr) {
             Tcl_Free((char*) strlist);
             TCL_Error(tcl, "could not set loop variable");
         }
 
-        if (Tcl_SetVar(tcl, hvar, (char*)hilite, 0) == NULL) {
+        if (Tcl_SetVar(tcl, hvar, (char*)hilite, 0) == nullptr) {
             Tcl_Free((char*) strlist);
             TCL_Error(tcl, "could not set loop variable");
         }

@@ -33,7 +33,7 @@ void Object::init(Tcl_Interp* t, char const* ty, char const* h) {
     interp = t;
 
     /* Create TCL Command */
-    Tcl_CreateCommand(interp, name, obj_handle, (ClientData) this, NULL);
+    Tcl_CreateCommand(interp, name, obj_handle, (ClientData) this, nullptr);
 }
 
 Object::~Object() {

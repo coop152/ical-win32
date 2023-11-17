@@ -37,7 +37,7 @@ Item::Item() {
     hilite = copy_string("always");
     todo = 0;
     done = 0;
-    options = 0;
+    options = nullptr;
 }
 
 Item::~Item() {
@@ -47,7 +47,7 @@ Item::~Item() {
     delete [] hilite;
     delete date;
 
-    if (options != 0) delete options;
+    if (options != nullptr) delete options;
 }
 
 bool Item::Read(Lexer* lex) {
@@ -134,7 +134,7 @@ bool Item::Parse(Lexer* lex, char const* keyword) {
                 lex->SetError("error reading date information");
                 return false;
             }
-            if (options == 0) options = new OptionMap;
+            if (options == nullptr) options = new OptionMap;
             options->store("Dates", val);
         }
         return true;
@@ -170,7 +170,7 @@ bool Item::Parse(Lexer* lex, char const* keyword) {
         return false;
     }
 
-    if (options == 0) options = new OptionMap;
+    if (options == nullptr) options = new OptionMap;
     options->store(key, val);
     delete [] key;
     return true;
@@ -203,7 +203,7 @@ void Item::Write(charArray* out) const {
     date->write(out);
     append_string(out, "]\n");
 
-    if (options != 0) {
+    if (options != nullptr) {
         options->write(out);
     }
 }
@@ -224,13 +224,13 @@ void Item::CopyTo(Item* item) const {
     // Do NOT copy uid.  That would defeat the whole purpose of uids
 
     // Clear any options in the destination
-    if (item->options != 0) {
+    if (item->options != nullptr) {
         delete item->options;
-        item->options = 0;
+        item->options = nullptr;
     }
 
     // Copy the option map
-    if (options != 0) {
+    if (options != nullptr) {
         item->options = new OptionMap;
         for (OptionMap_Bindings o = options->bindings(); o.ok(); o.next()) {
             item->options->store(o.key(), o.val());
@@ -250,18 +250,18 @@ void Item::SetUid(char const* u) {
 
 char const* Item::GetOption(char const* key) const {
     char const* val;
-    if (options == 0) return nullptr;
+    if (options == nullptr) return nullptr;
     if (options->fetch(key, val)) return val;
     return nullptr;
 }
 
 void Item::SetOption(char const* key, char const* val) {
-    if (options == 0) options = new OptionMap;
+    if (options == nullptr) options = new OptionMap;
     options->store(key, val);
 }
 
 void Item::RemoveOption(char const* key) {
-    if (options != 0) options->remove(key);
+    if (options != nullptr) options->remove(key);
 }
 
 bool Item::similar(Item const* x) const {
@@ -315,7 +315,7 @@ bool Appointment::Parse(Lexer* lex, char const* keyword) {
     }
 
     if (strcmp(keyword, "Alarms") == 0) {
-        if (alarms == 0) alarms = new intArray;
+        if (alarms == nullptr) alarms = new intArray;
         alarms->clear();
 
         while (1) {
@@ -345,7 +345,7 @@ void Appointment::Write(charArray* out) const {
     format(out, "Length [%d]\n", length);
     if (has_timezone())
       format(out, "Timezone [%s]\n", timezone);
-    if (alarms != 0) {
+    if (alarms != nullptr) {
         append_string(out, "Alarms [");
         for (int i = 0; i < alarms->size(); i++) {
             int x = alarms->slot(i);
@@ -365,11 +365,11 @@ Item* Appointment::Clone() const {
     copy->SetLength(length);
     copy->SetTimezone(timezone, false);
 
-    if (copy->alarms != 0) {
+    if (copy->alarms != nullptr) {
         delete copy->alarms;
-        copy->alarms = 0;
+        copy->alarms = nullptr;
     }
-    if (alarms != 0) {
+    if (alarms != nullptr) {
         copy->alarms = new intArray(*alarms);
     }
 

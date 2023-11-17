@@ -269,9 +269,9 @@ class Appointment : public Item {
      * cache the last result to avoid expensive timezone conversions
      */
     mutable struct {
-        int from_min, to_min;
+        int from_min = -1, to_min = -1;
         Date from_d, to_d;
-        bool to_tz;
+        bool to_tz = false;
         void invalidate() { from_min=-1; }
     } cache;
 };

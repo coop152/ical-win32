@@ -81,7 +81,7 @@ template <typename Element>
 inline ArrayType<Element>::ArrayType() {
 	alloc_ = 0;
 	size_ = 0;
-	store_ = 0;
+	store_ = nullptr;
 }
 
 template <typename Element>
@@ -145,7 +145,7 @@ ArrayType<Element>::ArrayType(int predict) {
 	range_check(predict);
 	alloc_ = 0;
 	size_ = 0;
-	store_ = 0;
+	store_ = nullptr;
 	enlarge_to(predict);
 	size_ = 0;
 }

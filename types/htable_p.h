@@ -397,7 +397,7 @@ void HTABLE::report_stats(char const* msg) const {
             "%s: size %6d, present %6d, deleted %6d, "
             "probes(avg/max)= %5.3f/%d\n",
             msg, tsize, count, delcount,
-            ((double) (probes+count)) / ((double) count),
+            ((double)probes + count) / (double)count,
             max_probes);
 }
 

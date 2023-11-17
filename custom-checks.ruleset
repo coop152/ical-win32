@@ -13,7 +13,6 @@
     <Rule Id="C26140" Action="Warning" />
     <Rule Id="C26437" Action="Warning" />
     <Rule Id="C26439" Action="Warning" />
-    <Rule Id="C26477" Action="Warning" />
     <Rule Id="C26478" Action="Warning" />
     <Rule Id="C26479" Action="Warning" />
     <Rule Id="C26498" Action="Warning" />

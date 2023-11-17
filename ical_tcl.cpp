@@ -69,7 +69,7 @@ int Cmd_ExpandFileName(ClientData, Tcl_Interp* tcl, int argc, const char* argv[]
 
     Tcl_DString buf;
     char* result = Tcl_TranslateFileName(tcl, argv[1], &buf);
-    if (result != NULL) {
+    if (result != nullptr) {
         Tcl_SetResult(tcl, result, TCL_VOLATILE);
         Tcl_DStringFree(&buf);
         return TCL_OK;

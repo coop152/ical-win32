@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
         if (strcmp(argv[i], "-nodisplay") == 0) continue;
         argv[j++] = argv[i];
     }
-    argv[j] = 0;
+    argv[j] = nullptr;
     argc = j;
 
     if (!use_tk && have_script) {
@@ -154,15 +154,15 @@ int Ical_Init(Tcl_Interp* tcl) {
     }
 
     // Non-Tk ical commands
-    Tcl_CreateCommand(tcl, "calendar",     Cmd_CreateCalendar,  NULL, NULL);
-    Tcl_CreateCommand(tcl, "notice",       Cmd_CreateNotice,    NULL, NULL);
-    Tcl_CreateCommand(tcl, "appointment",  Cmd_CreateAppt,      NULL, NULL);
-    Tcl_CreateCommand(tcl, "date",         Cmd_Date,            NULL, NULL);
-    Tcl_CreateCommand(tcl, "ical_time",    Cmd_Time,            NULL, NULL);
-    Tcl_CreateCommand(tcl, "get_tzdb",     Cmd_GetTzdb,         NULL, NULL);
-    Tcl_CreateCommand(tcl, "de_monthdays", Cmd_MonthDays,       NULL, NULL);
-    Tcl_CreateCommand(tcl, "hilite_loop",  Cmd_HiliteLoop,      NULL, NULL);
-    Tcl_CreateCommand(tcl, "ical_expand_file_name", Cmd_ExpandFileName, 0, 0);
+    Tcl_CreateCommand(tcl, "calendar",     Cmd_CreateCalendar,  nullptr, nullptr);
+    Tcl_CreateCommand(tcl, "notice",       Cmd_CreateNotice,    nullptr, nullptr);
+    Tcl_CreateCommand(tcl, "appointment",  Cmd_CreateAppt,      nullptr, nullptr);
+    Tcl_CreateCommand(tcl, "date",         Cmd_Date,            nullptr, nullptr);
+    Tcl_CreateCommand(tcl, "ical_time",    Cmd_Time,            nullptr, nullptr);
+    Tcl_CreateCommand(tcl, "get_tzdb",     Cmd_GetTzdb,         nullptr, nullptr);
+    Tcl_CreateCommand(tcl, "de_monthdays", Cmd_MonthDays,       nullptr, nullptr);
+    Tcl_CreateCommand(tcl, "hilite_loop",  Cmd_HiliteLoop,      nullptr, nullptr);
+    Tcl_CreateCommand(tcl, "ical_expand_file_name", Cmd_ExpandFileName, nullptr, nullptr);
 
     // Initialize ical stuff
     if (Tcl_EvalFile(tcl, "./tcl/startup.tcl") != TCL_OK) {
@@ -180,7 +180,7 @@ static int eval_list(Tcl_Interp* tcl, const char** list) {
     // Get buffer size
     int i;
     int count = 0;
-    for (i = 0; list[i] != 0; i++) {
+    for (i = 0; list[i] != nullptr; i++) {
         count += strlen(list[i]);
         count++;                        // Space for newline
     }
@@ -188,7 +188,7 @@ static int eval_list(Tcl_Interp* tcl, const char** list) {
     // Copy lines into buffer
     int index = 0;
     char* buf = new char[count+1];
-    for (i = 0; list[i] != 0; i++) {
+    for (i = 0; list[i] != nullptr; i++) {
         strcpy(buf+index, list[i]);
         index += strlen(list[i]);
         buf[index] = '\n';

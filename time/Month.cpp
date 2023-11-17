@@ -3,7 +3,7 @@
 #include "Month.h"
 
 char const* Month::name[13] = {
-    0,
+    nullptr,
     "January",
     "February",
     "March",
@@ -19,7 +19,7 @@ char const* Month::name[13] = {
     };
 
 char const* Month::shortName[13] = {
-    0,
+    nullptr,
     "Jan",
     "Feb",
     "Mar",

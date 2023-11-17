@@ -130,7 +130,7 @@ void Calendar_Tcl::fix_includes() {
 
         /* Try to reuse file from old include list */
         CalFile* file = name2file(name);
-        if (file == 0) {
+        if (file == nullptr) {
             /* Create new file */
             file = new CalFile(0, name);
             if (! file->Read())
@@ -141,7 +141,7 @@ void Calendar_Tcl::fix_includes() {
             /* Reuse old calendar - need to mark old include list */
             for (int j = 0; j < includes->size(); j++) {
                 if (includes->slot(j) == file)
-                    includes->slot(j) = 0;
+                    includes->slot(j) = nullptr;
             }
         }
 
@@ -153,7 +153,7 @@ void Calendar_Tcl::fix_includes() {
         CalFile* file = includes->slot(i);
 
         // Still included in main calendar?
-        if (file == 0) continue;
+        if (file == nullptr) continue;
 
         // Get rid of it
         if (file->IsModified()) {
@@ -237,7 +237,7 @@ static Dispatch_Entry calendar_dispatch[] = {
     { "delete_option",  1, 3, cal_doption       },
     { "loop_forward",   5, 7, cal_loopf         },
     { "loop_backward",  5, 7, cal_loopb         },
-    { 0,                0, 0, 0                 }
+    { nullptr,          0, 0, nullptr           }
 };
 
 // Helper routine for parsing set of items that will be covered by
@@ -271,7 +271,7 @@ static int parse_items(Tcl_Interp* tcl, Calendar_Tcl* cal, ItemList& items,
 
     if ((argc >= 2) && (strcmp(argv[0], "-calendar") == 0)) {
         CalFile* file = cal->name2file(argv[1]);
-        if (file == 0) {
+        if (file == nullptr) {
             TCL_Error(tcl, "no such calendar");
         }
 
@@ -292,7 +292,7 @@ static int parse_items(Tcl_Interp* tcl, Calendar_Tcl* cal, ItemList& items,
         int isize = items.size();
         for (int i = 0; i < count; i++) {
             Object* obj = Object::find(tcl, list[i]);
-            if ((obj == 0) || (strcmp(obj->type(), "Item") != 0)) {
+            if ((obj == nullptr) || (strcmp(obj->type(), "Item") != 0)) {
                 Tcl_Free((char*) list);
                 items.remove(items.size() - isize);
                 TCL_Error(tcl, "no such item");
@@ -344,7 +344,7 @@ static int cal_include(ClientData c, Tcl_Interp* tcl, int argc, const char* argv
     cal->includes->append(newFile);
     cal->main->Modified();
 
-    trigger(tcl, "flush", 0);
+    trigger(tcl, "flush", nullptr);
 
     TCL_Return(tcl, "");
 }
@@ -373,7 +373,7 @@ static int cal_exclude(ClientData c, Tcl_Interp* tcl, int argc, const char* argv
             cal->includes->remove();
             cal->main->Modified();
 
-            trigger(tcl, "flush", 0);
+            trigger(tcl, "flush", nullptr);
 
             TCL_Return(tcl, "");
         }
@@ -396,7 +396,7 @@ static int cal_load(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[])
     cal->main = newFile;
     cal->fix_includes();
 
-    trigger(tcl, "flush", 0);
+    trigger(tcl, "flush", nullptr);
 
     TCL_Return(tcl, "");
 }
@@ -408,7 +408,7 @@ static int cal_forincs(ClientData c, Tcl_Interp* tcl, int argc, const char* argv
     const char* body = argv[1];
     for (int i = 0; i < cal->includes->size(); i++) {
         if (Tcl_SetVar(tcl, var, (char*) (cal->includes->slot(i)->GetName()),
-                       0) == NULL) {
+                       0) == nullptr) {
             TCL_Error(tcl, "could not set loop variable");
         }
 
@@ -426,19 +426,19 @@ static int cal_add(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
 
     // Find item
     Object* obj = Object::find(tcl, argv[0]);
-    if ((obj == 0) || (strcmp(obj->type(), "Item") != 0)) {
+    if ((obj == nullptr) || (strcmp(obj->type(), "Item") != 0)) {
         TCL_Error(tcl, "no such item");
     }
     Item_Tcl* item = (Item_Tcl*) obj;
 
     CalFile* file = cal->name2file(argv[1]);
-    if (file == 0) {
+    if (file == nullptr) {
         TCL_Error(tcl, "no such calendar");
     }
 
     // Permission checks on old and new calendars
     CalFile* old = item->calendar();
-    if ((old != 0) && old->GetCalendar()->ReadOnly()) {
+    if ((old != nullptr) && old->GetCalendar()->ReadOnly()) {
         TCL_Error(tcl, "permission denied");
     }
 
@@ -450,7 +450,7 @@ static int cal_add(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
     item->set_calendar(file);
 
     // Remove from old calendar
-    if (old != 0) {
+    if (old != nullptr) {
         old->GetCalendar()->Remove(item->value());
         old->Modified();
     }
@@ -459,7 +459,7 @@ static int cal_add(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
     file->GetCalendar()->Add(item->value());
     file->Modified();
 
-    trigger(tcl, ((old == 0) ? "add" : "change"), item->handle());
+    trigger(tcl, ((old == nullptr) ? "add" : "change"), item->handle());
 
     TCL_Return(tcl, "");
 }
@@ -469,20 +469,20 @@ static int cal_remove(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[
 
     // Find item
     Object* obj = Object::find(tcl, argv[0]);
-    if ((obj == 0) || (strcmp(obj->type(), "Item") != 0)) {
+    if ((obj == nullptr) || (strcmp(obj->type(), "Item") != 0)) {
         TCL_Error(tcl, "no such item");
     }
     Item_Tcl* item = (Item_Tcl*) obj;
 
     // Find file
     CalFile* file = item->calendar();
-    if (file == 0) TCL_Error(tcl, "no such calendar");
+    if (file == nullptr) TCL_Error(tcl, "no such calendar");
 
     if (file->GetCalendar()->ReadOnly()) {
         TCL_Error(tcl, "permission denied");
     }
 
-    item->set_calendar(0);
+    item->set_calendar(nullptr);
     file->GetCalendar()->Remove(item->value());
     file->Modified();
 
@@ -496,13 +496,13 @@ static int cal_hide(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[])
 
     // Find item
     Object* obj = Object::find(tcl, argv[0]);
-    if ((obj == 0) || (strcmp(obj->type(), "Item") != 0)) {
+    if ((obj == nullptr) || (strcmp(obj->type(), "Item") != 0)) {
         TCL_Error(tcl, "no such item");
     }
     Item_Tcl* item = (Item_Tcl*) obj;
 
     CalFile* file = item->calendar();
-    if (file == 0) {
+    if (file == nullptr) {
         TCL_Error(tcl, "no such calendar");
     }
 
@@ -533,7 +533,7 @@ static int cal_ronly(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]
     Calendar_Tcl* cal = (Calendar_Tcl*) c;
 
     CalFile* file = cal->name2file(argv[0]);
-    if (file == 0) {
+    if (file == nullptr) {
         TCL_Error(tcl, "no such calendar");
     }
 
@@ -544,7 +544,7 @@ static int cal_dirty(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]
     Calendar_Tcl* cal = (Calendar_Tcl*) c;
 
     CalFile* file = cal->name2file(argv[0]);
-    if (file == 0) {
+    if (file == nullptr) {
         TCL_Error(tcl, "no such calendar");
     }
 
@@ -555,7 +555,7 @@ static int cal_stale(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]
     Calendar_Tcl* cal = (Calendar_Tcl*) c;
 
     CalFile* file = cal->name2file(argv[0]);
-    if (file == 0) {
+    if (file == nullptr) {
         TCL_Error(tcl, "no such calendar");
     }
 
@@ -566,7 +566,7 @@ static int cal_save(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[])
     Calendar_Tcl* cal = (Calendar_Tcl*) c;
 
     CalFile* file = cal->name2file(argv[0]);
-    if (file == 0) {
+    if (file == nullptr) {
         TCL_Error(tcl, "no such calendar");
     }
 
@@ -585,12 +585,12 @@ static int cal_reread(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[
     Calendar_Tcl* cal = (Calendar_Tcl*) c;
 
     CalFile* file = cal->name2file(argv[0]);
-    if (file == 0) {
+    if (file == nullptr) {
         TCL_Error(tcl, "no such calendar");
     }
 
     Calendar* old = file->ReRead();
-    if (old == 0) {
+    if (old == nullptr) {
         TCL_Error(tcl, (char*) CalFile::LastError());
     }
 
@@ -605,7 +605,7 @@ static int cal_reread(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[
         /* XXX Report error??? */
     }
 
-    trigger(tcl, "flush", 0);
+    trigger(tcl, "flush", nullptr);
 
     TCL_Return(tcl, "");
 }
@@ -624,14 +624,14 @@ static int cal_reread(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[
 static int item_loop(Tcl_Interp* tcl, Occurrences const& list,
                      const char* ivar, const char* dvar, const char* body) {
     for (int i = 0; i < list.size(); i++) {
-        if (Tcl_SetVar(tcl, ivar, (char*) list[i].item->handle(), 0) == NULL) {
+        if (Tcl_SetVar(tcl, ivar, (char*) list[i].item->handle(), 0) == nullptr) {
             TCL_Error(tcl, "could not set loop variable");
         }
 
         if (dvar != 0) {
             char buffer[20];
             sprintf(buffer, "%d", list[i].date.EpochDays());
-            if (Tcl_SetVar(tcl, dvar, buffer, 0) == NULL) {
+            if (Tcl_SetVar(tcl, dvar, buffer, 0) == nullptr) {
                 TCL_Error(tcl, "could not set loop variable");
             }
         }
@@ -680,10 +680,10 @@ static int cal_loopf(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]
     if (argc > 5) TCL_Error(tcl, "too many arguments");
 
     // Find starting item
-    Item_Tcl* item = 0;
+    Item_Tcl* item = nullptr;
     if (strcmp(argv[0], "") != 0) {
         Object* obj = Object::find(tcl, argv[0]);
-        if ((obj == 0) || (strcmp(obj->type(), "Item") != 0)) {
+        if ((obj == nullptr) || (strcmp(obj->type(), "Item") != 0)) {
             TCL_Error(tcl, "no such item");
         }
         item = (Item_Tcl*) obj;
@@ -699,7 +699,7 @@ static int cal_loopf(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]
 
     // Special case handling if only some of the items from the first
     // date should be returned.
-    if (item != 0) {
+    if (item != nullptr) {
         Occurrences tmp;
         collect_occurrences(cal, items, tmp, start, start, 0);
         sort_occurrences(tmp);
@@ -747,10 +747,10 @@ static int cal_loopb(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]
     if (argc > 5) TCL_Error(tcl, "too many arguments");
 
     // Find starting item
-    Item_Tcl* item = 0;
+    Item_Tcl* item = nullptr;
     if (strcmp(argv[0], "") != 0) {
         Object* obj = Object::find(tcl, argv[0]);
-        if ((obj == 0) || (strcmp(obj->type(), "Item") != 0)) {
+        if ((obj == nullptr) || (strcmp(obj->type(), "Item") != 0)) {
             TCL_Error(tcl, "no such item");
         }
         item = (Item_Tcl*) obj;
@@ -766,7 +766,7 @@ static int cal_loopb(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]
 
     // Special case handling if only some of the items from the first
     // date should be returned.
-    if (item != 0) {
+    if (item != nullptr) {
         Occurrences tmp;
         collect_occurrences(cal, items, tmp, start, start, 0);
         sort_occurrences(tmp);
@@ -855,14 +855,14 @@ static int cal_loop(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[])
     }
 
     sort_occurrences(list);
-    return (item_loop(tcl, list, argv[0], 0, argv[1]));
+    return (item_loop(tcl, list, argv[0], nullptr, argv[1]));
 }
 
 static int cal_incal(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]){
     Calendar_Tcl* cal = (Calendar_Tcl*) c;
 
     CalFile* file = cal->name2file(argv[0]);
-    if (file == 0) {
+    if (file == nullptr) {
         TCL_Error(tcl, "no such calendar");
     }
 
@@ -885,7 +885,7 @@ static int cal_incal(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]
     }
 
     sort_occurrences(list);
-    return (item_loop(tcl, list, argv[1], 0, argv[2]));
+    return (item_loop(tcl, list, argv[1], nullptr, argv[2]));
 }
 
 static int cal_option(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
@@ -895,7 +895,7 @@ static int cal_option(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[
     // See if a specific calendar is mentioned.
     if ((argc > 2) && (strcmp(argv[0], "-calendar") == 0)) {
         file = cal->name2file(argv[1]);
-        if (file == 0) TCL_Error(tcl, "no such calendar");
+        if (file == nullptr) TCL_Error(tcl, "no such calendar");
         argv += 2;
         argc -= 2;
     }
@@ -904,7 +904,7 @@ static int cal_option(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[
 
     if (argc == 1) {
         char const* val = file->GetCalendar()->GetOption(argv[0]);
-        if (val != 0) {
+        if (val != nullptr) {
             Tcl_SetResult(tcl, (char*)val, TCL_VOLATILE);
             return TCL_OK;
         }
@@ -926,7 +926,7 @@ static int cal_doption(ClientData c, Tcl_Interp* tcl, int argc, const char* argv
     // See if a specific calendar is mentioned.
     if ((argc > 1) && (strcmp(argv[0], "-calendar") == 0)) {
         file = cal->name2file(argv[1]);
-        if (file == 0) TCL_Error(tcl, "no such calendar");
+        if (file == nullptr) TCL_Error(tcl, "no such calendar");
         argv += 2;
         argc -= 2;
     }
@@ -936,7 +936,7 @@ static int cal_doption(ClientData c, Tcl_Interp* tcl, int argc, const char* argv
 
     // Check that option exists
     char const* val = file->GetCalendar()->GetOption(argv[0]);
-    if (val == 0) TCL_Error(tcl, "unknown calendar option");
+    if (val == nullptr) TCL_Error(tcl, "unknown calendar option");
 
     file->GetCalendar()->RemoveOption(argv[0]);
     file->Modified();

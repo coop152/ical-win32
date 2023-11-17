@@ -14,7 +14,7 @@ int Dispatch(Dispatch_Entry* table, ClientData c, Tcl_Interp* tcl,
     argc -= 2;
     argv += 2;
 
-    for (int i = 0; table[i].command != 0; i++) {
+    for (int i = 0; table[i].command != nullptr; i++) {
         Dispatch_Entry* entry = table+i;
 
         if (strcmp(command, entry->command) == 0) {

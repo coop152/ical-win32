@@ -34,7 +34,7 @@ void collect_calendar(Calendar_Tcl* cal, Calendar* calendar, ItemList& list) {
 
     for (int i = 0; i < calendar->Size(); i++) {
         Item_Tcl* item = Item_Tcl::find(calendar->Get(i));
-        if (item == 0) continue;
+        if (item == nullptr) continue;
 
         // Ignore hidden items
         if (mainCalendar->Hidden(item->value()->GetUid())) continue;
@@ -76,8 +76,8 @@ static bool occurs_before(Occurrence const& xo, Occurrence const& yo) {
     // Compare by appt time
     Appointment* xa = x->AsAppointment();
     Appointment* ya = y->AsAppointment();
-    int xs = (xa == 0) ? -1 : xa->GetStart(true);
-    int ys = (ya == 0) ? -1 : ya->GetStart(true);
+    int xs = (xa == nullptr) ? -1 : xa->GetStart(true);
+    int ys = (ya == nullptr) ? -1 : ya->GetStart(true);
     if (xs < ys) return true;
     if (xs > ys) return false;
 
@@ -133,7 +133,7 @@ void trigger(Tcl_Interp* tcl, char const* ttype, char const* id) {
     buffer.concat(cmd, strlen(cmd));
     buffer.concat(ttype, strlen(ttype));
 
-    if (id != 0) {
+    if (id != nullptr) {
         buffer.append(' ');
         buffer.concat(id, strlen(id));
     }

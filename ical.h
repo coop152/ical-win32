@@ -23,6 +23,11 @@ extern void trigger(Tcl_Interp*, char const* ttype, char const* id = 0);
 
 // Miscellaneous TCL support.
 
+// TECHNICALLY the definition given in the header file is wrong because it uses 0 as a literal for null.
+// and the analyser does NOT like that.
+#undef TCL_STATIC
+#define TCL_STATIC nullptr
+
 #define TCL_Return(tcl,str)                     \
     do {                                        \
         Tcl_SetResult(tcl, (char *)(str), TCL_STATIC);  \

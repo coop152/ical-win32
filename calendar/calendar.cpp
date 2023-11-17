@@ -43,14 +43,14 @@ static OptionDesc option_list[] = {
     { nullptr,                  nullptr         }
 };
 
-static OptionMap* option_default = 0;
+static OptionMap* option_default = nullptr;
 
 Calendar::Calendar(): items(), includes()
 {
     // Initialize default option map if not done already
-    if (option_default == 0) {
+    if (option_default == nullptr) {
         option_default = new OptionMap;
-        for (int i = 0; option_list[i].key != 0; i++) {
+        for (int i = 0; option_list[i].key != nullptr; i++) {
             option_default->store(option_list[i].key, option_list[i].val);
         }
     }

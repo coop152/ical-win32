@@ -33,10 +33,10 @@ char const* my_name() {
 
 bool copy_file(char const* src, char const* dst) {
     FILE* in = fopen(src, "r");
-    if (in == 0) return false;
+    if (in == nullptr) return false;
 
     FILE* out = fopen(dst, "w");
-    if (out == 0) {
+    if (out == nullptr) {
         fclose(in);
         return false;
     }

@@ -205,7 +205,7 @@ static Token words[] = {
 
     { "to",             2,      TO_TOKEN,       0       },
 
-    { 0,                0,      OTHER_TOKEN,    0       }
+    { nullptr,          0,      OTHER_TOKEN,    0       }
 };
 
 static bool build_date(int m, int d, int y, Date& result) {
@@ -224,7 +224,7 @@ static bool build_date(int m, int d, int y, Date& result) {
 }
 
 static bool parse_word(char const* str, int len, Token& t) {
-    for (int i = 0; words[i].ptr != 0; i++) {
+    for (int i = 0; words[i].ptr != nullptr; i++) {
         if (len < words[i].len) continue;
         if (len > strlen(words[i].ptr)) continue;
         if (_strnicmp(str, words[i].ptr, len) != 0) continue;

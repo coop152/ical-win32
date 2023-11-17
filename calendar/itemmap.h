@@ -27,11 +27,11 @@ class ItemMapRep {
     inline Item*&      val(int i) const         { return list[i]; }
 
     inline int is_full(int i) const {
-        return ((list[i] != 0) && ((list[i] != ((Item*)-1))));
+        return ((list[i] != nullptr) && ((list[i] != ((Item*)-1))));
     }
 
     inline int is_empty(int i) const {
-        return (list[i] == 0);
+        return (list[i] == nullptr);
     }
 
     inline int is_del(int i) const {
@@ -39,7 +39,7 @@ class ItemMapRep {
     }
 
     inline void clear(int i) {
-        list[i] = 0;
+        list[i] = nullptr;
     }
 
     inline void kill(int i) {
