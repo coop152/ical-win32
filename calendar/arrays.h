@@ -4,7 +4,7 @@
 
 #include "Array.h"
 
-typedef ArrayType<char> charArray;
-typedef ArrayType<int> intArray;
+typedef Array<char> charArray;
+typedef Array<int> intArray;
 
 #endif /* _ARRAYS_H */

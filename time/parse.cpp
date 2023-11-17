@@ -41,7 +41,7 @@ struct Token {
     long        tvalue;         // Any value associated with this token
 };
 
-typedef ArrayType<Token> Tokens;
+typedef Array<Token> Tokens;
 
 static void parse_tokens(char const*, Tokens&);
 static void parse_token(char const*, Token&);

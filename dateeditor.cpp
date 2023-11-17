@@ -24,7 +24,7 @@
 #include "ical.h"
 #include "item_tcl.h"
 
-typedef ArrayType<char const*> HiliteList;
+typedef Array<char const*> HiliteList;
 
 static bool monday_first(Calendar_Tcl*);
 static bool contains(HiliteList const&, char const*);

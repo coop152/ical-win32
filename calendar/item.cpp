@@ -231,10 +231,10 @@ void Item::CopyTo(Item* item) const {
 
     // Copy the option map
     if (options != nullptr) {
-        item->options = new OptionMap;
-        for (OptionMap_Bindings o = options->bindings(); o.ok(); o.next()) {
-            item->options->store(o.key(), o.val());
-        }
+        item->options = new OptionMap(*item->options);
+        //for (OptionMap_Bindings o = options->bindings(); o.ok(); o.next()) {
+        //    item->options->store(o.key(), o.val());
+        //}
     }
 }
 

@@ -36,8 +36,8 @@ struct Occurrence {
     }
 };
 
-typedef ArrayType<Item_Tcl*> ItemList;
-typedef ArrayType<Occurrence> Occurrences;
+typedef Array<Item_Tcl*> ItemList;
+typedef Array<Occurrence> Occurrences;
 
 extern void collect_all(Calendar_Tcl*, ItemList& list, bool only_visible);
 // modifies     list

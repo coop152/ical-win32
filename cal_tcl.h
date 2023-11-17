@@ -14,7 +14,7 @@ class CalFile;
 class Item;
 class Item_Tcl;
 
-typedef ArrayType<CalFile*> FileList;
+typedef Array<CalFile*> FileList;
 
 class Calendar_Tcl : public Object {
   public:

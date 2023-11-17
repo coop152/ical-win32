@@ -13,8 +13,8 @@
 #include "dateset.h"
 #include "item.h"
 
-typedef ArrayType<Item_Tcl*> ItemList;
-typedef ArrayType<Occurrence> Occurrences;
+typedef Array<Item_Tcl*> ItemList;
+typedef Array<Occurrence> Occurrences;
 
 void collect_all(Calendar_Tcl* cal, ItemList& list, bool only_visible) {
     Calendar* mainCalendar = cal->main->GetCalendar();

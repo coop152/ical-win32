@@ -8,7 +8,7 @@
 #include "Date.h"
 #include "smallintset.h"
 
-typedef ArrayType<Date> DateList;
+typedef Array<Date> DateList;
 
 class DateSetRep;
 class Lexer;
