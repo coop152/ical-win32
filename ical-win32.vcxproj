@@ -155,7 +155,6 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="calendar\arrays.cpp" />
     <ClCompile Include="calendar\calendar.cpp" />
     <ClCompile Include="calendar\calfile.cpp" />
     <ClCompile Include="calendar\dateset.cpp" />

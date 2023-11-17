@@ -2,7 +2,6 @@
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
-#include "arrays.h"
 #include "Month.h"
 #include "WeekDay.h"
 
@@ -1719,8 +1718,6 @@ DateSetRep* MonthSetDateSetRep::normalize(Date& start, Date& finish,
 
     return nullptr;
 }
-
-implementArray(DateList,Date)
 
 static void advance_months(Month& month, int& year, int delta) {
     /* Advance by years */

@@ -3,8 +3,9 @@
 #ifndef SMALLINTSETH
 #define SMALLINTSETH
 
+#include <arrays.h>
+
 class Lexer;
-class charArray;
 
 static const int SISetLargestMember = 31;
 

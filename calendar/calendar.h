@@ -10,9 +10,7 @@
 class Item;
 class Lexer;
 class OptionMap;
-class pointerArray;
 class UidSet;
-class charArray;
 
 class Calendar {
   public:

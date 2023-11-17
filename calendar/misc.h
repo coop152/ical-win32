@@ -4,6 +4,8 @@
 
 /* Support routines. */
 
+#include <arrays.h>
+
 extern char* copy_string(char const* str);
 // effects - Return a newly allocated copy of "str".
 
@@ -14,7 +16,6 @@ extern bool copy_file(char const* src, char const* dst);
     // effects - Copy file named by "src" to file named by "dst"
     //           Return true iff successful.
 
-class charArray;
 
 extern void append_string(charArray*, char const* str);
     // effects - Append string to end of a buffer.  No null character

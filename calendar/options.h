@@ -11,10 +11,10 @@
 #include "basic.h"
 #include "hashfuncs.h"
 #include "ohashmap.h"
+#include "arrays.h"
 
 declareOpenHashMap(OptionMapRep,char const*,char const*,hash_string,cmp_string)
 
-class charArray;
 typedef OptionMapRep_Bindings OptionMap_Bindings;
 
 class OptionMap {

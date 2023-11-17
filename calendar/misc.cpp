@@ -67,7 +67,7 @@ void append_string(charArray* cbuf, char const* str) {
     cbuf->concat(str, strlen(str));
 }
 
-void format(charArray* cbuf, char const* format ...) {
+void format(charArray* cbuf, char const* format, ...) {
     static char buffer[4096];
 
     va_list ap;

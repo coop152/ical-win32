@@ -34,9 +34,9 @@ void OptionMap::remove(char const* key) {
 
 void OptionMap::write(charArray* out) const {
     // Generated sorted list
-    pointerArray list;
+    ArrayType<const char*> list;
     for (OptionMap_Bindings b = rep; b.ok(); b.next())
-        list.append((void*) b.key());
+        list.append(b.key());
 
     // This is slow, but the option list should be fairly small
     int i = 0;
@@ -45,12 +45,12 @@ void OptionMap::write(charArray* out) const {
         /* Find min element in list[i..] */
         int minIndex = i;
         for (int j = i+1; j < num; j++) {
-            if (strcmp((char const*)list[j],(char const*)list[minIndex]) < 0) {
+            if (strcmp(list[j], list[minIndex]) < 0) {
                 minIndex = j;
             }
         }
 
-        void* temp;
+        const char* temp;
         temp = list[i];
         list[i] = list[minIndex];
         list[minIndex] = temp;

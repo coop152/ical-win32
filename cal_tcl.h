@@ -14,7 +14,7 @@ class CalFile;
 class Item;
 class Item_Tcl;
 
-declareArray(FileList,CalFile*)
+typedef ArrayType<CalFile*> FileList;
 
 class Calendar_Tcl : public Object {
   public:

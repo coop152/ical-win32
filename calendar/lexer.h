@@ -5,12 +5,12 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <arrays.h>
 
 /*
  * Help in lexing.
  */
 
-class charArray;
 
 class Lexer {
   public:

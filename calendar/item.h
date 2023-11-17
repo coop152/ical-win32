@@ -10,10 +10,9 @@
 #include "dateset.h"
 #include "smallintset.h"
 #include "misc.h"
+#include "arrays.h"
 
 class Lexer;
-class charArray;
-class intArray;
 class OptionMap;
 
 class Notice;

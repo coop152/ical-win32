@@ -15,7 +15,6 @@
 #include "calfile.h"
 #include "uid.h"
 
-implementArray(FileList,CalFile*)
 
 Calendar_Tcl::Calendar_Tcl(Tcl_Interp* tcl, char const* h, char const* f)
     : Object(tcl, "Calendar", h)

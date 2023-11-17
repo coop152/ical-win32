@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "../types/Array.h"
+#include "arrays.h"
 
 #include "Date.h"
 #include "Month.h"
@@ -41,8 +41,7 @@ struct Token {
     long        tvalue;         // Any value associated with this token
 };
 
-declareArray(Tokens,Token)
-implementArray(Tokens,Token)
+typedef ArrayType<Token> Tokens;
 
 static void parse_tokens(char const*, Tokens&);
 static void parse_token(char const*, Token&);

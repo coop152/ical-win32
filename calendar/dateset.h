@@ -4,15 +4,14 @@
 
 #include "basic.h"
 #include "Array.h"
-#include "Date.h"
 #include "arrays.h"
+#include "Date.h"
 #include "smallintset.h"
 
-declareArray(DateList,Date)
+typedef ArrayType<Date> DateList;
 
 class DateSetRep;
 class Lexer;
-class charArray;
 /*
  * A date set is a mutable set of dates.
  */

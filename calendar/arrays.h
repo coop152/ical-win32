@@ -4,8 +4,7 @@
 
 #include "Array.h"
 
-declareArray(charArray,char)
-declareArray(intArray,int)
-declareArray(pointerArray,void*)
+typedef ArrayType<char> charArray;
+typedef ArrayType<int> intArray;
 
 #endif /* _ARRAYS_H */

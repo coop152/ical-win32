@@ -36,8 +36,8 @@ struct Occurrence {
     }
 };
 
-declareArray(ItemList,Item_Tcl*)
-declareArray(Occurrences,Occurrence)
+typedef ArrayType<Item_Tcl*> ItemList;
+typedef ArrayType<Occurrence> Occurrences;
 
 extern void collect_all(Calendar_Tcl*, ItemList& list, bool only_visible);
 // modifies     list

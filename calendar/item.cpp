@@ -10,7 +10,6 @@
 
 #include "Date.h"
 
-#include "arrays.h"
 #include "item.h"
 #include "lexer.h"
 #include "misc.h"
