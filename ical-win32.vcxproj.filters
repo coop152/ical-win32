@@ -137,9 +137,6 @@
     <ClInclude Include="types\intset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="types\ohashmap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="types\ohashset.h">
       <Filter>Header Files</Filter>
     </ClInclude>

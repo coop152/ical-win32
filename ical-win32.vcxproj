@@ -220,7 +220,6 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClInclude Include="types\htable.h" />
     <ClInclude Include="types\htable_p.h" />
     <ClInclude Include="types\intset.h" />
-    <ClInclude Include="types\ohashmap.h" />
     <ClInclude Include="types\ohashset.h" />
     <ClInclude Include="types\tablerep.h" />
   </ItemGroup>

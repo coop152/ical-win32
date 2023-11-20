@@ -10,14 +10,10 @@
 #include <string.h>
 #include "basic.h"
 #include "hashfuncs.h"
-#include "ohashmap.h"
 #include "arrays.h"
 #include <map>
 #include <string>
 
-//declareOpenHashMap(OptionMapRep,char const*,char const*,hash_string,cmp_string)
-
-//typedef OptionMapRep_Bindings OptionMap_Bindings;
 
 class OptionMap {
   public:
@@ -30,7 +26,6 @@ class OptionMap {
     void store(char const* key, char const* value);
     void remove(char const* key);
 
-    //OptionMap_Bindings bindings() const;
     void write(charArray*) const;
   private:
     std::map<std::string, std::string> rep;
