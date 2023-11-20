@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "basic.h"
 #include "misc.h"
 #include "uid.h"
 
@@ -37,4 +36,3 @@ char const* uid_new() {
     return copy_string(buffer);
 }
 
-implementOpenHashSet(UidSet,char const*,hash_string,cmp_string)

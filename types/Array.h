@@ -7,7 +7,6 @@
  */
 
 #include <assert.h>
-#include "basic.h"
 
 template <typename T>
 class Array {

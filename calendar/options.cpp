@@ -1,18 +1,9 @@
 /* Copyright (c) 1994 Sanjay Ghemawat */
 #include <assert.h>
-#include "basic.h"
 #include "options.h"
 #include "arrays.h"
 #include "lexer.h"
 #include "misc.h"
-
-//OptionMap::~OptionMap() {
-//    for (OptionMap_Bindings b = rep; b.ok(); b.next()) {
-//        delete [] ((char*) b.key());
-//        delete [] ((char*) b.val());
-//    }
-//    delete rep;
-//}
 
 void OptionMap::store(char const* key, char const* value) {
     rep.insert_or_assign(key, value);
@@ -64,4 +55,3 @@ void OptionMap::write(charArray* out) const {
     }
 }
 
-//implementOpenHashMap(OptionMapRep,char const*,char const*,hash_string,cmp_string)

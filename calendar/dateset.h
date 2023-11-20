@@ -2,7 +2,6 @@
 #ifndef _DATESET_H
 #define _DATESET_H
 
-#include "basic.h"
 #include "Array.h"
 #include "arrays.h"
 #include "Date.h"

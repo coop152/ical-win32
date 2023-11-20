@@ -4,13 +4,12 @@
 #define _CALENDARH
 
 #include <stdio.h>
-#include "basic.h"
+#include "options.h"
+#include "item.h"
+#include "lexer.h"
 #include <vector>
+#include <set>
 
-class Item;
-class Lexer;
-class OptionMap;
-class UidSet;
 
 class Calendar {
   public:
@@ -52,7 +51,7 @@ class Calendar {
     void Hide(char const* uid);
     // effects - Add specified uid to set of uids of hidden items.
 
-    void RestrictHidden(UidSet const* set);
+    void RestrictHidden(std::set<char const*> set);
     // effects - Restrict hidden items to the specified set of items.
 
     // Options...
@@ -75,8 +74,8 @@ class Calendar {
     std::vector<Item*> items;           // Items
     std::vector<char*> includes;        // Included calendars
     bool readonly;                      // Readonly calendar?
-    UidSet*       hidden;               // Hidden items from other calendars
-    OptionMap*    options;              // Calendar options
+    std::set<char const*> hidden;       // Hidden items from other calendars
+    OptionMap* options;                 // Calendar options
 
     void clear();
     // modifies this

@@ -5,12 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "basic.h"
 #include "calendar.h"
-#include "item.h"
-#include "lexer.h"
 #include "misc.h"
-#include "options.h"
 #include "uid.h"
 #include "version.h"
 
@@ -45,7 +41,7 @@ static OptionDesc option_list[] = {
 
 static OptionMap* option_default = nullptr;
 
-Calendar::Calendar(): items(), includes()
+Calendar::Calendar(): items(), includes(), hidden()
 {
     // Initialize default option map if not done already
     if (option_default == nullptr) {
@@ -56,13 +52,11 @@ Calendar::Calendar(): items(), includes()
     }
     
     readonly = 0;
-    hidden = new UidSet;
     options = new OptionMap;
 }
 
 Calendar::~Calendar() {
     clear();
-    delete hidden;
     delete options;
 }
 
@@ -81,10 +75,10 @@ void Calendar::clear() {
     }
     includes.clear();
 
-    for (UidSet_Elements h = hidden; h.ok(); h.next()) {
-        delete [] (char*)(h.get());
+    for (char const* s : hidden) {
+        delete[] s;
     }
-    hidden->clear();
+    hidden.clear();
 
     delete options;
     options = new OptionMap;
@@ -258,8 +252,8 @@ void Calendar::Write(FILE* file) const {
         append_string(out, "]\n");
     }
 
-    for (UidSet_Elements h = hidden; h.ok(); h.next()) {
-        format(out, "Hide [%s]\n", h.get());
+    for (char const* s : hidden) {
+        format(out, "Hide [%s]\n", s);
     }
 
     // Just dump array out to file.
@@ -302,30 +296,27 @@ Item* Calendar::Get(int i) const {
 }
 
 bool Calendar::Hidden(char const* uid) const {
-    return (hidden->contains(uid));
+    return hidden.contains(uid);
 }
 
 void Calendar::Hide(char const* uid) {
-    hidden->insert(copy_string(uid));
+    hidden.insert(copy_string(uid));
 }
 
-void Calendar::RestrictHidden(UidSet const* set) {
-    UidSet* old = new UidSet;
+void Calendar::RestrictHidden(std::set<char const*> set) {
+    std::set<char const*> to_remove;
 
-    // Collect list of hide entries that can be removed 
-    for (UidSet_Elements h = hidden; h.ok(); h.next()) {
-        if (!set->contains(h.get())) {
-            old->insert(h.get());
+    // Collect list of hide entries that will be removed 
+    for (const char* h : hidden) {
+        if (!set.contains(h)) {
+            to_remove.insert(h);
         }
     }
-
     // Remove the collected entries.
-    for (UidSet_Elements x = old; x.ok(); x.next()) {
-        hidden->remove(x.get());
-        delete [] (char*)(x.get());
+    for (const char* r : to_remove) {
+        hidden.erase(r);
+        delete [] r;
     }
-
-    delete old;
 }
 
 char const* Calendar::GetOption(char const* key) const {

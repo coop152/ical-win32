@@ -45,15 +45,6 @@
     <ClCompile Include="time_tcl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="types\bitvec.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="types\hashfuncs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="types\intset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="calendar\calendar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -119,30 +110,6 @@
     <ClInclude Include="types\Array.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="types\basic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\bitvec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\hashfuncs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\htable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\htable_p.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\intset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\ohashset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\tablerep.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="calendar\calendar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -153,9 +120,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="calendar\item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\itemmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="calendar\lexer.h">

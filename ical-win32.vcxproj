@@ -182,9 +182,6 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClCompile Include="time\Time.cpp" />
     <ClCompile Include="time\WeekDay.cpp" />
     <ClCompile Include="time_tcl.cpp" />
-    <ClCompile Include="types\bitvec.cpp" />
-    <ClCompile Include="types\hashfuncs.cpp" />
-    <ClCompile Include="types\intset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="calendar\arrays.h" />
@@ -192,7 +189,6 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClInclude Include="calendar\calfile.h" />
     <ClInclude Include="calendar\dateset.h" />
     <ClInclude Include="calendar\item.h" />
-    <ClInclude Include="calendar\itemmap.h" />
     <ClInclude Include="calendar\lexer.h" />
     <ClInclude Include="calendar\misc.h" />
     <ClInclude Include="calendar\options.h" />
@@ -214,14 +210,6 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClInclude Include="time\Time_.h" />
     <ClInclude Include="time\WeekDay.h" />
     <ClInclude Include="types\Array.h" />
-    <ClInclude Include="types\basic.h" />
-    <ClInclude Include="types\bitvec.h" />
-    <ClInclude Include="types\hashfuncs.h" />
-    <ClInclude Include="types\htable.h" />
-    <ClInclude Include="types\htable_p.h" />
-    <ClInclude Include="types\intset.h" />
-    <ClInclude Include="types\ohashset.h" />
-    <ClInclude Include="types\tablerep.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bitmaps\dleft.xbm" />

@@ -8,8 +8,6 @@
 // to a raw hash map.
 
 #include <string.h>
-#include "basic.h"
-#include "hashfuncs.h"
 #include "arrays.h"
 #include <map>
 #include <string>
@@ -18,8 +16,6 @@
 class OptionMap {
   public:
     OptionMap();
-    //OptionMap(const OptionMap&); // copy constructor
-    //~OptionMap();
 
     bool contains(char const* key) const;
     bool fetch(char const* key, char const*& value) const;
@@ -33,8 +29,6 @@ class OptionMap {
 
 inline OptionMap::OptionMap() : rep() {}
 
-//inline OptionMap::OptionMap(const OptionMap &other) : rep(other.rep) {}
-
 inline bool OptionMap::contains(char const* key) const {
     return (rep.contains(key));
 }
@@ -42,7 +36,6 @@ inline bool OptionMap::contains(char const* key) const {
 // put located value in `value` if found, otherwise do not change.
 // return true if map contains key.
 inline bool OptionMap::fetch(char const* key, char const*& value) const {
-    //return (rep->fetch(key, value));
     if (auto x = rep.find(key); x != rep.end()) {
         value = x->second.c_str();
         return true;
@@ -50,9 +43,6 @@ inline bool OptionMap::fetch(char const* key, char const*& value) const {
     return false;
 }
 
-//inline OptionMap_Bindings OptionMap::bindings() const {
-//    OptionMap_Bindings b = rep;
-//    return b;
-//}
+
 
 #endif /* _OPTIONS_H */

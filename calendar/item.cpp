@@ -17,8 +17,6 @@
 #include "uid.h"
 #include "version.h"
 
-#define HTABLE_IMPLEMENT
-#include "itemmap.h"
 
 const int Item::defaultRemindStart = 1;
 

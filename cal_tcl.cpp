@@ -9,7 +9,6 @@
 #include "ical.h"
 #include "item_tcl.h"
 
-#include "basic.h"
 #include "Array.h"
 #include "calendar.h"
 #include "calfile.h"
@@ -102,7 +101,7 @@ CalFile* Calendar_Tcl::cal2file(Calendar* c) {
 
 void Calendar_Tcl::purge() {
     // Collect all active uids
-    UidSet* elements = new UidSet;
+    std::set<const char*> elements;
     for (int i = 0; i <= includes->size(); i++) {
         // Iterate once more than necessary to scan the main calendar as well
         Calendar* calendar = ((i >= includes->size())
@@ -110,14 +109,13 @@ void Calendar_Tcl::purge() {
                               : includes->slot(i))->GetCalendar();
 
         for (int j = 0; j < calendar->Size(); j++) {
-            elements->insert(calendar->Get(j)->GetUid());
+            elements.insert(calendar->Get(j)->GetUid());
         }
     }
 
     // Remove hide entries for all non-active items
     main->GetCalendar()->RestrictHidden(elements);
     main->Modified();
-    delete elements;
 }
 
 void Calendar_Tcl::fix_includes() {
