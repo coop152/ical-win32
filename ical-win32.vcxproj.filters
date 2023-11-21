@@ -134,9 +134,6 @@
     <ClInclude Include="calendar\smallintset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="calendar\statfix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="calendar\uid.h">
       <Filter>Header Files</Filter>
     </ClInclude>

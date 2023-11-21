@@ -193,7 +193,6 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClInclude Include="calendar\misc.h" />
     <ClInclude Include="calendar\options.h" />
     <ClInclude Include="calendar\smallintset.h" />
-    <ClInclude Include="calendar\statfix.h" />
     <ClInclude Include="calendar\uid.h" />
     <ClInclude Include="calendar\version.h" />
     <ClInclude Include="cal_tcl.h" />

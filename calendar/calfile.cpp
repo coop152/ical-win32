@@ -12,14 +12,14 @@
 #include <string.h>
 #include <filesystem>
 
-#include "basic.h"
 
 #include "calfile.h"
 #include "calendar.h"
 #include "lexer.h"
 #include "misc.h"
-#include "statfix.h"
 #include "uid.h"
+
+namespace fs = std::filesystem;
 
 // Only use "fsync" if it is available.
 #ifdef HAVE_FSYNC
@@ -98,8 +98,8 @@ bool CalFile::Write() {
     bool is_slink = false;
 
     int result = _stat(fileName, &buf);
-    if ((result >= 0) && S_ISLNK(buf.st_mode)) {
-        // Get mode for real referenced file
+    if ((result >= 0) && fs::is_symlink(fileName)) {
+        //Get mode for real referenced file
         is_slink = true;
     }
 
