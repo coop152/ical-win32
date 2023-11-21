@@ -4,7 +4,7 @@
 
 /* Support routines. */
 
-#include <arrays.h>
+#include "arrays.h"
 
 extern char* copy_string(char const* str);
 // effects - Return a newly allocated copy of "str".

@@ -7,7 +7,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "basic.h"
 #include "arrays.h"
 #include "lexer.h"
 #include <io.h>

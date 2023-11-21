@@ -184,7 +184,7 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <ClCompile Include="time_tcl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="calendar\arrays.h" />
+    <ClInclude Include="types\arrays.h" />
     <ClInclude Include="calendar\calendar.h" />
     <ClInclude Include="calendar\calfile.h" />
     <ClInclude Include="calendar\dateset.h" />

@@ -3,7 +3,7 @@
 #ifndef SMALLINTSETH
 #define SMALLINTSETH
 
-#include <arrays.h>
+#include "arrays.h"
 
 class Lexer;
 

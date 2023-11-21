@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
-#include "basic.h"
 #include "arrays.h"
 #include "misc.h"
 
