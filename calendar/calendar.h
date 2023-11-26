@@ -3,7 +3,6 @@
 #ifndef _CALENDARH
 #define _CALENDARH
 
-#include <stdio.h>
 #include "options.h"
 #include "item.h"
 #include "lexer.h"
@@ -23,6 +22,8 @@ class Calendar {
     Item* Get(int) const;               /* Get the ith item */
     void Add(Item*);                    /* Add an item */
     void Remove(Item*);                 /* Remove an item */
+    void SoftDelete(Item*);             /* Move an item into the delete history */
+    void Expunge(Item*);                /* Permanently remove an item from the delete history */
 
     /*
      * Included calendars.
@@ -43,7 +44,7 @@ class Calendar {
      * Read/Write.
      */
     bool Read(Lexer*);
-    void Write(FILE*) const;
+    void Write(FILE*, bool delete_history = false) const;
 
     bool Hidden(char const* uid) const;
     // effects - Returns true iff item named by uid should be hidden.
@@ -72,6 +73,7 @@ class Calendar {
 
   protected:
     std::vector<Item*> items;           // Items
+    std::vector<Item*> deleted;         // Items in the delete history (stored in .del calendar file)
     std::vector<char*> includes;        // Included calendars
     bool readonly;                      // Readonly calendar?
     std::set<char const*> hidden;       // Hidden items from other calendars

@@ -175,6 +175,13 @@ action ical_cut_or_hide item {Delete selected item} {} {
     }
 }
 
+action ical_delete item {Delete selected item and save in delete history} {} {
+    if ![ical_with_item i] return
+
+    # ical_clip $i
+    $i softdelete
+}
+
 action ical_cut witem {Delete selected item even if owned by another user} {} {
     if ![ical_with_mod_single_item i] return
 

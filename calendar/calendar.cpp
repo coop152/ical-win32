@@ -41,7 +41,7 @@ static OptionDesc option_list[] = {
 
 static OptionMap* option_default = nullptr;
 
-Calendar::Calendar(): items(), includes(), hidden()
+Calendar::Calendar(): items(), deleted(), includes(), hidden()
 {
     // Initialize default option map if not done already
     if (option_default == nullptr) {
@@ -94,9 +94,23 @@ void Calendar::Remove(Item* item) {
     for (int i = 0; i < items.size(); i++) {
         if (items[i] == item) {
             /* Found it */
-
-            /* Shift the other items over */
             items.erase(items.begin() + i);
+            break;
+        }
+    }
+}
+
+void Calendar::SoftDelete(Item* item) {
+    //??? Should this check if the item actually exists and error out if it doesn't?
+    Remove(item);
+    deleted.push_back(item);
+}
+
+void Calendar::Expunge(Item* item) {
+    for (int i = 0; i < deleted.size(); i++) {
+        if (deleted[i] == item) {
+            /* Found it */
+            deleted.erase(deleted.begin() + i);
             break;
         }
     }
@@ -228,7 +242,7 @@ bool Calendar::Read(Lexer* lex) {
     }
 }
 
-void Calendar::Write(FILE* file) const {
+void Calendar::Write(FILE* file, bool delete_history) const {
     charArray* out = new charArray;
 
     format(out, "Calendar [v%d.%d]\n", VersionMajor, VersionMinor);
@@ -239,8 +253,10 @@ void Calendar::Write(FILE* file) const {
         Lexer::PutString(out, name);
         append_string(out, "]\n");
     }
-    for (int i = 0; i < items.size(); i++) {
-        Item* item = (Item*) items[i];
+    // if delete_history is true, write out the delete history instead
+    const std::vector<Item*>& to_write = delete_history ? deleted : items; 
+    for (int i = 0; i < to_write.size(); i++) {
+        Item* item = (Item*) to_write[i];
 
         if (item->AsNotice() != nullptr) {
             append_string(out, "Note [\n");

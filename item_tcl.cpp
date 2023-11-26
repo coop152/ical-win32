@@ -68,6 +68,7 @@ static int item_timezone  (ClientData, Tcl_Interp*, int, const char**);
 static int item_clone     (ClientData, Tcl_Interp*, int, const char**);
 static int item_is        (ClientData, Tcl_Interp*, int, const char**);
 static int item_delete    (ClientData, Tcl_Interp*, int, const char**);
+static int item_softdel   (ClientData, Tcl_Interp*, int, const char**);
 static int item_cal       (ClientData, Tcl_Interp*, int, const char**);
 static int item_text      (ClientData, Tcl_Interp*, int, const char**);
 static int item_uid       (ClientData, Tcl_Interp*, int, const char**);
@@ -107,6 +108,7 @@ static int item_mlweekday (ClientData, Tcl_Interp*, int, const char**);
 
 static Dispatch_Entry item_dispatch[] = {
     { "delete",                 0, 0, item_delete       },
+    { "softdelete",             0, 0, item_softdel      },
     { "clone",                  0, 0, item_clone        },
 
     { "length",                 0, 1, item_length       },
@@ -293,6 +295,22 @@ static int item_delete(ClientData c, Tcl_Interp* tcl, int argc, const char** arg
 
     delete item->value();
     delete item;
+
+    TCL_Return(tcl, "");
+}
+
+static int item_softdel(ClientData c, Tcl_Interp* tcl, int argc, const char** argv) {
+    Item_Tcl* item = ((Item_Tcl*)c);
+    if (!check_permission(tcl, item)) return TCL_ERROR;
+
+    CalFile* file = item->calendar();
+    if (file != nullptr) {
+        file->GetCalendar()->SoftDelete(item->value());
+        file->Modified();
+
+        // XXX Only send triggers when deleting an item from a calendar???
+        //trigger(tcl, "delete", item->handle());
+    }
 
     TCL_Return(tcl, "");
 }

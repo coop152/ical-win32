@@ -278,7 +278,7 @@ method DayView build_menu {} {
     menu-sep    $b File
     menu-entry  $b File Exit                    {ical_exit}
 
-    menu-entry  $b Edit {Undo}                  {ical_undo}
+    menu-entry  $b Edit {Delete Item}           {ical_delete}
     menu-sep    $b Edit
     menu-entry  $b Edit {Cut Item}              {ical_cut_or_hide}
     menu-entry  $b Edit {Copy Item}             {ical_copy}

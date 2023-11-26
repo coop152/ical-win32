@@ -70,11 +70,11 @@ class CalFile {
      */
     static char const* LastError();
   protected:
-    bool  readOnly;             /* Read-only mode? */
-    char* fileName;             /* Calendar file name */
-    char* backupName;           /* Backup file name */
-    char* tmpName;              /* Tmp file name */
-    char* dirName;              /* Directory name */
+    bool        readOnly;             /* Read-only mode? */
+    std::string fileName;             /* Calendar file name */
+    std::string backupName;           /* Backup file name */
+    std::string tmpName;              /* Tmp file name */
+    std::string dirName;              /* Directory name */
 
     Calendar* calendar;         /* Volatile calendar state */
 
@@ -86,7 +86,7 @@ class CalFile {
     bool  lastModifyValid;      /* Is lastModifyTime valid? */
 
     /* Utility routines */
-    static bool GetModifyTime(char const*, Time&);
+    static bool GetModifyTime(std::string, Time&);
 
     // Update calendar readonly status.
     void PerformAccessCheck();
@@ -95,17 +95,17 @@ class CalFile {
     static const char* lastError;
 
     // Read/Write calendar from/to named file
-    static Calendar* ReadFrom(const char*);
-    static bool WriteTo(Calendar*, const char*);
+    static Calendar* ReadFrom(std::string);
+    static bool WriteTo(Calendar*, std::string);
 
     // Other internal IO routines
-    bool WriteNew(long mode);            // Save without writing in-place
-    bool WriteInPlace(long mode);        // Write in-place to preserve links
-    bool CopyBackup(long mode);          // Make a backup by copying
+    bool WriteNew();            // Save without writing in-place
+    bool WriteInPlace();        // Write in-place to preserve links
+    bool CopyBackup();          // Make a backup by copying
 };
 
 inline char const* CalFile::GetName() {
-    return fileName;
+    return fileName.c_str();
 }
 
 inline Calendar* CalFile::GetCalendar() {
