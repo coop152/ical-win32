@@ -197,3 +197,13 @@ void Lexer::PutString(charArray* out, char const* x) {
         x++;
     }
 }
+
+std::string Lexer::EscapeString(std::string x) {
+    std::string out = "";
+    for (char c : x) {
+        // escape any of these three characters, if present
+        if ((c == '\\') || (c == '[') || (c == ']')) out += "\\";
+        out += c;
+    }
+    return out;
+}

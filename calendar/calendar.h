@@ -8,7 +8,7 @@
 #include "lexer.h"
 #include <vector>
 #include <set>
-
+#include <fstream>
 
 class Calendar {
   public:
@@ -44,7 +44,7 @@ class Calendar {
      * Read/Write.
      */
     bool Read(Lexer*);
-    void Write(FILE*, bool delete_history = false) const;
+    void Write(std::ofstream&, bool delete_history = false) const;
 
     bool Hidden(char const* uid) const;
     // effects - Returns true iff item named by uid should be hidden.

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "arrays.h"
+#include <string>
 
 /*
  * Help in lexing.
@@ -98,6 +99,12 @@ class Lexer {
      * a call to GetString.  No terminating "]" is output.
      */
     static void PutString(charArray*, char const* x);
+
+     /*
+     * Write "string" to out so that it can be later read back with
+     * a call to GetString.  No terminating "]" is output.
+     */
+    static std::string EscapeString(std::string x);
 
     /*
      * Return current position in file.

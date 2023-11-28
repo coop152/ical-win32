@@ -248,11 +248,13 @@ class DateSet {
      *          have arbitrary contents.
      */
     bool read(Lexer* lexer);
-
+    
     /*
-     * effects  Appendsa string representation of *this to buffer.
+     * effects  Appends a string representation of *this to buffer.
      */
     void write(charArray* buffer) const;
+
+    operator std::string();
   private:
     DateSetRep* rep;            /* Type specific representation */
     bool        normalized;     /* Rep has been normalized? */

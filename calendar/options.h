@@ -23,6 +23,8 @@ class OptionMap {
     void remove(char const* key);
 
     void write(charArray*) const;
+
+    operator std::string();
   private:
     std::map<std::string, std::string> rep;
 };

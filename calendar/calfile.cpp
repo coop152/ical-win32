@@ -6,6 +6,7 @@
 
 #include "calfile.h"
 #include "calendar.h"
+#include <fstream>
 
 namespace fs = std::filesystem;
 
@@ -225,21 +226,35 @@ Calendar* CalFile::ReadFrom(std::string name) {
 }
 
 bool CalFile::WriteTo(Calendar* cal, std::string name) {
-    FILE* output = fopen(name.c_str(), "w");
-    if (!output) {
-        lastError = "could not open file for writing calendar";
+    //FILE* output = fopen(name.c_str(), "w");
+    //if (!output) {
+    //    lastError = "could not open file for writing calendar";
+    //    return false;
+    //}
+
+    //cal->Write(output);
+    //fflush(output);
+    //if (ferror(output) || (fsync(_fileno(output)) < 0)) {
+    //    lastError = "error writing calendar file";
+    //    fclose(output);
+    //    return false;
+    //}
+
+    //fclose(output);
+    //return true;
+
+    std::ofstream outfile(name);
+    if (!outfile) {
+        lastError = "Could not open calendar file for writing.";
         return false;
     }
 
-    cal->Write(output);
-    fflush(output);
-    if (ferror(output) || (fsync(_fileno(output)) < 0)) {
-        lastError = "error writing calendar file";
-        fclose(output);
+    cal->Write(outfile);
+    if (outfile.bad()) {
+        lastError = "Error writing to calendar file.";
         return false;
     }
 
-    fclose(output);
     return true;
 }
 

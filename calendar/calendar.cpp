@@ -241,8 +241,8 @@ bool Calendar::Read(Lexer* lex) {
         }
     }
 }
-
-void Calendar::Write(FILE* file, bool delete_history) const {
+/*
+void Calendar::Write(std::ofstream &file, bool delete_history) const {
     charArray* out = new charArray;
 
     format(out, "Calendar [v%d.%d]\n", VersionMajor, VersionMinor);
@@ -274,8 +274,41 @@ void Calendar::Write(FILE* file, bool delete_history) const {
 
     // Just dump array out to file.
     out->append('\0');
-    fputs(out->as_pointer(), file);
+    file << out->as_pointer();
     delete out;
+}
+*/
+
+void Calendar::Write(std::ofstream& file, bool delete_history) const {
+    std::string out = "";
+
+    out += std::format("Calendar [v{}.{}]\n", VersionMajor, VersionMinor);
+    out += *options;
+    for (int i = 0; i < includes.size(); i++) {
+        char const* name = (char const*)includes[i];
+        out += "IncludeCalendar [";
+        out += Lexer::EscapeString(name);
+        out += "]\n";
+    }
+    // if delete_history is true, write out the delete history instead
+    const std::vector<Item*>& to_write = delete_history ? deleted : items;
+    for (Item *item: to_write) {
+        if (item->AsNotice() != nullptr) {
+            out += "Note [\n";
+        }
+        else {
+            out += "Appt [\n";
+        }
+        out += *item;
+        out += "]\n";
+    }
+
+    for (char const* s : hidden) {
+        out += std::format("Hide [{}]\n", s);
+    }
+
+    // and output to the file.
+    file << out;
 }
 
 int Calendar::Size() const {

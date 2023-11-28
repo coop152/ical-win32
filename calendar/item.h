@@ -46,6 +46,8 @@ class Item {
     virtual bool Parse(Lexer*, char const* keyword);
     virtual void Write(charArray*) const;
 
+    virtual operator std::string();
+
     virtual Item* Clone() const = 0;
 
     const char* GetText() const { return text; }
@@ -209,6 +211,8 @@ class Appointment : public Item {
 
     virtual bool Parse(Lexer*, char const* keyword);
     virtual void Write(charArray*) const;
+
+    virtual operator std::string();
 
     virtual Item* Clone() const;
 

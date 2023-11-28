@@ -55,3 +55,11 @@ void OptionMap::write(charArray* out) const {
     }
 }
 
+OptionMap::operator std::string() {
+    // TODO: this needs to be implemented properly
+    charArray* arr = new charArray();
+    this->write(arr);
+    std::string out = std::string(arr->as_pointer(), arr->size());
+    delete arr;
+    return out;
+}

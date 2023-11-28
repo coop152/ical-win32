@@ -611,6 +611,15 @@ void DateSet::write(charArray* output) const {
     append_string(output, " End\n");
 }
 
+DateSet::operator std::string() {
+    // TODO: this needs to be implemented properly
+    charArray *arr = new charArray();
+    this->write(arr);
+    std::string out = std::string(arr->as_pointer(), arr->size());
+    delete arr;
+    return out;
+}
+
 bool DateSet::read(Lexer* lexer) {
     char const* keyword;
 
