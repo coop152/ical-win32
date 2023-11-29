@@ -53,52 +53,16 @@ void CalFile::Modified() {
 }
 
 bool CalFile::Write() {
-    /*
-    // Get information about the calendar file
-    struct _stat buf;
-    bool is_slink = false;
-
-    int result = _stat(fileName, &buf);
-    if ((result >= 0) && fs::is_symlink(fileName)) {
-        //Get mode for real referenced file
-        is_slink = true;
-    }
-
-    if (result < 0) {
-        // Could not get file mode 
-        if (errno == ENOENT) {
-            // Original file does not even exist - try to write directly 
-            if (WriteTo(calendar, fileName)) {
-                written();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    long mode = buf.st_mode & 07777;
-
-    // See if file is a link, or if the containing directory is write-protected
-    if (is_slink || (buf.st_nlink > 1) || (_access(dirName, W_OK) < 0)) {
-        // Backup by copying to preserve links
-        return WriteInPlace(mode);
-    }
-    else {
-        // Backup by renaming old version if possible
-        return WriteNew(mode);
-    }
-    */
-
     if (!fs::exists(fileName)) {
         // original file doesn't even exist - write directly
-        if (WriteTo(calendar, fileName)) {
+        // also write delete history file
+        if (WriteTo(calendar, fileName) && WriteTo(calendar, fileName+".del", true)) {
             written();
             return true;
         }
         return false;
     }
 
-    auto mode = fs::status(fileName).permissions();
 
     if (fs::is_symlink(fileName) || (_access(dirName.c_str(), W_OK) < 0)) {
         // file is a link, or the containing directory is write-protected
@@ -121,6 +85,7 @@ bool CalFile::WriteNew() {
         return false;
     }
 
+
     // delete the old backup file, rename the old calendar file into the new backup,
     // and rename the temp file into the new calendar file.
     try {
@@ -131,6 +96,11 @@ bool CalFile::WriteNew() {
     catch (fs::filesystem_error& e) {
         lastError = e.what();
         fs::remove(tmpName);
+        return false;
+    }
+
+    // try to write delete history file
+    if (!WriteTo(calendar, fileName+".del", true)) {
         return false;
     }
 
@@ -145,7 +115,7 @@ bool CalFile::WriteInPlace() {
     // XXX Should we just ignore errors while making a backup?
     CopyBackup();
 
-    if (WriteTo(calendar, fileName)) {
+    if (WriteTo(calendar, fileName) && WriteTo(calendar, fileName+".del", true)) {
         written();
         return true;
     }
@@ -215,41 +185,30 @@ bool CalFile::FileHasChanged() {
 Calendar* CalFile::ReadFrom(std::string name) {
     Calendar* cal = new Calendar;
     Lexer input(name.c_str());
+    Lexer historyInput((name + ".del").c_str());
 
-    if (! cal->Read(&input)) {
+    // read calendar, failing if it can't be read
+    if (!cal->Read(&input)) {
         lastError = input.LastError();
         delete cal;
         cal = nullptr;
     }
 
+    // try to read the corresponding delete history file, doing nothing if it fails
+    cal->ReadDeleteHistory(&historyInput);
+
     return cal;
 }
 
-bool CalFile::WriteTo(Calendar* cal, std::string name) {
-    //FILE* output = fopen(name.c_str(), "w");
-    //if (!output) {
-    //    lastError = "could not open file for writing calendar";
-    //    return false;
-    //}
-
-    //cal->Write(output);
-    //fflush(output);
-    //if (ferror(output) || (fsync(_fileno(output)) < 0)) {
-    //    lastError = "error writing calendar file";
-    //    fclose(output);
-    //    return false;
-    //}
-
-    //fclose(output);
-    //return true;
-
+bool CalFile::WriteTo(Calendar* cal, std::string name, bool delete_history) {
     std::ofstream outfile(name);
+
     if (!outfile) {
         lastError = "Could not open calendar file for writing.";
         return false;
     }
 
-    cal->Write(outfile);
+    cal->Write(outfile, delete_history);
     if (outfile.bad()) {
         lastError = "Error writing to calendar file.";
         return false;

@@ -96,7 +96,7 @@ class CalFile {
 
     // Read/Write calendar from/to named file
     static Calendar* ReadFrom(std::string);
-    static bool WriteTo(Calendar*, std::string);
+    static bool WriteTo(Calendar*, std::string, bool delete_history = false);
 
     // Other internal IO routines
     bool WriteNew();            // Save without writing in-place

@@ -241,43 +241,24 @@ bool Calendar::Read(Lexer* lex) {
         }
     }
 }
-/*
-void Calendar::Write(std::ofstream &file, bool delete_history) const {
-    charArray* out = new charArray;
 
-    format(out, "Calendar [v%d.%d]\n", VersionMajor, VersionMinor);
-    options->write(out);
-    for (int i = 0; i < includes.size(); i++) {
-        char const* name = (char const*) includes[i];
-        append_string(out, "IncludeCalendar [");
-        Lexer::PutString(out, name);
-        append_string(out, "]\n");
-    }
-    // if delete_history is true, write out the delete history instead
-    const std::vector<Item*>& to_write = delete_history ? deleted : items; 
-    for (int i = 0; i < to_write.size(); i++) {
-        Item* item = (Item*) to_write[i];
-
-        if (item->AsNotice() != nullptr) {
-            append_string(out, "Note [\n");
-        }
-        else {
-            append_string(out, "Appt [\n");
-        }
-        item->Write(out);
-        append_string(out, "]\n");
+bool Calendar::ReadDeleteHistory(Lexer* lex) {
+    Calendar* c = new Calendar();
+    
+    // note that Read returns true when there is no file!
+    // it's a perfectly acceptable outcome.
+    if (!c->Read(lex)) {
+        delete c;
+        return false;
     }
 
-    for (char const* s : hidden) {
-        format(out, "Hide [%s]\n", s);
-    }
+    // take the parsed items...
+    this->deleted = c->items;
 
-    // Just dump array out to file.
-    out->append('\0');
-    file << out->as_pointer();
-    delete out;
+    // ...and discard the rest
+    delete c;
+    return true;
 }
-*/
 
 void Calendar::Write(std::ofstream& file, bool delete_history) const {
     std::string out = "";
