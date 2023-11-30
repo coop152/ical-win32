@@ -253,7 +253,9 @@ bool Calendar::ReadDeleteHistory(Lexer* lex) {
     }
 
     // take the parsed items...
-    this->deleted = c->items;
+    this->deleted = std::move(c->items);
+    // be careful; this janky implementation requires this move or else the pointers will remain in c.
+    // when you delete c the pointers will all be deleted and youll have invalid pointers in this->deleted.
 
     // ...and discard the rest
     delete c;
@@ -323,6 +325,14 @@ char const* Calendar::GetInclude(int i) const {
 
 Item* Calendar::Get(int i) const {
     return (Item*) items[i];
+}
+
+void Calendar::RestoreAll()
+{
+    for (Item* i : deleted) {
+        Add(i);
+    }
+    deleted.clear();
 }
 
 bool Calendar::Hidden(char const* uid) const {

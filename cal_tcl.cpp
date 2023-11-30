@@ -190,6 +190,7 @@ void Calendar_Tcl::add_error(char const* t1, char const* t2) {
  * Forward declaration of handler procedures.
  */
 static int cal_delete   (ClientData, Tcl_Interp*, int, const char*[]);
+static int cal_restoreall(ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_main     (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_include  (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_exclude  (ClientData, Tcl_Interp*, int, const char*[]);
@@ -214,6 +215,7 @@ static int cal_loopb    (ClientData, Tcl_Interp*, int, const char*[]);
 
 static Dispatch_Entry calendar_dispatch[] = {
     { "delete",         0, 0, cal_delete        },
+    { "restoreall",     0, 0, cal_restoreall    },
     { "main",           0, 0, cal_main          },
     { "include",        1, 1, cal_include       },
     { "exclude",        1, 1, cal_exclude       },
@@ -340,6 +342,23 @@ static int cal_include(ClientData c, Tcl_Interp* tcl, int argc, const char* argv
 
     cal->main->GetCalendar()->Include(argv[0]);
     cal->includes->append(newFile);
+    cal->main->Modified();
+
+    trigger(tcl, "flush", nullptr);
+
+    TCL_Return(tcl, "");
+}
+
+static int cal_restoreall(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+    Calendar_Tcl* cal = (Calendar_Tcl*)c;
+
+    if (cal->main->GetCalendar()->ReadOnly()) {
+        TCL_Error(tcl, "permission denied");
+    }
+
+    cal->remove_item_handles(cal->main->GetCalendar());
+    cal->main->GetCalendar()->RestoreAll();
+    cal->add_item_handles(cal->main);
     cal->main->Modified();
 
     trigger(tcl, "flush", nullptr);

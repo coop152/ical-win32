@@ -308,8 +308,9 @@ static int item_softdel(ClientData c, Tcl_Interp* tcl, int argc, const char** ar
         file->GetCalendar()->SoftDelete(item->value());
         file->Modified();
 
-        // XXX Only send triggers when deleting an item from a calendar???
-        //trigger(tcl, "delete", item->handle());
+        trigger_item(tcl, item);
+        // this is currently being done in the tcl i think? confirm if its even required or if that was just the bug in ReadDeleteHistory
+        //trigger(tcl, "flush", item->handle());
     }
 
     TCL_Return(tcl, "");
