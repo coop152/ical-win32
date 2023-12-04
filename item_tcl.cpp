@@ -305,12 +305,14 @@ static int item_softdel(ClientData c, Tcl_Interp* tcl, int argc, const char** ar
 
     CalFile* file = item->calendar();
     if (file != nullptr) {
+        // move the item to the delete history and remove the Tcl handle
         file->GetCalendar()->SoftDelete(item->value());
+        delete item;
+
         file->Modified();
 
-        trigger_item(tcl, item);
-        // this is currently being done in the tcl i think? confirm if its even required or if that was just the bug in ReadDeleteHistory
-        //trigger(tcl, "flush", item->handle());
+        // prompt Tcl to re-check all items
+        trigger(tcl, "flush");
     }
 
     TCL_Return(tcl, "");

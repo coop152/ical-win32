@@ -180,7 +180,6 @@ action ical_delete item {Delete selected item and save in delete history} {} {
 
     # ical_clip $i
     $i softdelete
-    trigger fire flush
 }
 
 action ical_restoreall writable {Restore everything in the delete history} {} {
