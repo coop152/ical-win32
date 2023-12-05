@@ -186,6 +186,10 @@ action ical_restoreall writable {Restore everything in the delete history} {} {
     cal restoreall
 }
 
+action ical_historymode writable {Toggle delete history mode} {} {
+    cal historymode
+}
+
 action ical_cut witem {Delete selected item even if owned by another user} {} {
     if ![ical_with_mod_single_item i] return
 

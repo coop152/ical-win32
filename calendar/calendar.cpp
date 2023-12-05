@@ -51,7 +51,8 @@ Calendar::Calendar(): items(), deleted(), includes(), hidden()
         }
     }
     
-    readonly = 0;
+    historyMode = false;
+    readonly = false;
     options = new OptionMap;
 }
 
@@ -68,6 +69,12 @@ void Calendar::clear() {
         delete item;
     }
     items.clear();
+
+    for (i = 0; i < deleted.size(); i++) {
+        Item* item = (Item*)deleted[i];
+        delete item;
+    }
+    deleted.clear();
 
     for (i = 0; i < includes.size(); i++) {
         char* includeName = (char*) includes[i];
@@ -87,20 +94,24 @@ void Calendar::clear() {
 }
 
 void Calendar::Add(Item* item) {
-    items.push_back(item);
+    std::vector<Item*>& current = historyMode ? deleted : items;
+    current.push_back(item);
 }
 
 void Calendar::Remove(Item* item) {
-    for (int i = 0; i < items.size(); i++) {
-        if (items[i] == item) {
+    std::vector<Item*>& current = historyMode ? deleted : items;
+    for (int i = 0; i < current.size(); i++) {
+        if (current[i] == item) {
             /* Found it */
-            items.erase(items.begin() + i);
+            current.erase(current.begin() + i);
             break;
         }
     }
 }
 
 void Calendar::SoftDelete(Item* item) {
+    // If the user is viewing deleted items then this function shouldn't run
+    if (historyMode) return;
     //??? Should this check if the item actually exists and error out if it doesn't?
     Remove(item);
     deleted.push_back(item);
@@ -294,8 +305,9 @@ void Calendar::Write(std::ofstream& file, bool delete_history) const {
     file << out;
 }
 
-int Calendar::Size() const {
-    return items.size();
+int Calendar::Size() {
+    std::vector<Item*>& current = historyMode ? deleted : items;
+    return current.size();
 }
 
 void Calendar::Include(char const* name) {
@@ -320,17 +332,17 @@ int Calendar::NumIncludes() const {
 }
 
 char const* Calendar::GetInclude(int i) const {
-    return ((char const*) includes[i]);
+    return includes[i];
 }
 
-Item* Calendar::Get(int i) const {
-    return (Item*) items[i];
+Item* Calendar::Get(int i) {
+    std::vector<Item*>& current = historyMode ? deleted : items;
+    return current.at(i);
 }
 
-void Calendar::RestoreAll()
-{
+void Calendar::RestoreAll() {
     for (Item* i : deleted) {
-        Add(i);
+        items.push_back(i);
     }
     deleted.clear();
 }

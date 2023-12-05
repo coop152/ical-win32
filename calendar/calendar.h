@@ -18,8 +18,8 @@ class Calendar {
     /*
      * Item list.
      */
-    int Size() const;                   /* Number of items */
-    Item* Get(int) const;               /* Get the ith item */
+    int Size();                         /* Number of items */
+    Item* Get(int);                     /* Get the ith item */
     void Add(Item*);                    /* Add an item */
     void Remove(Item*);                 /* Remove an item */
     void SoftDelete(Item*);             /* Move an item into the delete history */
@@ -39,6 +39,9 @@ class Calendar {
      */
     bool ReadOnly() const { return readonly; }
     void SetReadOnly(bool t) { readonly = t; }
+
+    bool HistoryMode() const { return historyMode; }
+    void setHistoryMode(bool t) { historyMode = t; }
 
     /*
      * Read/Write.
@@ -82,6 +85,7 @@ class Calendar {
     std::vector<Item*> deleted;         // Items in the delete history (stored in .del calendar file)
     std::vector<char*> includes;        // Included calendars
     bool readonly;                      // Readonly calendar?
+    bool historyMode;                   // Is the delete history currently being viewed?
     std::set<char const*> hidden;       // Hidden items from other calendars
     OptionMap* options;                 // Calendar options
 
