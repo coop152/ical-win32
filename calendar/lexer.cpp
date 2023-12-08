@@ -14,6 +14,8 @@
 char const* Lexer::lastError = "";
 
 Lexer::Lexer(char const* file) {
+    // TODO: switch over to ifstream and std::strings, if reasonable
+    // it will make this constructor about 5 lines long lol
     tmp = new charArray;
 
     /* Dummy buffer for errors */
@@ -22,23 +24,11 @@ Lexer::Lexer(char const* file) {
     index = 0;
     length = 0;
 
-    //int fd = _open((char*)file, O_RDONLY, 0);
-    //if (fd < 0) {
-    //    SetError("could not open file");
-    //    return;
-    //}
-
-    FILE* f = fopen(file, "rb"); // open in binary mode to stop stripping of \r characters
+    FILE* f = fopen(file, "r");
     if (f == nullptr) {
         SetError("could not open file");
         return;
     }
-
-    //struct stat fs;
-    //if (fstat(fd, &fs) < 0) {
-    //    SetError("could not get file size");
-    //    return;
-    //}
 
     // seek to the end of the file to get size
     fseek(f, 0, SEEK_END);
