@@ -256,7 +256,9 @@ Calendar* CalFile::ReadFrom(const char* name) {
 }
 
 bool CalFile::WriteTo(Calendar* cal, const char* name) {
-    FILE* output = fopen(name, "w");
+    // temporarily making this binary so that the program writes unix line endings
+    // TODO: remove this when the program can compile on linux; in that case it (should) be able to convert from CRLF automatically
+    FILE* output = fopen(name, "wb");
     if (!output) {
         lastError = "could not open file for writing calendar";
         return false;
