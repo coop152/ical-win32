@@ -1,6 +1,5 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
-#include <Windows.h>
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>

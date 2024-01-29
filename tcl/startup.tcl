@@ -22,13 +22,26 @@ proc ical_init {} {
     set ical(author)            {sanjay@pa.dec.com}
     set ical(version)           {3.0.4}
     set ical(mailer)            {Mail}
-    set ical(libparent)         {.}
-    set ical(library)           {./tcl}
     set ical(startdate)         [date today]
     set ical(iconic)            0
     set ical(prefs)             {}
     set ical(geometry)          {}
     set ical(iconposition)      {}
+
+    # set library path for both platforms
+    global tcl_platform
+    if [string equal $tcl_platform(platform) windows] {
+        # tcl files are beside the executable on windows
+        set ical(libparent)         [.]
+        set ical(library)           [./tcl]
+    } else {
+        # tcl files are in the directory set during compilation on linux
+        # TECHNICALLY when compiling in windows these values are not substituted
+        # so on windows this is a syntax error
+        # but it's fine, its an interpreted language and we take a different branch (lol)
+        set ical(libparent)         {@pkglibdir@}
+        set ical(library)           {@icallibdir@}
+    }
 
     # Handle environment variables
     if [info exists env(ICAL_LIBRARY)] {set ical(library) $env(ICAL_LIBRARY)}

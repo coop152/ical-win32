@@ -6,6 +6,9 @@
 *.lo
 *.o
 *.obj
+*.Po
+*.Tpo
+*.a
 
 # Precompiled Headers
 *.gch
@@ -26,3 +29,37 @@ Debug/
 Release/
 x64/
 /ical-win32.vcxproj.user
+
+# VSCode directories
+.vscode/
+
+# automake artefacts
+/autom4te.cache/
+aclocal.m4
+out.log
+stamp-h1
+configure
+config.h
+config.h.in
+config.h.in~
+config.log
+config.status
+configure
+configure~
+configure.ac~
+compile
+depcomp
+install-sh
+INSTALL
+missing
+Makefile
+Makefile.in
+.dirstamp
+
+# build artefacts
+/*.tcl
+/tclIndex
+/contrib/
+/tcllib/
+/ical
+/ical.desktop

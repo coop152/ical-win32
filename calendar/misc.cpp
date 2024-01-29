@@ -6,7 +6,11 @@
 #include "arrays.h"
 #include "misc.h"
 
+#ifdef _WIN32
 #include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 
 #define MAXUNLENGTH 256 + 1
 
@@ -21,6 +25,7 @@ char const* my_name() {
     char* name = new char[len];
 
     // Fetch my name
+    #ifdef _WIN32
     if (GetUserNameA((LPTSTR)name, (LPDWORD)&len)) {
         return name;
     }
@@ -28,6 +33,14 @@ char const* my_name() {
         return "???";
 
     }
+    #else
+    if (getlogin_r(name, len) == 0) {
+        return name;
+    }
+    else {
+        return "???";
+    }
+    #endif
 }
 
 bool copy_file(char const* src, char const* dst) {

@@ -1,8 +1,16 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
+#ifdef _WIN32
 #include <Windows.h>
+#else
+#include <unistd.h>
+#define _stat stat
+#define _access access
+#define _chmod chmod
+#define _fileno fileno
+#endif
 #include <sys/types.h>
-#include <io.h>
+// #include <io.h>
 #include <stdlib.h>
 
 #include <stddef.h>
@@ -22,16 +30,14 @@
 namespace fs = std::filesystem;
 
 // Only use "fsync" if it is available.
-#ifdef HAVE_FSYNC
-extern "C" int fsync(int);
-#else
+#ifdef _WIN32
 static int fsync(int) {return 0;}
 #endif
 
 #define W_OK 2 // flag for write access using access()
 
 // Get various file names
-static char const* home_backup_file();  // Backup file in home dir
+static char const* home_backup_file(); // Backup file in home dir
 static char const* tmp_backup_file();   // Backup file in tmp dir
 
 static bool backup_file(char const* src, char const* dst, long mode);
@@ -58,7 +64,9 @@ CalFile::CalFile(bool ro, const char* name) {
     backupName = tmp;
 
     // Get directory name for access checks
-    char* lastSlash = strrchr(const_cast<char*>(name), '\\');
+    // XXX: if an included calendar uses the wrong platform's seperator then this will crash
+    // i think this is fixed in a newer branch, just don't give invalid file names in the meantime
+    char* lastSlash = strrchr(const_cast<char*>(name), fs::path::preferred_separator);
     int dirlen = lastSlash + 1 - name;
     tmp = new char[dirlen+1];
     strncpy(tmp, name, dirlen);
@@ -69,7 +77,11 @@ CalFile::CalFile(bool ro, const char* name) {
     // Get temporary file name.  Make sure it works even
     // on systems with a 14 character file name limit.
     tmp = new char[strlen(dirName)+20];
+    #ifdef _WIN32
     sprintf(tmp, "%sical%d~", dirName, GetCurrentProcessId());
+    #else
+    sprintf(tmp, "%sical%d~", dirName, getpid());
+    #endif
     tmpName = tmp;
 
     lastModifyValid = false;
@@ -82,10 +94,10 @@ CalFile::CalFile(bool ro, const char* name) {
 
 CalFile::~CalFile() {
     delete calendar;
-    delete fileName;
-    delete backupName;
-    delete tmpName;
-    delete dirName;
+    delete[] fileName;
+    delete[] backupName;
+    delete[] tmpName;
+    delete[] dirName;
 }
 
 void CalFile::Modified() {
@@ -94,7 +106,7 @@ void CalFile::Modified() {
 
 bool CalFile::Write() {
     // Get information about the calendar file
-    struct _stat buf;
+    struct stat buf;
     bool is_slink = false;
 
     int result = _stat(fileName, &buf);
@@ -332,7 +344,8 @@ static char const* home_backup_file() {
         char const* home = getenv("HOME");
         if (home != nullptr) {
             char* copy = new char[strlen(home) + strlen(part_name) + 2];
-            sprintf(copy, "%s\\%s", home, part_name);
+            sprintf(copy, "%s%c%s", home, fs::path::preferred_separator, part_name);
+
             full_name = copy;
         }
     }
@@ -342,8 +355,12 @@ static char const* home_backup_file() {
 
 static char const* tmp_backup_file() {
     // how horrible is THIS?
+    #ifdef _WIN32
     auto sys_tmp_path = std::wstring(std::filesystem::temp_directory_path().c_str());
     auto as_ascii = std::string(sys_tmp_path.begin(), sys_tmp_path.end());
+    #else
+    auto as_ascii = std::filesystem::temp_directory_path().string();
+    #endif
     static char const* prefix = as_ascii.c_str();
     static char const* full_name = nullptr;
     static int inited = false;
