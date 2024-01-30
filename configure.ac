@@ -43,17 +43,16 @@ AC_SUBST(TCL_INCLUDE_SPEC)
 AC_SUBST(TK_INCLUDE_SPEC)
 
 # Generate list of all .tcl files that need to be installed
+# (Note that the tcl directory that they are all in is stripped)
 generated='startup\|ps_header'
 ICAL_TCLLIB_SCRIPTS=`echo $srcdir/tcl/tcllib/*.tcl|sed 's|/tcl/|/|g'`
 ICAL_SCRIPTS=`echo $srcdir/tcl/*.tcl|sed -e "s/[[^ ]]*\($generated\)[[^ ]]*//g"|sed 's|/tcl/|/|g'`
 ICAL_CONTRIB=`echo $srcdir/tcl/contrib/*|sed 's|/tcl/|/|g'`
 
+# Export listed files to 
 AC_SUBST(ICAL_TCLLIB_SCRIPTS)
 AC_SUBST(ICAL_SCRIPTS)
 AC_SUBST(ICAL_CONTRIB)
 
-AC_CHECK_FUNCS(fsync)
-
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
-

@@ -39,7 +39,7 @@ CLEANFILES = $(icallib_DATA) $(app_DATA)  $(ical_scripts) $(ical_tcllib_scripts)
 clean-local:
 	-rmdir $(srcdir)/contrib $(srcdir)/tcllib 
 
-# uninstall needs a little help thanks to the fiddling with cp down below, and the use of versioned subdirs
+# uninstall needs a little help thanks to the directory-shifting weirdness
 uninstall-hook:
 	-rmdir $(icallibdir)/contrib $(icallibdir)/tcllib $(icallibdir) $(pkglibdir)
 
