@@ -32,8 +32,8 @@ proc ical_init {} {
     global tcl_platform
     if [string equal $tcl_platform(platform) windows] {
         # tcl files are beside the executable on windows
-        set ical(libparent)         [.]
-        set ical(library)           [./tcl]
+        set ical(libparent)         {.}
+        set ical(library)           {./tcl}
     } else {
         # tcl files are in the directory set during compilation on linux
         # TECHNICALLY when compiling in windows these values are not substituted

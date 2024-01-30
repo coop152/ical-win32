@@ -2,6 +2,7 @@
 
 #ifdef _WIN32
 #include <Windows.h>
+#include <io.h>
 #else
 #include <unistd.h>
 #define _stat stat
@@ -10,7 +11,6 @@
 #define _fileno fileno
 #endif
 #include <sys/types.h>
-// #include <io.h>
 #include <stdlib.h>
 
 #include <stddef.h>
@@ -106,7 +106,7 @@ void CalFile::Modified() {
 
 bool CalFile::Write() {
     // Get information about the calendar file
-    struct stat buf;
+    struct _stat buf;
     bool is_slink = false;
 
     int result = _stat(fileName, &buf);
