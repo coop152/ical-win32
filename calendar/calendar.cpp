@@ -71,7 +71,7 @@ void Calendar::clear() {
 
     for (i = 0; i < includes.size(); i++) {
         char* includeName = (char*) includes[i];
-        delete includeName;
+        delete[] includeName;
     }
     includes.clear();
 

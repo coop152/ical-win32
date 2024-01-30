@@ -64,15 +64,19 @@ CalFile::CalFile(bool ro, const char* name) {
     backupName = tmp;
 
     // Get directory name for access checks
-    // XXX: if an included calendar uses the wrong platform's seperator then this will crash
-    // i think this is fixed in a newer branch, just don't give invalid file names in the meantime
-    char* lastSlash = strrchr(const_cast<char*>(name), fs::path::preferred_separator);
+    // TODO: make this suck less
+    // probably when all the nice new file handling stuff from the delete history branch comes in
+    char* lastSlash = strrchr(const_cast<char*>(name), '\\'); // just assume the path is from windows
+    if (lastSlash == nullptr) { // guess it must be unix, then
+        lastSlash = strrchr(const_cast<char*>(name), '/');
+    }
     int dirlen = lastSlash + 1 - name;
     tmp = new char[dirlen+1];
     strncpy(tmp, name, dirlen);
     tmp[dirlen] = '\0';
     
     dirName = tmp;
+
 
     // Get temporary file name.  Make sure it works even
     // on systems with a 14 character file name limit.
@@ -83,6 +87,7 @@ CalFile::CalFile(bool ro, const char* name) {
     sprintf(tmp, "%sical%d~", dirName, getpid());
     #endif
     tmpName = tmp;
+
 
     lastModifyValid = false;
 
