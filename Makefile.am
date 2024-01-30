@@ -16,21 +16,21 @@ appdir = $(prefix)/share/applications
 app_DATA = ical.desktop
 ical_SOURCES = cal_tcl.cpp dateeditor.cpp dispatch.cpp ical.cpp ical_tcl.cpp \
 	       item_tcl.cpp object.cpp time_tcl.cpp main.cpp
-ical_CPPFLAGS = -DICALLIBDIR='"$(icallibdir)"' -I$(srcdir)/calendar -I$(srcdir)/types -I$(srcdir)/time -std=c++20 -fsanitize=address @TK_XINCLUDES@
+ical_CPPFLAGS = -DICALLIBDIR='"$(icallibdir)"' -I$(srcdir)/calendar -I$(srcdir)/types -I$(srcdir)/time -std=c++20 @TK_XINCLUDES@ @TK_INCLUDE_SPEC@
 ical_LDADD = libcalendar.a libtime.a \
 	     @TK_LIB_SPEC@ @TCL_LIB_SPEC@ @TK_LIBS@
-ical_LDFLAGS = -std=c++20 -fsanitize=address
+ical_LDFLAGS = -std=c++20
 
 noinst_LIBRARIES = libcalendar.a libtime.a
 
-libcalendar_a_CPPFLAGS = -I$(srcdir)/types -I$(srcdir)/time -std=c++20 -fsanitize=address 
+libcalendar_a_CPPFLAGS = -I$(srcdir)/types -I$(srcdir)/time -std=c++20
 libcalendar_a_SOURCES = calendar/calendar.cpp \
 			calendar/calfile.cpp calendar/dateset.cpp \
 			calendar/item.cpp calendar/lexer.cpp calendar/misc.cpp \
 			calendar/options.cpp calendar/smallintset.cpp \
 			calendar/uid.cpp
 
-libtime_a_CPPFLAGS = -I$(srcdir)/types -std=c++20 -fsanitize=address 
+libtime_a_CPPFLAGS = -I$(srcdir)/types -std=c++20
 libtime_a_SOURCES = time/Date.cpp time/Month.cpp time/Time.cpp time/WeekDay.cpp \
 		    time/parse.cpp
 
