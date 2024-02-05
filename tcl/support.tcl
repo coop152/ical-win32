@@ -7,6 +7,7 @@ set ical_state(views)   {}
 set ical_state(view)    {}
 set ical_state(clip)    {}
 set ical_state(search)  {}
+set ical_state(historymode) 0
 
 proc support_init {} {
     global month_name ical

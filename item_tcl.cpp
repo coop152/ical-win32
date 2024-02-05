@@ -305,8 +305,15 @@ static int item_softdel(ClientData c, Tcl_Interp* tcl, int argc, const char** ar
 
     CalFile* file = item->calendar();
     if (file != nullptr) {
-        // move the item to the delete history and remove the Tcl handle
-        file->GetCalendar()->SoftDelete(item->value());
+        // TODO: THIS IS A TEMP JANK IMPLEMENTATION with one SoftDelete/Restore button
+        // this is a deleted item; restore it
+        if (file->GetCalendar()->HistoryMode()) {
+            file->GetCalendar()->Restore(item->value());
+        }
+        else {
+            // move the item to the delete history and remove the Tcl handle
+            file->GetCalendar()->SoftDelete(item->value());
+        }
         delete item;
 
         file->Modified();

@@ -112,16 +112,17 @@ void Calendar::Remove(Item* item) {
 void Calendar::SoftDelete(Item* item) {
     // If the user is viewing deleted items then this function shouldn't run
     if (historyMode) return;
-    //??? Should this check if the item actually exists and error out if it doesn't?
+    // TODO: this should specifically remove from items and not just call remove
     Remove(item);
     deleted.push_back(item);
 }
 
-void Calendar::Expunge(Item* item) {
+void Calendar::Restore(Item* item) {
     for (int i = 0; i < deleted.size(); i++) {
         if (deleted[i] == item) {
             /* Found it */
             deleted.erase(deleted.begin() + i);
+            items.push_back(item);
             break;
         }
     }

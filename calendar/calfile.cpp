@@ -38,7 +38,7 @@ CalFile::CalFile(bool ro, const char* name) {
     fileName = name;
     backupName = fileName + "~";
     dirName = fs::path(name).remove_filename().string();
-    tmpName = std::format("{}\\ical{}~", dirName, GetCurrentProcessId()); // these backslashes aren't linux safe!
+    tmpName = std::format("{}\\ical{}~", dirName, GetCurrentProcessId()); // TODO: this isn't linux safe!
 
     calendar = new Calendar;
     calendar->SetReadOnly(readOnly);
@@ -271,7 +271,7 @@ static char const* home_backup_file() {
         char const* home = getenv("HOME");
         if (home != nullptr) {
             char* copy = new char[strlen(home) + strlen(part_name) + 2];
-            sprintf(copy, "%s\\%s", home, part_name);
+            sprintf(copy, "%s\\%s", home, part_name); // TODO: this isn't linux safe!
             full_name = copy;
         }
     }

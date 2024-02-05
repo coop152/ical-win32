@@ -187,7 +187,10 @@ action ical_restoreall writable {Restore everything in the delete history} {} {
 }
 
 action ical_historymode writable {Toggle delete history mode} {} {
-    cal historymode
+    global ical_state
+    # invert history mode
+    set ical_state(historymode) [expr {!$ical_state(historymode)}]
+    cal historymode $ical_state(historymode)
 }
 
 action ical_cut witem {Delete selected item even if owned by another user} {} {

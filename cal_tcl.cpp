@@ -214,7 +214,7 @@ static int cal_loopb      (ClientData, Tcl_Interp*, int, const char*[]);
 static Dispatch_Entry calendar_dispatch[] = {
     { "delete",         0, 0, cal_delete        },
     { "restoreall",     0, 0, cal_restoreall    },
-    { "historymode",    0, 0, cal_historymode   },
+    { "historymode",    1, 1, cal_historymode   },
     { "main",           0, 0, cal_main          },
     { "include",        1, 1, cal_include       },
     { "exclude",        1, 1, cal_exclude       },
@@ -374,18 +374,21 @@ static int cal_restoreall(ClientData c, Tcl_Interp* tcl, int argc, const char* a
 
 static int cal_historymode(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
     Calendar_Tcl* cal = (Calendar_Tcl*)c;
+    // Convert argument to a bool
+    // Tcl uses the same "0 is false, everything else is true" logic as C
+    std::string mode_arg = argv[0];
+    bool newmode = mode_arg != "0";
 
     Calendar* main_cal = cal->main->GetCalendar();
-    bool new_history_mode = !main_cal->HistoryMode();
     // completely changing the set of items in the calendar; reset handles
     cal->remove_item_handles(main_cal);
-    main_cal->setHistoryMode(new_history_mode);
+    main_cal->setHistoryMode(newmode);
     cal->add_item_handles(cal->main);
 
     for (CalFile *cf : cal->includes) {
         Calendar *included_cal = cf->GetCalendar();
         cal->remove_item_handles(included_cal);
-        included_cal->setHistoryMode(new_history_mode);
+        included_cal->setHistoryMode(newmode);
         cal->add_item_handles(cf);
     }
 

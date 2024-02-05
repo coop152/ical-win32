@@ -23,7 +23,7 @@ class Calendar {
     void Add(Item*);                    /* Add an item */
     void Remove(Item*);                 /* Remove an item */
     void SoftDelete(Item*);             /* Move an item into the delete history */
-    void Expunge(Item*);                /* Permanently remove an item from the delete history */
+    void Restore(Item*);                /* Move an item from the delete history back into the calendar */
 
     /*
      * Included calendars.
