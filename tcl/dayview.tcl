@@ -22,7 +22,7 @@ class DayView {} {
     lappend ical_state(views) $self
     set ical_view($n) $self
 
-    toplevel $n -class Dayview
+    toplevel $n -class Dayview 
     set_geometry {} $n [option get $n geometry Geometry]
 
     set slot(apptlist) [ApptList $n.al $self]
@@ -31,6 +31,7 @@ class DayView {} {
 
     frame $n.status -class Pane
     label $n.cal -text ""
+    label $n.modeindicator -text ""
     label $n.rep -text ""
     frame $n.menu -class Pane
 
@@ -38,6 +39,7 @@ class DayView {} {
 
     # Pack windows
     pack $n.cal         -in $n.status -side left
+    pack $n.modeindicator -in $n.status -side right
     pack $n.rep         -in $n.status -side right
     pack $n.menu        -side top -fill x
     pack $n.status      -side bottom -fill x
@@ -204,13 +206,42 @@ method DayView reconfig {} {
 ##############################################################################
 # Internal helper procs
 
+method DayView update_statusbar_warning {} {
+    set n $slot(window)
+    global ical_state
+    # in delete history mode?
+    if {$ical_state(historymode)} {
+        $n.cal configure -background tomato 
+        $n.rep configure -background tomato
+        $n.modeindicator configure -background tomato -text "Delete History"
+        $n.status configure -background tomato
+    } else {
+        # get default color from ttk::style
+        set default_color [ttk::style lookup TText -background]
+        $n.cal configure -background $default_color
+        $n.rep configure -background $default_color
+        $n.modeindicator configure -background $default_color -text ""
+        $n.status configure -background $default_color   
+    }
+     # destroy everything in the menu and rebuild, to update the entries
+    foreach m [winfo children $n.menu] {
+        destroy $m
+    }
+    $self build_menu
+    # don't forget the keyboard shortcuts
+    $self update_menu_accelerators
+}
+
 method DayView config_status {} {
     set item $slot(sel)
+
+    $self update_statusbar_warning
+
     if {$item == ""} {
         $slot(window).cal configure -text ""
         $slot(window).rep configure -text ""
     } else {
-        set disp ""
+        set disp "" 
         catch {set disp [ical_title [$item calendar]]}
 
         if {[$item hilite] == "holiday"} {
@@ -264,6 +295,7 @@ method DayView update_menu_accelerators {} {
 # Build the menu
 method DayView build_menu {} {
     set b $slot(window).menu
+    
 
     menu-entry  $b File Save                    {ical_save}
     menu-entry  $b File Re-Read                 {ical_reread}
@@ -279,8 +311,15 @@ method DayView build_menu {} {
     menu-sep    $b File
     menu-entry  $b File Exit                    {ical_exit}
 
-    menu-entry  $b Edit {Delete Item}           {ical_delete}
-    menu-entry  $b Edit {Restore All Deleted (Debug)}           {ical_restoreall}
+    global ical_state
+    if {$ical_state(historymode)} {
+        menu-entry  $b Edit {Restore Item}           {ical_delete}
+    } else {
+        menu-entry  $b Edit {Delete Item}           {ical_delete}
+    }
+
+    # TODO: remove all the stuff related to this debug thing
+    # menu-entry  $b Edit {Restore All Deleted (Debug)}           {ical_restoreall}
     menu-sep    $b Edit
     menu-entry  $b Edit {Cut Item}              {ical_cut_or_hide}
     menu-entry  $b Edit {Copy Item}             {ical_copy}
