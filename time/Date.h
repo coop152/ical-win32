@@ -25,7 +25,8 @@ public:
 	 */
 	Date() : rep{epoch} {} 
 	Date(Date const& d) : rep{ d.rep } {}
-	Date(year_month_day ymd) : rep{ ymd } {}
+	// explicit to stop infinite recursion headaches with operators
+	explicit Date(year_month_day ymd) : rep{ ymd } {}
 	Date(int d, month m, int yr) { rep = year_month_day{ year{yr}, m, day{unsigned(d)} }; }
 	Date(int d, month m, year yr) { rep = year_month_day{ yr, m, day{unsigned(d)} }; }
 	Date(Time);
@@ -76,7 +77,7 @@ public:
 	int EpochDays() const { return (sys_days{ rep } - sys_days{ epoch }).count(); }
 	static year_month_day epoch;
 
-	// implicit conversion to year_month_day
+	// conversion to year_month_day
 	operator year_month_day() { return rep; }
 private:
 	/*
@@ -93,12 +94,13 @@ inline Date operator -  (Date date, int d) {
 	auto res = year_month_day{ sys_days{ date.rep } - days{ unsigned(d) } };
 	return Date(res);
 }
-inline int  operator -  (Date a, Date b) { return (a.rep - b.rep); }
-inline int  operator == (Date a, Date b) { return (a.rep == b.rep); }
-inline int  operator != (Date a, Date b) { return (a.rep != b.rep); }
-inline int  operator <  (Date a, Date b) { return (a.rep < b.rep); }
-inline int  operator <= (Date a, Date b) { return (a.rep <= b.rep); }
-inline int  operator >  (Date a, Date b) { return (a.rep > b.rep); }
-inline int  operator >= (Date a, Date b) { return (a.rep >= b.rep); }
+
+inline int operator -  (Date a, Date b) { return (sys_days{ a.rep } - sys_days{ b.rep }).count(); }
+inline int operator == (Date a, Date b) { return (a.rep == b.rep); }
+inline int operator != (Date a, Date b) { return (a.rep != b.rep); }
+inline int operator <  (Date a, Date b) { return (a.rep < b.rep); }
+inline int operator <= (Date a, Date b) { return (a.rep <= b.rep); }
+inline int operator >  (Date a, Date b) { return (a.rep > b.rep); }
+inline int operator >= (Date a, Date b) { return (a.rep >= b.rep); }
 
 #endif /* _DATEH */
