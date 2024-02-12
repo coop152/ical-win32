@@ -176,11 +176,21 @@ action ical_cut_or_hide item {Delete selected item} {} {
 }
 
 action ical_delete item {Delete selected item and save in delete history} {} {
-    if ![ical_with_item i] return
+    if {$::ical_state(historymode)} return
+    if ![ical_with_mod_single_item i] return
 
     set ic [$i clone]
     ical_clip $ic
     cal softremove $i
+}
+
+action ical_restore item {Restore selected item from delete history} {} {
+    if !{$::ical_state(historymode)} return
+    if ![ical_with_mod_single_item i] return
+
+    set ic [$i clone]
+    ical_clip $ic
+    cal restore $i
 }
 
 action ical_historymode writable {Toggle delete history mode} {} {
@@ -189,6 +199,7 @@ action ical_historymode writable {Toggle delete history mode} {} {
     set ical_state(historymode) [expr {!$ical_state(historymode)}]
     cal historymode $ical_state(historymode)
 
+    # update GUI to reflect change
     global dayview_id ical_view
     set n .dayview$dayview_id
     $ical_view($n) update_statusbar_warning

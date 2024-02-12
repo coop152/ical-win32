@@ -294,6 +294,7 @@ method DayView update_menu_accelerators {} {
 
 # Build the menu
 method DayView build_menu {} {
+    global ical_state
     set b $slot(window).menu
 
     menu-entry  $b File Save                    {ical_save}
@@ -301,7 +302,11 @@ method DayView build_menu {} {
     menu-entry  $b File Print                   {ical_print}
     menu-entry  $b File {Switch Calendar}       {ical_switchcalendar}
     menu-sep    $b File
-    menu-entry  $b File {View Delete History}   {ical_historymode}
+    if {$ical_state(historymode)} {
+        menu-entry  $b File {Close Delete History}  {ical_historymode}
+    } else {
+        menu-entry  $b File {Show Delete History}   {ical_historymode}
+    }
     menu-entry  $b File {Include Calendar}      {ical_addinclude}
     menu-pull   $b File {Configure Calendar}    {ical_fill_config}
     menu-sep    $b File
@@ -311,9 +316,8 @@ method DayView build_menu {} {
     menu-entry  $b File Exit                    {ical_exit}
 
     # change button depending on if we are in delete history mode or not
-    global ical_state
     if {$ical_state(historymode)} {
-        menu-entry  $b Edit {Restore Item}          {ical_delete}
+        menu-entry  $b Edit {Restore Item}          {ical_restore}
     } else {
         menu-entry  $b Edit {Delete Item}           {ical_delete}
     }

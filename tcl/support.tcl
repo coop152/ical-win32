@@ -296,6 +296,8 @@ proc tk_support_init {} {
     set keymap(item) {
         # that is Ctrl+Shift+X, note the capital X
         <Control-Key-X>         ical_delete
+        # that is Ctrl+Shift+R, note the capital R
+        <Control-Key-R>         ical_restore
         <Control-Key-c>         ical_copy
         <Control-Key-x>         ical_cut_or_hide
         <Control-Key-w>         ical_delete_selection
