@@ -183,10 +183,6 @@ action ical_delete item {Delete selected item and save in delete history} {} {
     cal softremove $i
 }
 
-action ical_restoreall writable {Restore everything in the delete history} {} {
-    cal restoreall
-}
-
 action ical_historymode writable {Toggle delete history mode} {} {
     global ical_state
     # invert history mode

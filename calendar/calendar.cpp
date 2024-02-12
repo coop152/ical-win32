@@ -341,12 +341,6 @@ Item* Calendar::Get(int i) {
     return current.at(i);
 }
 
-void Calendar::RestoreAll() {
-    for (Item* i : deleted) {
-        items.push_back(i);
-    }
-    deleted.clear();
-}
 
 bool Calendar::Hidden(char const* uid) const {
     return hidden.contains(uid);

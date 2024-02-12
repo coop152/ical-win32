@@ -295,7 +295,6 @@ method DayView update_menu_accelerators {} {
 # Build the menu
 method DayView build_menu {} {
     set b $slot(window).menu
-    
 
     menu-entry  $b File Save                    {ical_save}
     menu-entry  $b File Re-Read                 {ical_reread}
@@ -311,15 +310,14 @@ method DayView build_menu {} {
     menu-sep    $b File
     menu-entry  $b File Exit                    {ical_exit}
 
+    # change button depending on if we are in delete history mode or not
     global ical_state
     if {$ical_state(historymode)} {
-        menu-entry  $b Edit {Restore Item}           {ical_delete}
+        menu-entry  $b Edit {Restore Item}          {ical_delete}
     } else {
         menu-entry  $b Edit {Delete Item}           {ical_delete}
     }
 
-    # TODO: remove all the stuff related to this debug thing
-    # menu-entry  $b Edit {Restore All Deleted (Debug)}           {ical_restoreall}
     menu-sep    $b Edit
     menu-entry  $b Edit {Cut Item}              {ical_cut_or_hide}
     menu-entry  $b Edit {Copy Item}             {ical_copy}

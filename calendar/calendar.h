@@ -49,11 +49,8 @@ class Calendar {
     bool Read(Lexer*);
     void Write(std::ofstream&, bool delete_history = false) const;
 
-    // Takes a lexer for the delete history file and loads in the deleted items list.
     bool ReadDeleteHistory(Lexer*);
-
-    // Restore every deleted Item. Just a temporary function for demonstration.
-    void RestoreAll();
+    // effects - Takes a lexer for the delete history file and loads in the deleted items list.
 
     bool Hidden(char const* uid) const;
     // effects - Returns true iff item named by uid should be hidden.
