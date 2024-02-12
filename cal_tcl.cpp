@@ -196,6 +196,7 @@ static int cal_load       (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_forincs    (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_add        (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_remove     (ClientData, Tcl_Interp*, int, const char*[]);
+static int cal_softremove (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_hide       (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_ronly      (ClientData, Tcl_Interp*, int, const char*[]);
 static int cal_dirty      (ClientData, Tcl_Interp*, int, const char*[]);
@@ -222,6 +223,7 @@ static Dispatch_Entry calendar_dispatch[] = {
     { "forincludes",    2, 2, cal_forincs       },
     { "add",            1, 2, cal_add           },
     { "remove",         1, 1, cal_remove        },
+    { "softremove",     1, 1, cal_softremove    },
     { "hide",           1, 1, cal_hide          },
     { "readonly",       0, 1, cal_ronly         },
     { "dirty",          0, 1, cal_dirty         },
@@ -533,6 +535,39 @@ static int cal_remove(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[
     file->Modified();
 
     trigger(tcl, "delete", item->handle());
+
+    TCL_Return(tcl, "");
+}
+
+static int cal_softremove(ClientData c, Tcl_Interp* tcl, int argc, const char* argv[]) {
+    Calendar_Tcl* cal = (Calendar_Tcl*)c;
+
+    // Find item
+    Object* obj = Object::find(tcl, argv[0]);
+    if ((obj == nullptr) || (strcmp(obj->type(), "Item") != 0)) {
+        TCL_Error(tcl, "no such item");
+    }
+    Item_Tcl* item = (Item_Tcl*)obj;
+
+    // Find file
+    CalFile* file = item->calendar();
+    if (file == nullptr) TCL_Error(tcl, "no such calendar");
+
+    if (file->GetCalendar()->ReadOnly()) {
+        TCL_Error(tcl, "permission denied");
+    }
+
+    if (file->GetCalendar()->HistoryMode()) {
+        file->GetCalendar()->Restore(item->value());
+    }
+    else {
+        // move the item to the delete history and remove the Tcl handle
+        file->GetCalendar()->SoftDelete(item->value());
+    }
+    file->Modified();
+
+    trigger(tcl, "delete", item->handle());
+    delete item;
 
     TCL_Return(tcl, "");
 }

@@ -68,7 +68,6 @@ static int item_timezone  (ClientData, Tcl_Interp*, int, const char**);
 static int item_clone     (ClientData, Tcl_Interp*, int, const char**);
 static int item_is        (ClientData, Tcl_Interp*, int, const char**);
 static int item_delete    (ClientData, Tcl_Interp*, int, const char**);
-static int item_softdel   (ClientData, Tcl_Interp*, int, const char**);
 static int item_cal       (ClientData, Tcl_Interp*, int, const char**);
 static int item_text      (ClientData, Tcl_Interp*, int, const char**);
 static int item_uid       (ClientData, Tcl_Interp*, int, const char**);
@@ -108,7 +107,6 @@ static int item_mlweekday (ClientData, Tcl_Interp*, int, const char**);
 
 static Dispatch_Entry item_dispatch[] = {
     { "delete",                 0, 0, item_delete       },
-    { "softdelete",             0, 0, item_softdel      },
     { "clone",                  0, 0, item_clone        },
 
     { "length",                 0, 1, item_length       },
@@ -295,32 +293,6 @@ static int item_delete(ClientData c, Tcl_Interp* tcl, int argc, const char** arg
 
     delete item->value();
     delete item;
-
-    TCL_Return(tcl, "");
-}
-
-static int item_softdel(ClientData c, Tcl_Interp* tcl, int argc, const char** argv) {
-    Item_Tcl* item = ((Item_Tcl*)c);
-    if (!check_permission(tcl, item)) return TCL_ERROR;
-
-    CalFile* file = item->calendar();
-    if (file != nullptr) {
-        // TODO: THIS IS A TEMP JANK IMPLEMENTATION with one SoftDelete/Restore button
-        // this is a deleted item; restore it
-        if (file->GetCalendar()->HistoryMode()) {
-            file->GetCalendar()->Restore(item->value());
-        }
-        else {
-            // move the item to the delete history and remove the Tcl handle
-            file->GetCalendar()->SoftDelete(item->value());
-        }
-        delete item;
-
-        file->Modified();
-
-        // prompt Tcl to re-check all items
-        trigger(tcl, "flush");
-    }
 
     TCL_Return(tcl, "");
 }

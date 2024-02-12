@@ -94,7 +94,6 @@ proc ical_clip {i} {
     global ical_state
     set old $ical_state(clip)
     if [string compare $old ""] {
-        tk_messageBox -message "$old"
         $old delete
     }
     set ical_state(clip) $i
@@ -179,8 +178,9 @@ action ical_cut_or_hide item {Delete selected item} {} {
 action ical_delete item {Delete selected item and save in delete history} {} {
     if ![ical_with_item i] return
 
-    ical_clip $i
-    $i softdelete
+    set ic [$i clone]
+    ical_clip $ic
+    cal softremove $i
 }
 
 action ical_restoreall writable {Restore everything in the delete history} {} {
