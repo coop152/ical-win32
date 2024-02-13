@@ -213,14 +213,14 @@ method DayView update_statusbar_warning {} {
     if {$ical_state(historymode)} {
         $n.cal configure -background tomato 
         $n.rep configure -background tomato
-        $n.modeindicator configure -background tomato -text "Delete History"
+        $n.modeindicator configure -relief groove -padx 2 -background tomato -text "Delete History"
         $n.status configure -background tomato
     } else {
         # get default color from ttk::style
         set default_color [ttk::style lookup TText -background]
         $n.cal configure -background $default_color
         $n.rep configure -background $default_color
-        $n.modeindicator configure -background $default_color -text ""
+        $n.modeindicator configure -relief flat -padx 0 -background $default_color -text ""
         $n.status configure -background $default_color   
     }
      # destroy everything in the menu and rebuild, to update the entries
