@@ -5,10 +5,12 @@
 #include <io.h>
 #else
 #include <unistd.h>
+#include <sys/stat.h>
 #define _stat stat
 #define _access access
 #define _chmod chmod
 #define _fileno fileno
+#define GetCurrentProcessId getpid
 #endif
 #include <filesystem>
 
