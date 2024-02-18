@@ -41,7 +41,7 @@ static OptionDesc option_list[] = {
 
 static OptionMap* option_default = nullptr;
 
-Calendar::Calendar(): items(), includes(), hidden()
+Calendar::Calendar(): items(), deleted(), includes(), hidden()
 {
     // Initialize default option map if not done already
     if (option_default == nullptr) {
@@ -51,7 +51,8 @@ Calendar::Calendar(): items(), includes(), hidden()
         }
     }
     
-    readonly = 0;
+    historyMode = false;
+    readonly = false;
     options = new OptionMap;
 }
 
@@ -68,6 +69,12 @@ void Calendar::clear() {
         delete item;
     }
     items.clear();
+
+    for (i = 0; i < deleted.size(); i++) {
+        Item* item = (Item*)deleted[i];
+        delete item;
+    }
+    deleted.clear();
 
     for (i = 0; i < includes.size(); i++) {
         char* includeName = (char*) includes[i];
@@ -87,16 +94,35 @@ void Calendar::clear() {
 }
 
 void Calendar::Add(Item* item) {
-    items.push_back(item);
+    std::vector<Item*>& current = historyMode ? deleted : items;
+    current.push_back(item);
 }
 
 void Calendar::Remove(Item* item) {
-    for (int i = 0; i < items.size(); i++) {
-        if (items[i] == item) {
+    std::vector<Item*>& current = historyMode ? deleted : items;
+    for (int i = 0; i < current.size(); i++) {
+        if (current[i] == item) {
             /* Found it */
+            current.erase(current.begin() + i);
+            break;
+        }
+    }
+}
 
-            /* Shift the other items over */
-            items.erase(items.begin() + i);
+void Calendar::SoftDelete(Item* item) {
+    // If the user is viewing deleted items then this function shouldn't run
+    if (historyMode) return;
+    // TODO: this should specifically remove from items and not just call remove
+    Remove(item);
+    deleted.push_back(item);
+}
+
+void Calendar::Restore(Item* item) {
+    for (int i = 0; i < deleted.size(); i++) {
+        if (deleted[i] == item) {
+            /* Found it */
+            deleted.erase(deleted.begin() + i);
+            items.push_back(item);
             break;
         }
     }
@@ -228,42 +254,61 @@ bool Calendar::Read(Lexer* lex) {
     }
 }
 
-void Calendar::Write(FILE* file) const {
-    charArray* out = new charArray;
-
-    format(out, "Calendar [v%d.%d]\n", VersionMajor, VersionMinor);
-    options->write(out);
-    for (int i = 0; i < includes.size(); i++) {
-        char const* name = (char const*) includes[i];
-        append_string(out, "IncludeCalendar [");
-        Lexer::PutString(out, name);
-        append_string(out, "]\n");
+bool Calendar::ReadDeleteHistory(Lexer* lex) {
+    Calendar* c = new Calendar();
+    
+    // note that Read returns true when there is no file!
+    // it's a perfectly acceptable outcome.
+    if (!c->Read(lex)) {
+        delete c;
+        return false;
     }
-    for (int i = 0; i < items.size(); i++) {
-        Item* item = (Item*) items[i];
 
+    // take the parsed items...
+    this->deleted = std::move(c->items);
+    // be careful; this janky implementation requires this move or else the pointers will remain in c.
+    // when you delete c the pointers will all be deleted and youll have invalid pointers in this->deleted.
+
+    // ...and discard the rest
+    delete c;
+    return true;
+}
+
+void Calendar::Write(std::ofstream& file, bool delete_history) const {
+    std::string out = "";
+
+    out += std::format("Calendar [v{}.{}]\n", VersionMajor, VersionMinor);
+    out += *options;
+    for (int i = 0; i < includes.size(); i++) {
+        char const* name = (char const*)includes[i];
+        out += "IncludeCalendar [";
+        out += Lexer::EscapeString(name);
+        out += "]\n";
+    }
+    // if delete_history is true, write out the delete history instead
+    const std::vector<Item*>& to_write = delete_history ? deleted : items;
+    for (Item *item: to_write) {
         if (item->AsNotice() != nullptr) {
-            append_string(out, "Note [\n");
+            out += "Note [\n";
         }
         else {
-            append_string(out, "Appt [\n");
+            out += "Appt [\n";
         }
-        item->Write(out);
-        append_string(out, "]\n");
+        out += *item;
+        out += "]\n";
     }
 
     for (char const* s : hidden) {
-        format(out, "Hide [%s]\n", s);
+        out += std::format("Hide [{}]\n", s);
     }
 
-    // Just dump array out to file.
-    out->append('\0');
-    fputs(out->as_pointer(), file);
-    delete out;
+    // and output to the file.
+    file << out;
 }
 
-int Calendar::Size() const {
-    return items.size();
+int Calendar::Size() {
+    std::vector<Item*>& current = historyMode ? deleted : items;
+    return current.size();
 }
 
 void Calendar::Include(char const* name) {
@@ -288,12 +333,14 @@ int Calendar::NumIncludes() const {
 }
 
 char const* Calendar::GetInclude(int i) const {
-    return ((char const*) includes[i]);
+    return includes[i];
 }
 
-Item* Calendar::Get(int i) const {
-    return (Item*) items[i];
+Item* Calendar::Get(int i) {
+    std::vector<Item*>& current = historyMode ? deleted : items;
+    return current.at(i);
 }
+
 
 bool Calendar::Hidden(char const* uid) const {
     return hidden.contains(uid);

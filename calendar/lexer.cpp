@@ -24,7 +24,7 @@ Lexer::Lexer(char const* file) {
     index = 0;
     length = 0;
 
-    FILE* f = fopen(file, "r");
+    FILE* f = fopen(file, "rb"); // open in binary mode to stop stripping of \r characters
     if (f == nullptr) {
         SetError("could not open file");
         return;
@@ -186,4 +186,14 @@ void Lexer::PutString(charArray* out, char const* x) {
         out->append(c);
         x++;
     }
+}
+
+std::string Lexer::EscapeString(std::string x) {
+    std::string out = "";
+    for (char c : x) {
+        // escape any of these three characters, if present
+        if ((c == '\\') || (c == '[') || (c == ']')) out += "\\";
+        out += c;
+    }
+    return out;
 }

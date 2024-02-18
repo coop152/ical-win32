@@ -1,23 +1,12 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
 #include <Windows.h>
-#include <sys/types.h>
 #include <io.h>
-#include <stdlib.h>
-
-#include <stddef.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <string.h>
 #include <filesystem>
-
 
 #include "calfile.h"
 #include "calendar.h"
-#include "lexer.h"
-#include "misc.h"
-#include "uid.h"
+#include <fstream>
 
 namespace fs = std::filesystem;
 
@@ -34,7 +23,7 @@ static int fsync(int) {return 0;}
 static char const* home_backup_file();  // Backup file in home dir
 static char const* tmp_backup_file();   // Backup file in tmp dir
 
-static bool backup_file(char const* src, char const* dst, long mode);
+static bool backup_file(std::string src, std::string dst);
 // effects      Backup file named "src" to file named "dst".
 //              Change the mode of "dst" to "mode".
 //              Return true iff successful.
@@ -43,49 +32,20 @@ const char* CalFile::lastError = "no error";
 
 CalFile::CalFile(bool ro, const char* name) {
     readOnly = ro;
-
-    int len = strlen(name);
-    char* tmp;
-
-    // Copy file name
-    tmp = new char[len+1];
-    strcpy(tmp, name);
-    fileName = tmp;
-
-    // Copy backup file name
-    tmp = new char[len+2];
-    sprintf(tmp, "%s~", fileName);
-    backupName = tmp;
-
-    // Get directory name for access checks
-    char* lastSlash = strrchr(const_cast<char*>(name), '\\');
-    int dirlen = lastSlash + 1 - name;
-    tmp = new char[dirlen+1];
-    strncpy(tmp, name, dirlen);
-    tmp[dirlen] = '\0';
-    
-    dirName = tmp;
-
-    // Get temporary file name.  Make sure it works even
-    // on systems with a 14 character file name limit.
-    tmp = new char[strlen(dirName)+20];
-    sprintf(tmp, "%sical%d~", dirName, GetCurrentProcessId());
-    tmpName = tmp;
-
     lastModifyValid = false;
+    modified = false;
+
+    fileName = name;
+    backupName = fileName + "~";
+    dirName = fs::path(name).remove_filename().string();
+    tmpName = std::format("{}\\ical{}~", dirName, GetCurrentProcessId()); // TODO: this isn't linux safe!
 
     calendar = new Calendar;
     calendar->SetReadOnly(readOnly);
-
-    modified = false;
 }
 
 CalFile::~CalFile() {
     delete calendar;
-    delete fileName;
-    delete backupName;
-    delete tmpName;
-    delete dirName;
 }
 
 void CalFile::Modified() {
@@ -93,38 +53,24 @@ void CalFile::Modified() {
 }
 
 bool CalFile::Write() {
-    // Get information about the calendar file
-    struct _stat buf;
-    bool is_slink = false;
-
-    int result = _stat(fileName, &buf);
-    if ((result >= 0) && fs::is_symlink(fileName)) {
-        //Get mode for real referenced file
-        is_slink = true;
-    }
-
-    if (result < 0) {
-        /* Could not get file mode */
-        if (errno == ENOENT) {
-            /* Original file does not even exist - try to write directly */
-            if (WriteTo(calendar, fileName)) {
-                written();
-                return true;
-            }
+    if (!fs::exists(fileName)) {
+        // original file doesn't even exist - write directly
+        // also write delete history file
+        if (WriteTo(calendar, fileName) && WriteTo(calendar, fileName+".del", true)) {
+            written();
+            return true;
         }
         return false;
     }
 
-    long mode = buf.st_mode & 07777;
 
-    // See if file is a link, or if the containing directory is write-protected
-    if (is_slink || (buf.st_nlink > 1) || (_access(dirName, W_OK) < 0)) {
-        // Backup by copying to preserve links
-        return WriteInPlace(mode);
+    if (fs::is_symlink(fileName) || (_access(dirName.c_str(), W_OK) < 0)) {
+        // file is a link, or the containing directory is write-protected
+        return WriteInPlace();
     }
     else {
-        // Backup by renaming old version if possible
-        return WriteNew(mode);
+        // backup by renaming old version
+        return WriteNew();
     }
 }
 
@@ -132,35 +78,29 @@ bool CalFile::Write() {
 // to a backup file and then rename the new version to the right
 // file name.
 
-bool CalFile::WriteNew(long mode) {
+bool CalFile::WriteNew() {
+    // try to write to the temp file
     if (!WriteTo(calendar, tmpName)) {
-        remove(tmpName);
+        fs::remove(tmpName);
         return false;
     }
 
-    if (_chmod(tmpName, mode) < 0) {
-        /* Could not set new file mode */
-        lastError = strerror (errno);
-        remove(tmpName);
+
+    // delete the old backup file, rename the old calendar file into the new backup,
+    // and rename the temp file into the new calendar file.
+    try {
+        fs::remove(backupName);
+        fs::rename(fileName, backupName);
+        fs::rename(tmpName, fileName);
+    }
+    catch (fs::filesystem_error& e) {
+        lastError = e.what();
+        fs::remove(tmpName);
         return false;
     }
 
-    // We could conceivably do more sanity checks here.
-
-    // Create backup file.
-    // We could check for errors and fail here, but that seems too paranoid.
-    //link(fileName, backupName);
-    remove(backupName);
-    if (rename(fileName, backupName) < 0) {
-        lastError = strerror(errno);
-        remove(tmpName);
-        return false;
-    }
-
-    // Now rename the new version
-    if (rename(tmpName, fileName) < 0) {
-        lastError = strerror (errno);
-        remove(tmpName);
+    // try to write delete history file
+    if (!WriteTo(calendar, fileName+".del", true)) {
         return false;
     }
 
@@ -171,11 +111,11 @@ bool CalFile::WriteNew(long mode) {
 // First backup the current stable version of the calendar, and then
 // write a new version in place.
 
-bool CalFile::WriteInPlace(long mode) {
+bool CalFile::WriteInPlace() {
     // XXX Should we just ignore errors while making a backup?
-    CopyBackup(mode);
+    CopyBackup();
 
-    if (WriteTo(calendar, fileName)) {
+    if (WriteTo(calendar, fileName) && WriteTo(calendar, fileName+".del", true)) {
         written();
         return true;
     }
@@ -183,16 +123,16 @@ bool CalFile::WriteInPlace(long mode) {
     return false;
 }
 
-bool CalFile::CopyBackup(long mode) {
+bool CalFile::CopyBackup() {
     // Try backing up in various place until we succeed:
     //
     // * backupName
     // * In home directory
     // * In tmp directory
 
-    if (backup_file(fileName, backupName,          mode)) return true;
-    if (backup_file(fileName, home_backup_file(),  mode)) return true;
-    if (backup_file(fileName, tmp_backup_file(),   mode)) return true;
+    if (backup_file(fileName, backupName)) return true;
+    if (backup_file(fileName, home_backup_file())) return true;
+    if (backup_file(fileName, tmp_backup_file())) return true;
 
     return false;
 }
@@ -242,44 +182,45 @@ bool CalFile::FileHasChanged() {
     return (lastModifyValid && (newModifyTime != lastModifyTime));
 }
 
-Calendar* CalFile::ReadFrom(const char* name) {
+Calendar* CalFile::ReadFrom(std::string name) {
     Calendar* cal = new Calendar;
-    Lexer input(name);
+    Lexer input(name.c_str());
+    Lexer historyInput((name + ".del").c_str());
 
-    if (! cal->Read(&input)) {
+    // read calendar, failing if it can't be read
+    if (!cal->Read(&input)) {
         lastError = input.LastError();
         delete cal;
         cal = nullptr;
     }
 
+    // try to read the corresponding delete history file, doing nothing if it fails
+    cal->ReadDeleteHistory(&historyInput);
+
     return cal;
 }
 
-bool CalFile::WriteTo(Calendar* cal, const char* name) {
-    // temporarily making this binary so that the program writes unix line endings
-    // TODO: remove this when the program can compile on linux; in that case it (should) be able to convert from CRLF automatically
-    FILE* output = fopen(name, "wb");
-    if (!output) {
-        lastError = "could not open file for writing calendar";
+bool CalFile::WriteTo(Calendar* cal, std::string name, bool delete_history) {
+    std::ofstream outfile(name, std::ios_base::binary); // binary mode as to not alter the line endings (for cross-OS compatibility)
+
+    if (!outfile) {
+        lastError = "Could not open calendar file for writing.";
         return false;
     }
 
-    cal->Write(output);
-    fflush(output);
-    if (ferror(output) || (fsync(_fileno(output)) < 0)) {
-        lastError = "error writing calendar file";
-        fclose(output);
+    cal->Write(outfile, delete_history);
+    if (outfile.bad()) {
+        lastError = "Error writing to calendar file.";
         return false;
     }
 
-    fclose(output);
     return true;
 }
 
-bool CalFile::GetModifyTime(char const* file, Time& t) {
+bool CalFile::GetModifyTime(std::string file, Time& t) {
     struct stat buf;
 
-    int ret = stat(file, &buf);
+    int ret = stat(file.c_str(), &buf);
     if (ret < 0) return false;
 
     t = Time(buf.st_mtime);
@@ -289,7 +230,7 @@ bool CalFile::GetModifyTime(char const* file, Time& t) {
 void CalFile::PerformAccessCheck() {
     calendar->SetReadOnly(readOnly);
 
-    if (_access(fileName, W_OK) < 0) {
+    if (_access(fileName.c_str(), W_OK) < 0) {
         switch (errno) {
           case ENOENT:
             /* File does not exist */
@@ -312,12 +253,10 @@ void CalFile::written() {
     lastModifyValid = GetModifyTime(fileName, lastModifyTime);
 }
 
-static bool backup_file(char const* src, char const* dst, long mode) {
-    if (dst == nullptr) return false;
-    if (!copy_file(src, dst)) return false;
+static bool backup_file(std::string src, std::string dst) {
+    if (!copy_file(src.c_str(), dst.c_str())) return false;
 
-    // XXX Ignoring error while changing mode of backup file
-    _chmod(dst, mode);
+    fs::permissions(dst, fs::perms::all, fs::perm_options::add);
     return true;
 }
 
@@ -332,7 +271,7 @@ static char const* home_backup_file() {
         char const* home = getenv("HOME");
         if (home != nullptr) {
             char* copy = new char[strlen(home) + strlen(part_name) + 2];
-            sprintf(copy, "%s\\%s", home, part_name);
+            sprintf(copy, "%s\\%s", home, part_name); // TODO: this isn't linux safe!
             full_name = copy;
         }
     }

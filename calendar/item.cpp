@@ -1,6 +1,5 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
-#include <Windows.h>
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
@@ -198,6 +197,32 @@ void Item::Write(charArray* out) const {
     options.write(out);
 }
 
+Item::operator std::string() {
+    std::string out = "";
+
+    out += std::format("Uid [{}]\n", uid);
+    this->uid_persistent = 1;
+
+    if (strlen(owner) != 0) {
+        out += std::format("Owner [{}]\n", Lexer::EscapeString(owner));
+    }
+
+    out += std::format("Contents [{}]\n", Lexer::EscapeString(text));
+
+    out += std::format("Remind [{}]\n", remindStart);
+
+    out += std::format("Hilite [{}]\n", Lexer::EscapeString(hilite));
+
+    if (todo) { out += "Todo []\n"; }
+    if (done) { out += "Done []\n"; }
+
+    out += std::format("Dates [{}]\n", std::string(*date));
+
+    out += options;
+
+    return out;
+}
+
 void Item::CopyTo(Item* item) const {
     // The code below cannot correctly handle aliasing.
     if (item == this) return;
@@ -320,6 +345,27 @@ void Appointment::Write(charArray* out) const {
     }
 
     Item::Write(out);
+}
+
+Appointment::operator std::string() {
+    std::string out = "";
+
+    out += std::format("Start [{}]\n", start);
+    out += std::format("Length [{}]\n", length);
+    if (has_timezone())
+        out += std::format("Timezone [{}]\n", timezone);
+    if (alarms != nullptr) {
+        out += "Alarms [";
+        for (int i = 0; i < alarms->size(); i++) {
+            int x = alarms->slot(i);
+            out += std::format(" {}", x); // with a space before it!
+        }
+        out += "]\n";
+    }
+    
+    // and call the base class version to get the rest
+    out += this->Item::operator std::string();
+    return out;
 }
 
 Item* Appointment::Clone() const {

@@ -3,13 +3,12 @@
 #ifndef _CALENDARH
 #define _CALENDARH
 
-#include <stdio.h>
 #include "options.h"
 #include "item.h"
 #include "lexer.h"
 #include <vector>
 #include <set>
-
+#include <fstream>
 
 class Calendar {
   public:
@@ -19,10 +18,12 @@ class Calendar {
     /*
      * Item list.
      */
-    int Size() const;                   /* Number of items */
-    Item* Get(int) const;               /* Get the ith item */
+    int Size();                         /* Number of items */
+    Item* Get(int);                     /* Get the ith item */
     void Add(Item*);                    /* Add an item */
     void Remove(Item*);                 /* Remove an item */
+    void SoftDelete(Item*);             /* Move an item into the delete history */
+    void Restore(Item*);                /* Move an item from the delete history back into the calendar */
 
     /*
      * Included calendars.
@@ -39,11 +40,17 @@ class Calendar {
     bool ReadOnly() const { return readonly; }
     void SetReadOnly(bool t) { readonly = t; }
 
+    bool HistoryMode() const { return historyMode; }
+    void setHistoryMode(bool t) { historyMode = t; }
+
     /*
      * Read/Write.
      */
     bool Read(Lexer*);
-    void Write(FILE*) const;
+    void Write(std::ofstream&, bool delete_history = false) const;
+
+    bool ReadDeleteHistory(Lexer*);
+    // effects - Takes a lexer for the delete history file and loads in the deleted items list.
 
     bool Hidden(char const* uid) const;
     // effects - Returns true iff item named by uid should be hidden.
@@ -72,8 +79,10 @@ class Calendar {
 
   protected:
     std::vector<Item*> items;           // Items
+    std::vector<Item*> deleted;         // Items in the delete history (stored in .del calendar file)
     std::vector<char*> includes;        // Included calendars
     bool readonly;                      // Readonly calendar?
+    bool historyMode;                   // Is the delete history currently being viewed?
     std::set<char const*> hidden;       // Hidden items from other calendars
     OptionMap* options;                 // Calendar options
 

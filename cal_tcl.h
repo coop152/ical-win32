@@ -8,13 +8,13 @@
 
 #include "object.h"
 #include "arrays.h"
+#include <vector>
 
 class Calendar;
 class CalFile;
 class Item;
 class Item_Tcl;
 
-typedef Array<CalFile*> FileList;
 
 class Calendar_Tcl : public Object {
   public:
@@ -27,7 +27,7 @@ class Calendar_Tcl : public Object {
     virtual int method(int, const char*[]);
 
     CalFile*  main;             /* Main calendar */
-    FileList* includes;         /* Included calendars */
+    std::vector<CalFile*> includes; /* Included calendars */
 
     void add_item_handles(CalFile*);
     void remove_item_handles(Calendar*);

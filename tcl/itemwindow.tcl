@@ -289,7 +289,7 @@ method ItemWindow date {} {
 }
 
 method ItemWindow prop_menu {X Y x y} {
-    global iw_cal
+    global iw_cal, ical_state
 
     $self click $x $y
     set m .${self}_menu
@@ -343,6 +343,12 @@ method ItemWindow prop_menu {X Y x y} {
     $m add separator
     $m add command -label "Cut" -command {ical_cut_or_hide}
     $m add command -label "Copy" -command {ical_copy}
+    # show delete or restore button depending on program state
+    if {$ical_state(historymode)} {
+        $m add command -label "Restore" -command {ical_restore}
+    } else {
+        $m add command -label "Delete" -command {ical_delete}
+    }
     run-hook item-popup $self $m
     tk_popup $m $X $Y
     return $m
