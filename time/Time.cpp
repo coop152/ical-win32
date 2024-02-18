@@ -1,6 +1,5 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
-#include <Windows.h>
 #include <stddef.h>
 #include <sys/types.h>
 #include <math.h>

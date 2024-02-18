@@ -14,7 +14,12 @@
  * as well to avoid depending on external files being installed correctly.
  */
 
+
+#ifdef _WIN32
 #include <Windows.h>
+#define ICALLIBDIR "./tcl" // tcl files are beside the executable on windows
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <tcl.h>
@@ -164,8 +169,7 @@ int Ical_Init(Tcl_Interp* tcl) {
     Tcl_CreateCommand(tcl, "hilite_loop",  Cmd_HiliteLoop,      nullptr, nullptr);
     Tcl_CreateCommand(tcl, "ical_expand_file_name", Cmd_ExpandFileName, nullptr, nullptr);
 
-    // Initialize ical stuff
-    if (Tcl_EvalFile(tcl, "./tcl/startup.tcl") != TCL_OK) {
+    if (Tcl_EvalFile(tcl, ICALLIBDIR "/startup.tcl") != TCL_OK) {
         return TCL_ERROR;
     }
 
@@ -201,8 +205,10 @@ static int eval_list(Tcl_Interp* tcl, const char** list) {
     return result;
 }
 
+#ifdef _WIN32
 // Entrypoint for a Windows desktop application (So that a console window doesn't open with the program)
 int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
     main(__argc, __argv);
 }
+#endif

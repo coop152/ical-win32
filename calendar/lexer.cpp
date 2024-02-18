@@ -9,7 +9,6 @@
 
 #include "arrays.h"
 #include "lexer.h"
-#include <io.h>
 
 char const* Lexer::lastError = "";
 

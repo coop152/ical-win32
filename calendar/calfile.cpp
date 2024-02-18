@@ -1,7 +1,15 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
+#ifdef _WIN32
 #include <Windows.h>
 #include <io.h>
+#else
+#include <unistd.h>
+#define _stat stat
+#define _access access
+#define _chmod chmod
+#define _fileno fileno
+#endif
 #include <filesystem>
 
 #include "calfile.h"
@@ -11,9 +19,7 @@
 namespace fs = std::filesystem;
 
 // Only use "fsync" if it is available.
-#ifdef HAVE_FSYNC
-extern "C" int fsync(int);
-#else
+#ifdef _WIN32
 static int fsync(int) {return 0;}
 #endif
 
@@ -271,7 +277,8 @@ static char const* home_backup_file() {
         char const* home = getenv("HOME");
         if (home != nullptr) {
             char* copy = new char[strlen(home) + strlen(part_name) + 2];
-            sprintf(copy, "%s\\%s", home, part_name); // TODO: this isn't linux safe!
+            sprintf(copy, "%s%c%s", home, fs::path::preferred_separator, part_name);
+
             full_name = copy;
         }
     }
@@ -281,8 +288,12 @@ static char const* home_backup_file() {
 
 static char const* tmp_backup_file() {
     // how horrible is THIS?
+    #ifdef _WIN32
     auto sys_tmp_path = std::wstring(std::filesystem::temp_directory_path().c_str());
     auto as_ascii = std::string(sys_tmp_path.begin(), sys_tmp_path.end());
+    #else
+    auto as_ascii = std::filesystem::temp_directory_path().string();
+    #endif
     static char const* prefix = as_ascii.c_str();
     static char const* full_name = nullptr;
     static int inited = false;

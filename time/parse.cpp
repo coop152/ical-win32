@@ -227,7 +227,11 @@ static bool parse_word(char const* str, int len, Token& t) {
     for (int i = 0; words[i].ptr != nullptr; i++) {
         if (len < words[i].len) continue;
         if (len > strlen(words[i].ptr)) continue;
+        #ifdef _WIN32
         if (_strnicmp(str, words[i].ptr, len) != 0) continue;
+        #else
+        if (strncasecmp(str, words[i].ptr, len) != 0) continue;
+        #endif
 
         // Found it
         t.ptr = str;

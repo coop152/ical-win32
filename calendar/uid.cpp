@@ -1,5 +1,10 @@
 /* Copyright (c) 1996  by Sanjay Ghemawat */
+#ifdef _WIN32
 #include <Windows.h>
+#else
+#include <unistd.h>
+#endif
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,7 +30,13 @@ char const* uid_new() {
             strcpy(hostname, "unknownhost");
         }
         hostid = 42;
+
+        #ifdef _WIN32
         pid = GetCurrentProcessId();
+        #else
+        pid = getpid();
+        #endif
+
         counter = 0;
         inited = 1;
     }
