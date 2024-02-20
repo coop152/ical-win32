@@ -227,6 +227,7 @@
     <None Include="tcl\tcllib\textwin.tcl" />
     <None Include="tcl\timerange.tcl" />
     <None Include="tcl\trigger.tcl" />
+    <None Include="tcl\tcllib\dg_duration.tcl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ical-win32.rc">

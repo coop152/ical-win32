@@ -325,6 +325,7 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <None Include="tcl\tcllib\dg_bug.tcl">
       <FileType>Document</FileType>
     </None>
+    <None Include="tcl\tcllib\dg_duration.tcl" />
     <None Include="tcl\tcllib\dg_error.tcl">
       <FileType>Document</FileType>
     </None>
