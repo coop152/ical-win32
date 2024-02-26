@@ -779,6 +779,18 @@ action ical_itemwidth writable {Change the default width of the notice and appt 
     }
 }
 
+action ical_autopurgesettings writable {Choose if and when items in the delete history will be automatically cleaned out} {} {
+    if [cal readonly] {return}
+
+    set d [cal option AutoPurgeDelay] 
+    if [get_duration [ical_leader] {Autopurge Settings}\
+            {Specify the number of days between an item being deleted and it being automatically purged from the delete history. (Set to 0 to disable.)}\
+            0 365 $d d] {
+                cal option AutoPurgeDelay $d
+                trigger fire reconfig
+            }
+}
+
 action ical_webbrowser writable {Change the default browser which is used for opening web links} {} {
     if [cal readonly] {return}
 

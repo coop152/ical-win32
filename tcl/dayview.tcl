@@ -375,6 +375,7 @@ method DayView build_menu {} {
     menu-sep    $b List
     menu-pull   $b List {From Calendar}         {ical_fill_listinc}
 
+    menu-entry  $b Options {Autopurge Settings}   {ical_autopurgesettings}
     menu-entry  $b Options {Appointment Range}    {ical_timerange}
     menu-entry  $b Options {Notice Window Height} {ical_noticeheight}
     menu-entry  $b Options {Item Width}           {ical_itemwidth}
