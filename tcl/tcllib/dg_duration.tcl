@@ -51,7 +51,6 @@ proc duration_make {} {
     }
 
     #pack $f.scale -in $f.mid -side top -expand 1 -padx 5m -pady 5m
-    pack $f.tickbox -in $f.mid -side top
     pack $f.days -in $f.mid -side left -expand 1 -padx 5m -pady 5m
     pack $f.dayslabel -in $f.mid -side right -expand 1 -padx {0 5m} -pady 5m
     pack $f.top -side top -expand 1 -fill both

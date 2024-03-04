@@ -322,6 +322,8 @@ method DayView build_menu {} {
         menu-entry  $b Edit {Delete Item}           {ical_delete}
     }
 
+    menu-entry  $b Edit {Delete Items Before Date...} {ical_deleteallbefore}
+
     menu-sep    $b Edit
     menu-entry  $b Edit {Cut Item}              {ical_cut_or_hide}
     menu-entry  $b Edit {Copy Item}             {ical_copy}

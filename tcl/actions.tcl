@@ -791,6 +791,50 @@ action ical_autopurgesettings writable {Choose if and when items in the delete h
             }
 }
 
+action ical_deleteallbefore writable {Delete all items in the calendar before the chosen date} {} {
+    if [cal readonly] {return}
+
+    set historymode $::ical_state(historymode)
+    if {!$historymode} {
+        set message {Give a date. All items before this date will be deleted. They can be recovered from the delete history. (DD/MM/YYYY)}
+    } else {
+        set message {Give a date. All items before this date will be permanently cleared from the delete history. (DD/MM/YYYY)}
+    }
+
+    # given date
+    set d 0 
+    if [get_date [ical_leader] {Delete all items before date} $message $d d] {
+        set count 0
+        set items {}
+        cal query 0 $d item item_date {
+            incr count
+            lappend items $item
+        }
+        
+        set user_choice [yes_no_cancel [ical_leader] "This will delete $count item(s). Are you sure?" "List items" "Delete" "Cancel"] 
+        if {$user_choice == "yes"} { # yes to seeing a listing
+            set l [ItemListing]
+            $l dayrange 0 [expr $d-1]
+            tkwait window .$l
+            if {[yes_or_no [ical_leader] "Delete those items?"]} {
+                # delete everything in $items in a for loop
+                foreach i $items {
+                    
+                    if {$historymode} {cal remove $i} else {cal softremove $i}
+                }
+            } else { return }
+        } elseif {$user_choice == "no"} { # no to seeing a listing (delete immediately)
+            foreach i $items {
+                
+                if {$historymode} {cal remove $i} else {cal softremove $i}
+            }
+        } else {
+            # user cancelled, do nothing
+            return
+        }
+    }
+}
+
 action ical_webbrowser writable {Change the default browser which is used for opening web links} {} {
     if [cal readonly] {return}
 
