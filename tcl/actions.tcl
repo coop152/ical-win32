@@ -615,6 +615,11 @@ action ical_toggle_todo witem {Make item a todo item} {} {
     $i todo [expr ![$i todo]]
 }
 
+action ical_toggle_important witem {Mark item as important} {} {
+    if ![ical_with_mod_single_item i] return
+    $i important [expr ![$i important]]
+}
+
 action ical_toggle_done witem {Mark todo item as done} {} {
     if ![ical_with_mod_item i] return
     if [catch {set cal [$i calendar]}] return
@@ -807,6 +812,8 @@ action ical_deleteallbefore writable {Delete all items in the calendar before th
         set count 0
         set items {}
         cal query 0 $d item item_date {
+            # don't mass delete important items
+            if {[$item important]} {continue}
             incr count
             lappend items $item
         }
@@ -814,18 +821,17 @@ action ical_deleteallbefore writable {Delete all items in the calendar before th
         set user_choice [yes_no_cancel [ical_leader] "This will delete $count item(s). Are you sure?" "List items" "Delete" "Cancel"] 
         if {$user_choice == "yes"} { # yes to seeing a listing
             set l [ItemListing]
-            $l dayrange 0 [expr $d-1]
+            # last argument of 0 to hide important items
+            $l dayrange 0 [expr $d-1] 0
             tkwait window .$l
             if {[yes_or_no [ical_leader] "Delete those items?"]} {
                 # delete everything in $items in a for loop
                 foreach i $items {
-                    
                     if {$historymode} {cal remove $i} else {cal softremove $i}
                 }
             } else { return }
         } elseif {$user_choice == "no"} { # no to seeing a listing (delete immediately)
             foreach i $items {
-                
                 if {$historymode} {cal remove $i} else {cal softremove $i}
             }
         } else {

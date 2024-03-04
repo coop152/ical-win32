@@ -31,6 +31,8 @@ class Appointment;
  * Hilite: string               Hilite mode
  * Todo: bool                   Is Item a to-do item
  * Done: bool                   Has item been marked "done"
+ * Important: bool              Has item been marked "important",
+ *                                  meaning it shouldn't be deleted in mass-delete operations
  *
  * AsNotice: Notice*            Typecast to Notice if legal.  Null otherwise.
  * AsAppointment: Appointment*  Typecast to Appointment if legal ... 
@@ -132,11 +134,15 @@ class Item {
 
     /* Todo? */
     bool IsTodo() const { return todo; }
-    void SetTodo(bool t) { todo = t; if (!t) done = false; }
+    void SetTodo(bool t) { todo = t; }
 
     /* Done? */
     bool IsDone() const { return done; }
     void SetDone(bool d) { done = todo && d; }
+
+    /* Important? */
+    bool IsImportant() const { return important; }
+    void SetImportant(bool i) { important = i; }
 
     /* Options */
     char const* GetOption(char const* key) const;
@@ -168,6 +174,7 @@ class Item {
     char*       hilite;
     bool        todo;
     bool        done;
+    bool        important;
     OptionMap   options;
 
     void CopyTo(Item*) const;

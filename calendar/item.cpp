@@ -33,6 +33,7 @@ Item::Item(): options() {
     hilite = copy_string("always");
     todo = 0;
     done = 0;
+    important = 0;
 }
 
 Item::~Item() {
@@ -154,6 +155,11 @@ bool Item::Parse(Lexer* lex, char const* keyword) {
         return true;
     }
 
+    if (strcmp(keyword, "Important") == 0) {
+        important = 1;
+        return true;
+    }
+
     char* key = copy_string(keyword);
     char const* val;
     if (! lex->GetString(val)) {
@@ -189,6 +195,7 @@ void Item::Write(charArray* out) const {
 
     if (todo) {append_string(out, "Todo []\n");}
     if (done) {append_string(out, "Done []\n");}
+    if (important) { append_string(out, "Important []\n"); }
 
     append_string(out, "Dates [");
     date->write(out);
@@ -215,6 +222,7 @@ Item::operator std::string() {
 
     if (todo) { out += "Todo []\n"; }
     if (done) { out += "Done []\n"; }
+    if (important) { out += "Important []\n"; }
 
     out += std::format("Dates [{}]\n", std::string(*date));
 
@@ -233,6 +241,7 @@ void Item::CopyTo(Item* item) const {
 
     item->todo = todo;
     item->done = done;
+    item->important = important;
     *item->date = *date;
     item->remindStart = remindStart;
     // Do NOT copy uid.  That would defeat the whole purpose of uids

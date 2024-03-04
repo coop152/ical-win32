@@ -75,13 +75,16 @@ method ItemListing null {} {
 }
 
 # effects - Fill listing with items in specified date range.
-method ItemListing dayrange {start finish} {
+method ItemListing dayrange {start finish {include_important 1}} {
     # Allow edits temporarily
     .$self.display configure -state normal
 
     set sep  ""
     set date ""
     cal listing $start $finish i d {
+        if {!$include_important && [$i important]} { # if not including important items, skip them
+            continue
+        }
         $self insert {} $sep
         if {$date != $d} {
             # New date

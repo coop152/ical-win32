@@ -336,6 +336,8 @@ method DayView build_menu {} {
 
     menu-bool   $b Item Todo                    {ical_toggle_todo}\
         dv_state(state:todo)
+    menu-bool   $b Item {Never Autopurge}       {ical_toggle_important}\
+        dv_state(state:important)
     menu-sep    $b Item
     $self fill_hilite $b Item
     menu-sep    $b Item

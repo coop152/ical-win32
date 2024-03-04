@@ -309,6 +309,8 @@ method ItemWindow prop_menu {X Y x y} {
     $m add separator
     $m add checkbutton -label "Todo" -command {ical_toggle_todo} \
         -variable dv_state(state:todo)
+    $m add checkbutton -label "Never Autopurge" -command {ical_toggle_important} \
+        -variable dv_state(state:important)
     $m add separator
     menu $m.hl -tearoff no
     $m.hl add radiobutton -label "Always" -command "ical_hilite always" \
@@ -643,6 +645,7 @@ set last_focus {}
 set dv_state(state:remind)      -1
 set dv_state(state:hilite)      ""
 set dv_state(state:todo)        0
+set dv_state(state:important)   0
 
 proc ical_focus_on {w} {
     global last_focus
@@ -686,6 +689,7 @@ proc ical_select {item date} {
         set dv_state(state:remind)      [$item earlywarning]
         set dv_state(state:hilite)      [$item hilite]
         set dv_state(state:todo)        [$item todo]
+        set dv_state(state:important)   [$item important]
         trigger fire select
         run-hook item-select $item $date
     }
@@ -704,6 +708,7 @@ proc ical_unselect {} {
         catch {set dv_state(state:remind) -1}
         catch {set dv_state(state:hilite) ""}
         catch {set dv_state(state:todo)   0}
+        catch {set dv_state(state:important)   0}
 
         $sel unselect
         trigger fire select
