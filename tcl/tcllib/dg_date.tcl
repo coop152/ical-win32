@@ -13,7 +13,7 @@
 
 # Hidden global variables
 #
-#       date_done                Is num interaction finished
+#       date_done                Is date interaction finished
 
 set date_done 0
 
@@ -84,7 +84,6 @@ proc date_interact {leader title doc init} {
 
     # Fix dialog contents
     $f.doc configure -text $doc
-    # $f.days set $init
     set d [date today]
     $f.day set [date monthday $d]
     $f.month set [date month $d]
