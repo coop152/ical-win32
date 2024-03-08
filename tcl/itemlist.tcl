@@ -75,21 +75,45 @@ method ItemListing null {} {
 }
 
 # effects - Fill listing with items in specified date range.
-method ItemListing dayrange {start finish {include_important 1}} {
+method ItemListing dayrange {start finish} {
     # Allow edits temporarily
     .$self.display configure -state normal
 
     set sep  ""
     set date ""
     cal listing $start $finish i d {
-        if {!$include_important && [$i important]} { # if not including important items, skip them
-            continue
-        }
         $self insert {} $sep
         if {$date != $d} {
             # New date
             set date $d
             $self insert {-date} "[date2text $date]\n"
+        }
+
+        $self insert {-item} [item2text $d $i "" "" 10000]
+        set sep "\n"
+    }
+
+    # No more editing
+    .$self.display configure -state disabled
+    $self resize
+}
+
+# effects - Fill listing with items in a given list
+# the list is a list of pairs, where the first element is the item and the second is the date
+method ItemListing fromlist {item_list} {
+    # Allow edits temporarily
+    .$self.display configure -state normal
+
+    set sep ""
+    set last_date ""
+    foreach elem $item_list {
+        lassign $elem i d
+        $self insert {} $sep
+        # day changed, print header
+        if {$last_date != $d} {
+            # New date
+            set last_date $d
+            $self insert {-date} "[date2text $d]\n"
         }
 
         $self insert {-item} [item2text $d $i "" "" 10000]
