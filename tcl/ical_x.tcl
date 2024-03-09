@@ -50,6 +50,26 @@ proc ical_tk_script {} {
     }
 }
 
+# effects - Automatically remove items from the delete history that are 
+proc autopurge {} {
+    set now [date today]
+    set purge_delay [cal option AutoPurgeDelay]
+    if {$purge_delay == 0} { 
+        # autopurge disabled, don't do anything
+        return
+    }
+    set purge_thresh [expr {$now - $purge_delay}]
+    
+    # save history mode state, go into history mode and purge old items, then restore history mode state
+    set oldhistorymode $::ical_state(historymode)
+    set $::ical_state(historymode) 1
+    cal historymode 1
+    ask_to_deleteallbefore $purge_thresh
+
+    set $::ical_state(historymode) $oldhistorymode
+    cal historymode $oldhistorymode
+}
+
 # effects Startup a thread that will do the right thing at each midnight.
 proc start_midnight_thread {} {
     set now [ical_time now]
@@ -57,6 +77,9 @@ proc start_midnight_thread {} {
     set offset [expr "([lindex $split 0]*60*60 +\
                        [lindex $split 1]*60 +\
                        [lindex $split 2])"]
+
+    # try autopurge both at program start and at midnight
+    autopurge
 
     # Find time remaining today and schedule an event after that much time.
     # Note: the "after" command takes time in milliseconds.

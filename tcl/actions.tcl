@@ -826,9 +826,8 @@ proc delete_item_list {items} {
 }
 
 # given a date, asks the user if they would like to delete all items before that date
-# or just do it immediately, if noask is 1
-proc ask_to_deleteallbefore {d {noask 0}} {
-    set historymode $::ical_state(historymode)
+# or just do it immediately, if silent is 1
+proc ask_to_deleteallbefore {d {silent 0}} {
     set count 0
     set items {}
     cal query 0 $d item item_date {
@@ -838,7 +837,7 @@ proc ask_to_deleteallbefore {d {noask 0}} {
         lappend items [list $item $item_date]
     }
 
-    if {$noask} {
+    if {$silent} {
         # just delete without showing a list
         set user_choice "no"
     } else {
