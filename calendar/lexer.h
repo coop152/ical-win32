@@ -17,7 +17,6 @@ class Lexer {
   public:
     Lexer(char const* file);
     Lexer(charArray*);
-    ~Lexer();
 
     /*
      * Status.
@@ -119,7 +118,7 @@ class Lexer {
   protected:
     std::string buf;            /* Contents of entire file */
     int         index;          /* Index of next char in file */
-    charArray*  tmp;            /* Temporary buffer */
+    std::string tmp;            /* Temporary buffer */
 
     /* Last error message */
     static char const* lastError;

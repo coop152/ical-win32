@@ -15,11 +15,9 @@
 char const* Lexer::lastError = "";
 
 Lexer::Lexer(char const* file) {
-    // TODO: switch over to ifstream and std::strings, if reasonable
-    // it will make this constructor about 5 lines long lol
-    tmp = new charArray;
+    index = 0;
+    tmp = "";
 
-    // FILE* f = fopen(file, "rb");
     // open in binary mode to stop stripping of \r characters
     std::ifstream f(file, std::ios_base::binary);
     if (!f.is_open()) {
@@ -38,13 +36,8 @@ Lexer::Lexer(char const* file) {
 }
 
 Lexer::Lexer(charArray* text) {
-    tmp = new charArray;
     index = 0;
     buf = std::string(text->as_pointer());
-}
-
-Lexer::~Lexer() {
-    delete tmp;
 }
 
 bool Lexer::Skip(char const* str) {
@@ -52,7 +45,6 @@ bool Lexer::Skip(char const* str) {
 
     if ((index + len) <= buf.length()) {
         /* Still have enough chars left */
-        //if (strncmp(buf+index, str, len) == 0) {
         if (buf.substr(index, len) == str) {
             index += len;
             return true;
@@ -100,10 +92,8 @@ bool Lexer::GetId(char const*& x) {
         index++;
     }
 
-    tmp->clear();
-    tmp->concat(buf.substr(start).c_str(), index - start);
-    tmp->append('\0');
-    x = tmp->as_pointer();
+    tmp = buf.substr(start, index - start);
+    x = tmp.c_str();
     return true;
 }
 
@@ -117,10 +107,8 @@ bool Lexer::GetUntil(char terminator, char const*& x) {
         index++;
     }
 
-    tmp->clear();
-    tmp->concat(buf.substr(start).c_str(), index - start);
-    tmp->append('\0');
-    x = tmp->as_pointer();
+    tmp = buf.substr(start, index - start);
+    x = tmp.c_str();
     return true;
 }
  
@@ -146,19 +134,18 @@ bool Lexer::GetNumber(int& x) {
 bool Lexer::GetString(char const*& x) {
     if (index >= buf.length()) return false;
 
-    tmp->clear();
+    tmp = "";
 
     while ((index < buf.length()) && (buf[index] != ']')) {
         if (buf[index] == '\\') {
             index++;
             if (index >= buf.length()) return false;
         }
-        tmp->append(buf[index]);
+        tmp += buf[index];
         index++;
     }
 
-    tmp->append('\0');
-    x = tmp->as_pointer();
+    x = tmp.c_str();
     return true;
 }
 
