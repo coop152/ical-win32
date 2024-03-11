@@ -36,8 +36,8 @@ static OptionDesc option_list[] = {
     { "Color",            "<Default> <Default>" },
     { "Timezone",               "<Local>"       },
 
-    { "AutoPurgeDelay",         "0"             },
-    { "AutoPurgeSafe",          "1"             },
+    { "AutoPurgeDelay",         "0"             }, // autopurge off by default
+    { "AutoPurgeSafe",          "1"             }, // will always ask before deleting anything by default
 
     { nullptr,                  nullptr         }
 };
