@@ -37,6 +37,7 @@ static OptionDesc option_list[] = {
     { "Timezone",               "<Local>"       },
 
     { "AutoPurgeDelay",         "0"             },
+    { "AutoPurgeSafe",          "1"             },
 
     { nullptr,                  nullptr         }
 };

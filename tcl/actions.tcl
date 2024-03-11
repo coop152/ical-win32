@@ -788,10 +788,10 @@ action ical_autopurgesettings writable {Choose if and when items in the delete h
     if [cal readonly] {return}
 
     set d [cal option AutoPurgeDelay] 
-    if [get_duration [ical_leader] {Autopurge Settings}\
-            {Specify the number of days between an item being deleted and it being automatically purged from the delete history. (Set to 0 to disable.)}\
-            0 365 $d d] {
+    set s [cal option AutoPurgeSafe]
+    if [get_autopurge_settings [ical_leader] $d d $s s] {
                 cal option AutoPurgeDelay $d
+                cal option AutoPurgeSafe $s
                 trigger fire reconfig
             }
 }

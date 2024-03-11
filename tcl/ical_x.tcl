@@ -59,12 +59,14 @@ proc autopurge {} {
         return
     }
     set purge_thresh [expr {$now - $purge_delay}]
-    
+
     # save history mode state, go into history mode and purge old items, then restore history mode state
     set oldhistorymode $::ical_state(historymode)
     set $::ical_state(historymode) 1
     cal historymode 1
-    ask_to_deleteallbefore $purge_thresh
+
+    set safe [cal option AutoPurgeSafe]
+    ask_to_deleteallbefore $purge_thresh [expr {!$safe}]
 
     set $::ical_state(historymode) $oldhistorymode
     cal historymode $oldhistorymode
