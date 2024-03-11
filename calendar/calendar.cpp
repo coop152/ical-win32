@@ -112,7 +112,6 @@ void Calendar::Remove(Item* item) {
 void Calendar::SoftDelete(Item* item) {
     // If the user is viewing deleted items then this function shouldn't run
     if (historyMode) return;
-    // TODO: this should specifically remove from items and not just call remove
     Remove(item);
     deleted.push_back(item);
 }

@@ -46,7 +46,8 @@ CalFile::CalFile(bool ro, const char* name) {
     fileName = name;
     backupName = fileName + "~";
     dirName = fs::path(name).remove_filename().string();
-    tmpName = std::format("{}\\ical{}~", dirName, GetCurrentProcessId()); // TODO: this isn't linux safe!
+    fs::path tmpPath = fs::path(dirName) / std::format("ical{}~", GetCurrentProcessId());
+    tmpName = tmpPath.string();
 
     calendar = new Calendar;
     calendar->SetReadOnly(readOnly);
