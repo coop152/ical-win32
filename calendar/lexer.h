@@ -117,8 +117,7 @@ class Lexer {
      */
     void Reset(int pos);
   protected:
-    char*       buf;            /* Contents of entire file */
-    int         length;         /* File length */
+    std::string buf;            /* Contents of entire file */
     int         index;          /* Index of next char in file */
     charArray*  tmp;            /* Temporary buffer */
 
@@ -127,14 +126,14 @@ class Lexer {
 };
 
 inline Lexer::StatusType Lexer::Status() {
-    if (index == length)        {return Eof;}
-    else if (index > length)    {return Error;}
+    if (index == buf.length())        {return Eof;}
+    else if (index > buf.length())    {return Error;}
     else                        {return Valid;}
 }
 
 inline void Lexer::SetError(char const* msg) {
     lastError = msg;
-    index = length+1;
+    index = buf.length()+1;
 }
 
 inline char const* Lexer::LastError() {
@@ -150,7 +149,7 @@ inline void Lexer::Reset(int i) {
 }    
 
 inline bool Lexer::Peek(char& c) {
-    if (index < length) {
+    if (index < buf.length()) {
         c = buf[index];
         return true;
     }
@@ -159,7 +158,7 @@ inline bool Lexer::Peek(char& c) {
 }
 
 inline bool Lexer::Next(char& c) {
-    if (index < length) {
+    if (index < buf.length()) {
         c = buf[index];
         index++;
         return true;
@@ -171,19 +170,19 @@ inline bool Lexer::Next(char& c) {
 inline bool Lexer::Advance(char& c) {
     index++;
 
-    if (index < length) {
+    if (index < buf.length()) {
         c = buf[index];
         return true;
     }
     else {
         /* Undo advance */
-        index = length;
+        index = buf.length();
         return false;
     }
 }
 
 inline bool Lexer::Skip(char c) {
-    if ((index < length) && (buf[index] == c)) {
+    if ((index < buf.length()) && (buf[index] == c)) {
         index++;
         return true;
     }
