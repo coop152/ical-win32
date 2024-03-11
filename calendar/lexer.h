@@ -16,7 +16,6 @@
 class Lexer {
   public:
     Lexer(char const* file);
-    Lexer(charArray*);
 
     /*
      * Status.

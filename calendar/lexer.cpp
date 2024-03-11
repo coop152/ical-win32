@@ -35,11 +35,6 @@ Lexer::Lexer(char const* file) {
 
 }
 
-Lexer::Lexer(charArray* text) {
-    index = 0;
-    buf = std::string(text->as_pointer());
-}
-
 bool Lexer::Skip(char const* str) {
     int len = strlen(str);
 
