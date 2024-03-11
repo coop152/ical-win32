@@ -826,8 +826,7 @@ proc delete_item_list {items} {
 }
 
 # given a date, asks the user if they would like to delete all items before that date
-# or just do it immediately, if silent is 1
-proc ask_to_deleteallbefore {d {silent 0}} {
+proc ask_to_deleteallbefore {d} {
     set count 0
     set items {}
     cal query 0 $d item item_date {
@@ -837,12 +836,12 @@ proc ask_to_deleteallbefore {d {silent 0}} {
         lappend items [list $item $item_date]
     }
 
-    if {$silent} {
-        # just delete without showing a list
-        set user_choice "no"
-    } else {
-        set user_choice [yes_no_cancel [ical_leader] "This will delete $count item(s). Are you sure?" "List items" "Delete" "Cancel"] 
+    if {$count == 0} {
+        ical_error "No items to delete before that date."
+        return
     }
+
+    set user_choice [yes_no_cancel [ical_leader] "This will delete $count item(s). Are you sure?" "List items" "Delete" "Cancel"] 
 
     if {$user_choice == "yes"} { # yes to seeing a listing
         set l [ItemListing]
