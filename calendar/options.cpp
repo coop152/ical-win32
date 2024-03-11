@@ -19,37 +19,15 @@ void OptionMap::remove(char const* key) {
 
 OptionMap::operator std::string() const {
     std::string out = "";
-    // Generated sorted list
+    // Generate sorted list
     std::vector<std::string> list;
     for (auto& [k, v] : rep) {
         list.push_back(k);
     }
-
-    // This is slow, but the option list should be fairly small
-    int i = 0;
-    int num = list.size();
-    while (i < num) {
-        /* Find min element in list[i..] */
-        int minIndex = i;
-        for (int j = i + 1; j < num; j++) {
-            //if (strcmp(list[j], list[minIndex]) < 0) {
-            if (list[j].compare(list[minIndex]) < 0) {
-                minIndex = j;
-            }
-        }
-
-        std::string temp;
-        temp = list[i];
-        list[i] = list[minIndex];
-        list[minIndex] = temp;
-
-        i++;
-    }
-    // or...
-    //std::sort(list.begin(), list.end());
+    std::sort(list.begin(), list.end());
 
     // Now print out in sorted order
-    for (i = 0; i < num; i++) {
+    for (int i = 0; i < list.size(); i++) {
         std::string key = list[i];
         assert(rep.contains(key));
 

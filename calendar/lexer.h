@@ -3,9 +3,6 @@
 #ifndef _LEXERH
 #define _LEXERH
 
-#include <stdio.h>
-#include <string.h>
-#include "arrays.h"
 #include <string>
 
 /*

@@ -1,19 +1,10 @@
 /* Copyright (c) 1993 by Sanjay Ghemawat */
 
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
-
-#include "Array.h"
-
-#include "Date.h"
 
 #include "item.h"
 #include "lexer.h"
 #include "misc.h"
-#include "options.h"
 #include "uid.h"
-#include "version.h"
 
 
 const int Item::defaultRemindStart = 1;

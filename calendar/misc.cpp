@@ -1,10 +1,6 @@
 /* Copyright (c) 1994 Sanjay Ghemawat */
-#include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
-#include <errno.h>
-#include "arrays.h"
 #include "misc.h"
+#include <fstream>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -44,33 +40,17 @@ char const* my_name() {
 }
 
 bool copy_file(char const* src, char const* dst) {
-    FILE* in = fopen(src, "r");
-    if (in == nullptr) return false;
-
-    FILE* out = fopen(dst, "w");
-    if (out == nullptr) {
-        fclose(in);
+    std::ifstream in(src, std::ios::binary);
+    if (!in.is_open()) {
         return false;
     }
 
-    static const int bufsize = 1024;
-    char buf[bufsize];
-    while (1) {
-        int readcount = fread(buf, sizeof(char), bufsize, in);
-        if (readcount <= 0) break;
-
-        int writecount = fwrite(buf, sizeof(char), readcount, out);
-        if (readcount != writecount) break;
-    }
-
-    if (ferror(in) || ferror(out)) {
-        fclose(in);
-        fclose(out);
+    std::ofstream out(dst, std::ios::binary);
+    if (!out.is_open()) {
         return false;
     }
 
-    fclose(in);
-    if (fclose(out) < 0) return false;
+    out << in.rdbuf();
 
     return true;
 }

@@ -1,15 +1,7 @@
 /* Copyright (c) 1996  by Sanjay Ghemawat */
-#include <ctype.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fstream>
 #include <sstream>
 
-#include "arrays.h"
 #include "lexer.h"
 
 char const* Lexer::lastError = "";

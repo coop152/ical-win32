@@ -3,14 +3,11 @@
 #ifndef _ITEMH
 #define _ITEMH
 
-#include <string.h>
-
 #include "Date.h"
 
 #include "dateset.h"
 #include "smallintset.h"
 #include "misc.h"
-#include "arrays.h"
 #include "options.h"
 
 class Lexer;
