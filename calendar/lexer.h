@@ -93,11 +93,6 @@ class Lexer {
      */
     bool GetString(char const*& x);
 
-    /*
-     * Write "string" to out so that it can be later read back with
-     * a call to GetString.  No terminating "]" is output.
-     */
-    static void PutString(charArray*, char const* x);
 
      /*
      * Write "string" to out so that it can be later read back with

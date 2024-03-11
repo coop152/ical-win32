@@ -19,12 +19,11 @@ class OptionMap {
 
     bool contains(char const* key) const;
     bool fetch(char const* key, char const*& value) const;
+    bool fetch(std::string key, std::string& value) const;
     void store(char const* key, char const* value);
     void remove(char const* key);
 
-    void write(charArray*) const;
-
-    operator std::string();
+    operator std::string() const;
   private:
     std::map<std::string, std::string> rep;
 };
@@ -40,6 +39,14 @@ inline bool OptionMap::contains(char const* key) const {
 inline bool OptionMap::fetch(char const* key, char const*& value) const {
     if (auto x = rep.find(key); x != rep.end()) {
         value = x->second.c_str();
+        return true;
+    }
+    return false;
+}
+
+inline bool OptionMap::fetch(std::string key, std::string& value) const {
+    if (auto x = rep.find(key); x != rep.end()) {
+        value = x->second;
         return true;
     }
     return false;

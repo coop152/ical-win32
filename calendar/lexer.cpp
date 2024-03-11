@@ -149,14 +149,6 @@ bool Lexer::GetString(char const*& x) {
     return true;
 }
 
-void Lexer::PutString(charArray* out, char const* x) {
-    while (*x != '\0') {
-        char c = *x;
-        if ((c == '\\') || (c == '[') || (c == ']')) out->append('\\');
-        out->append(c);
-        x++;
-    }
-}
 
 std::string Lexer::EscapeString(std::string x) {
     std::string out = "";

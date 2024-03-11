@@ -167,41 +167,10 @@ bool Item::Parse(Lexer* lex, char const* keyword) {
     return true;
 }
 
-void Item::Write(charArray* out) const {
-    format(out, "Uid [%s]\n", uid);
-    ((Item*) this)->uid_persistent = 1;
-
-    if (strlen(owner) != 0) {
-        append_string(out, "Owner [");
-        Lexer::PutString(out, owner);
-        append_string(out, "]\n");
-    }
-
-    append_string(out, "Contents [");
-    Lexer::PutString(out, text);
-    append_string(out, "]\n");
-
-    format(out, "Remind [%d]\n", remindStart);
-
-    append_string(out, "Hilite [");
-    Lexer::PutString(out, hilite);
-    append_string(out, "]\n");
-
-    if (todo) {append_string(out, "Todo []\n");}
-    if (done) {append_string(out, "Done []\n");}
-
-    append_string(out, "Dates [");
-    date->write(out);
-    append_string(out, "]\n");
-
-    options.write(out);
-}
-
-Item::operator std::string() {
+Item::operator std::string() const {
     std::string out = "";
 
     out += std::format("Uid [{}]\n", uid);
-    this->uid_persistent = 1;
 
     if (strlen(owner) != 0) {
         out += std::format("Owner [{}]\n", Lexer::EscapeString(owner));
@@ -257,14 +226,9 @@ void Item::RemoveOption(char const* key) {
 bool Item::similar(Item const* x) const {
     // Fast check
     if (this == x) return true;
-
-    // XXX Just compare unparsing: only works if it is deterministic
-    charArray aval, bval;
-    this->Write(&aval);
-    x->Write(&bval);
-
-    if (aval.size() != bval.size()) return false;
-    return strncmp(aval.as_pointer(), bval.as_pointer(), aval.size());
+    
+    // XXX Compare the string versions (yes, the original code also did this)
+    return std::string(*this) == std::string(*x);
 }
 
 Item* Notice::Clone() const {
@@ -330,24 +294,24 @@ bool Appointment::Parse(Lexer* lex, char const* keyword) {
     return Item::Parse(lex, keyword);
 }
 
-void Appointment::Write(charArray* out) const {
-    format(out, "Start [%d]\n", start);
-    format(out, "Length [%d]\n", length);
-    if (has_timezone())
-      format(out, "Timezone [%s]\n", timezone);
-    if (alarms != nullptr) {
-        append_string(out, "Alarms [");
-        for (int i = 0; i < alarms->size(); i++) {
-            int x = alarms->slot(i);
-            format(out, " %d", x);
-        }
-        append_string(out, "]\n");
-    }
+//void Appointment::Write(charArray* out) const {
+//    format(out, "Start [%d]\n", start);
+//    format(out, "Length [%d]\n", length);
+//    if (has_timezone())
+//      format(out, "Timezone [%s]\n", timezone);
+//    if (alarms != nullptr) {
+//        append_string(out, "Alarms [");
+//        for (int i = 0; i < alarms->size(); i++) {
+//            int x = alarms->slot(i);
+//            format(out, " %d", x);
+//        }
+//        append_string(out, "]\n");
+//    }
+//
+//    Item::Write(out);
+//}
 
-    Item::Write(out);
-}
-
-Appointment::operator std::string() {
+Appointment::operator std::string() const {
     std::string out = "";
 
     out += std::format("Start [{}]\n", start);

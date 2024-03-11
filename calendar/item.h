@@ -44,9 +44,8 @@ class Item {
 
     virtual bool Read(Lexer*);
     virtual bool Parse(Lexer*, char const* keyword);
-    virtual void Write(charArray*) const;
 
-    virtual operator std::string();
+    virtual operator std::string() const;
 
     virtual Item* Clone() const = 0;
 
@@ -112,9 +111,6 @@ class Item {
     // effects - Return the uid.  The returned string is guaranteed
     //           to remain valid until the item is deleted.
 
-    //void SetUid(char const*);
-    // modifies - this
-    // effects  - Sets uid to specified value.
 
     bool IsUidPersistent() const { return uid_persistent; }
     // effects - Return true iff uid is also stored persistently
@@ -210,9 +206,8 @@ class Appointment : public Item {
     }
 
     virtual bool Parse(Lexer*, char const* keyword);
-    virtual void Write(charArray*) const;
 
-    virtual operator std::string();
+    virtual operator std::string() const;
 
     virtual Item* Clone() const;
 

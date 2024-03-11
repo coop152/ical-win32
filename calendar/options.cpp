@@ -4,6 +4,9 @@
 #include "arrays.h"
 #include "lexer.h"
 #include "misc.h"
+#include <vector>
+#include <algorithm>
+#include <format>
 
 void OptionMap::store(char const* key, char const* value) {
     rep.insert_or_assign(key, value);
@@ -14,11 +17,12 @@ void OptionMap::remove(char const* key) {
     rep.erase(key);
 }
 
-void OptionMap::write(charArray* out) const {
+OptionMap::operator std::string() const {
+    std::string out = "";
     // Generated sorted list
-    Array<const char*> list;
+    std::vector<std::string> list;
     for (auto& [k, v] : rep) {
-        list.append(k.c_str());
+        list.push_back(k);
     }
 
     // This is slow, but the option list should be fairly small
@@ -27,39 +31,31 @@ void OptionMap::write(charArray* out) const {
     while (i < num) {
         /* Find min element in list[i..] */
         int minIndex = i;
-        for (int j = i+1; j < num; j++) {
-            if (strcmp(list[j], list[minIndex]) < 0) {
+        for (int j = i + 1; j < num; j++) {
+            //if (strcmp(list[j], list[minIndex]) < 0) {
+            if (list[j].compare(list[minIndex]) < 0) {
                 minIndex = j;
             }
         }
 
-        const char* temp;
+        std::string temp;
         temp = list[i];
         list[i] = list[minIndex];
         list[minIndex] = temp;
 
         i++;
     }
+    // or...
+    //std::sort(list.begin(), list.end());
 
     // Now print out in sorted order
     for (i = 0; i < num; i++) {
-        char const* key = (char const*) list[i];
+        std::string key = list[i];
         assert(rep.contains(key));
 
-        char const* val;
+        std::string val;
         fetch(key, val);
-        append_string(out, key);
-        append_string(out, " [");
-        Lexer::PutString(out, val);
-        append_string(out, "]\n");
+        out += std::format("{} [{}]\n", key, Lexer::EscapeString(val));
     }
-}
-
-OptionMap::operator std::string() {
-    // TODO: this needs to be implemented properly
-    charArray* arr = new charArray();
-    this->write(arr);
-    std::string out = std::string(arr->as_pointer(), arr->size());
-    delete arr;
     return out;
 }
