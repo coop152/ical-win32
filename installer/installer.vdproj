@@ -3477,6 +3477,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_8DD61E5979BE4043B747D5142CC75846"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8E57C3E36E414DCD9155644E4C0F29C9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -3742,6 +3748,12 @@
         "Entry"
         {
         "MsmKey" = "8:_975C09C55BB547C6AE18D4C716221E9E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_979B4E43A7AA40A1926AAA37E7DD9FC5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -18172,6 +18184,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8DD61E5979BE4043B747D5142CC75846"
+            {
+            "SourcePath" = "8:..\\tcl\\tcllib\\dg_date.tcl"
+            "TargetName" = "8:dg_date.tcl"
+            "Tag" = "8:"
+            "Folder" = "8:_0B60CE79051B4191AB7E076C71DCB5C2"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8E57C3E36E414DCD9155644E4C0F29C9"
             {
             "SourcePath" = "8:..\\lib\\IronTcl\\lib\\tcl8.6\\tzdata\\Asia\\Choibalsan"
@@ -19058,6 +19090,26 @@
             "TargetName" = "8:Universal"
             "Tag" = "8:"
             "Folder" = "8:_9DE2BBA9D704421081F88CD4D8A91AF8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_979B4E43A7AA40A1926AAA37E7DD9FC5"
+            {
+            "SourcePath" = "8:..\\tcl\\tcllib\\dg_autopurgesettings.tcl"
+            "TargetName" = "8:dg_autopurgesettings.tcl"
+            "Tag" = "8:"
+            "Folder" = "8:_0B60CE79051B4191AB7E076C71DCB5C2"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -28946,15 +28998,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ical"
-        "ProductCode" = "8:{F8613E98-366C-4449-BBF5-887E80A27327}"
-        "PackageCode" = "8:{0542904E-3D91-485F-A03A-34556AB2BA5F}"
+        "ProductCode" = "8:{6B216287-8722-4252-85F8-BC94F914ED5E}"
+        "PackageCode" = "8:{9807C6C7-B628-43C0-9CAF-773FB1E84C3B}"
         "UpgradeCode" = "8:{15B4BA30-D284-451F-A279-6BF8C405CE63}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.2"
+        "ProductVersion" = "8:1.1"
         "Manufacturer" = "8:ical"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

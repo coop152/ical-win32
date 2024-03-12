@@ -1,169 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Tcl Files">
-      <UniqueIdentifier>{8a20068a-6fda-4604-93b7-63e1952f2b01}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="calendar\calendar.cpp" />
+    <ClCompile Include="calendar\calfile.cpp" />
+    <ClCompile Include="calendar\dateset.cpp" />
+    <ClCompile Include="calendar\item.cpp" />
+    <ClCompile Include="calendar\lexer.cpp" />
+    <ClCompile Include="calendar\misc.cpp" />
+    <ClCompile Include="calendar\options.cpp" />
+    <ClCompile Include="calendar\smallintset.cpp" />
+    <ClCompile Include="calendar\uid.cpp" />
+    <ClCompile Include="cal_tcl.cpp" />
+    <ClCompile Include="dateeditor.cpp" />
+    <ClCompile Include="dispatch.cpp" />
+    <ClCompile Include="ical.cpp" />
+    <ClCompile Include="ical_tcl.cpp" />
+    <ClCompile Include="item_tcl.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="time\Date.cpp" />
+    <ClCompile Include="time\Month.cpp" />
+    <ClCompile Include="time\parse.cpp" />
+    <ClCompile Include="time\Time.cpp" />
+    <ClCompile Include="time\WeekDay.cpp" />
+    <ClCompile Include="time_tcl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cal_tcl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dateeditor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dispatch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ical.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ical_tcl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="item_tcl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="time_tcl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\calendar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\calfile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\dateset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\lexer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\misc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\options.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\smallintset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="calendar\uid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="time\Date.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="time\Month.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="time\parse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="time\Time.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="time\WeekDay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="types\arrays.h" />
+    <ClInclude Include="calendar\calendar.h" />
+    <ClInclude Include="calendar\calfile.h" />
+    <ClInclude Include="calendar\dateset.h" />
+    <ClInclude Include="calendar\item.h" />
+    <ClInclude Include="calendar\lexer.h" />
+    <ClInclude Include="calendar\misc.h" />
+    <ClInclude Include="calendar\options.h" />
+    <ClInclude Include="calendar\smallintset.h" />
+    <ClInclude Include="calendar\uid.h" />
+    <ClInclude Include="calendar\version.h" />
+    <ClInclude Include="cal_tcl.h" />
+    <ClInclude Include="collect.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="dispatch.h" />
+    <ClInclude Include="ical.h" />
+    <ClInclude Include="item_tcl.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="time\Date.h" />
+    <ClInclude Include="time\Month.h" />
+    <ClInclude Include="time\parse.h" />
+    <ClInclude Include="time\Time_.h" />
+    <ClInclude Include="time\WeekDay.h" />
+    <ClInclude Include="types\Array.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="item_tcl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ical.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dispatch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="collect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\Array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\calendar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\calfile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\dateset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\lexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\misc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\options.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\smallintset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\uid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="calendar\version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="time\Date.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="time\Month.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="time\parse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="time\Time_.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="time\WeekDay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cal_tcl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="types\arrays.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ResourceCompile Include="ical-win32.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bitmaps\ical_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bitmaps\dleft.xbm" />
@@ -175,6 +68,8 @@
     <None Include="bitmaps\sleft.xbm" />
     <None Include="bitmaps\sright.xbm" />
     <None Include="bitmaps\todo.xbm" />
+    <None Include="license.terms" />
+    <None Include="README.md" />
     <None Include="tcl\actions.tcl" />
     <None Include="tcl\alarm.tcl" />
     <None Include="tcl\apptlist.tcl" />
@@ -210,6 +105,8 @@
     <None Include="tcl\tcllib\canvas.tcl" />
     <None Include="tcl\tcllib\class.tcl" />
     <None Include="tcl\tcllib\dg_bug.tcl" />
+    <None Include="tcl\tcllib\dg_date.tcl" />
+    <None Include="tcl\tcllib\dg_duration.tcl" />
     <None Include="tcl\tcllib\dg_error.tcl" />
     <None Include="tcl\tcllib\dg_file.tcl" />
     <None Include="tcl\tcllib\dg_num.tcl" />
@@ -227,19 +124,6 @@
     <None Include="tcl\tcllib\textwin.tcl" />
     <None Include="tcl\timerange.tcl" />
     <None Include="tcl\trigger.tcl" />
-    <None Include="README.md" />
-    <None Include="license.terms" />
-    <None Include="tcl\tcllib\dg_duration.tcl" />
-    <None Include="tcl\tcllib\dg_date.tcl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ical-win32.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="bitmaps\ical_icon.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <None Include="tcl\tcllib\dg_autopurgesettings.tcl" />
   </ItemGroup>
 </Project>
