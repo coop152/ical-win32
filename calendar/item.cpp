@@ -24,6 +24,7 @@ Item::Item(): options() {
     hilite = copy_string("always");
     todo = 0;
     done = 0;
+    important = 0;
 }
 
 Item::~Item() {
@@ -145,6 +146,11 @@ bool Item::Parse(Lexer* lex, char const* keyword) {
         return true;
     }
 
+    if (strcmp(keyword, "Important") == 0) {
+        important = 1;
+        return true;
+    }
+
     char* key = copy_string(keyword);
     char const* val;
     if (! lex->GetString(val)) {
@@ -175,6 +181,7 @@ Item::operator std::string() const {
 
     if (todo) { out += "Todo []\n"; }
     if (done) { out += "Done []\n"; }
+    if (important) { out += "Important []\n"; }
 
     out += std::format("Dates [{}]\n", std::string(*date));
 
@@ -193,6 +200,7 @@ void Item::CopyTo(Item* item) const {
 
     item->todo = todo;
     item->done = done;
+    item->important = important;
     *item->date = *date;
     item->remindStart = remindStart;
     // Do NOT copy uid.  That would defeat the whole purpose of uids
@@ -285,22 +293,6 @@ bool Appointment::Parse(Lexer* lex, char const* keyword) {
     return Item::Parse(lex, keyword);
 }
 
-//void Appointment::Write(charArray* out) const {
-//    format(out, "Start [%d]\n", start);
-//    format(out, "Length [%d]\n", length);
-//    if (has_timezone())
-//      format(out, "Timezone [%s]\n", timezone);
-//    if (alarms != nullptr) {
-//        append_string(out, "Alarms [");
-//        for (int i = 0; i < alarms->size(); i++) {
-//            int x = alarms->slot(i);
-//            format(out, " %d", x);
-//        }
-//        append_string(out, "]\n");
-//    }
-//
-//    Item::Write(out);
-//}
 
 Appointment::operator std::string() const {
     std::string out = "";

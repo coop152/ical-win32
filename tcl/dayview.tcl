@@ -322,6 +322,8 @@ method DayView build_menu {} {
         menu-entry  $b Edit {Delete Item}           {ical_delete}
     }
 
+    menu-entry  $b Edit {Delete Items Before Date...} {ical_deleteallbefore}
+
     menu-sep    $b Edit
     menu-entry  $b Edit {Cut Item}              {ical_cut_or_hide}
     menu-entry  $b Edit {Copy Item}             {ical_copy}
@@ -334,6 +336,8 @@ method DayView build_menu {} {
 
     menu-bool   $b Item Todo                    {ical_toggle_todo}\
         dv_state(state:todo)
+    menu-bool   $b Item {Never Autopurge}       {ical_toggle_important}\
+        dv_state(state:important)
     menu-sep    $b Item
     $self fill_hilite $b Item
     menu-sep    $b Item
@@ -375,6 +379,7 @@ method DayView build_menu {} {
     menu-sep    $b List
     menu-pull   $b List {From Calendar}         {ical_fill_listinc}
 
+    menu-entry  $b Options {Autopurge Settings}   {ical_autopurgesettings}
     menu-entry  $b Options {Appointment Range}    {ical_timerange}
     menu-entry  $b Options {Notice Window Height} {ical_noticeheight}
     menu-entry  $b Options {Item Width}           {ical_itemwidth}

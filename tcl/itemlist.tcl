@@ -98,6 +98,33 @@ method ItemListing dayrange {start finish} {
     $self resize
 }
 
+# effects - Fill listing with items in a given list
+# the list is a list of pairs, where the first element is the item and the second is the date
+method ItemListing fromlist {item_list} {
+    # Allow edits temporarily
+    .$self.display configure -state normal
+
+    set sep ""
+    set last_date ""
+    foreach elem $item_list {
+        lassign $elem i d
+        $self insert {} $sep
+        # day changed, print header
+        if {$last_date != $d} {
+            # New date
+            set last_date $d
+            $self insert {-date} "[date2text $d]\n"
+        }
+
+        $self insert {-item} [item2text $d $i "" "" 10000]
+        set sep "\n"
+    }
+
+    # No more editing
+    .$self.display configure -state disabled
+    $self resize
+}
+
 # effects - Fill listing with items in specified calendar
 method ItemListing calendar {calendar} {
     # Allow edits temporarily

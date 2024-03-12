@@ -81,7 +81,7 @@ inline Time& Time::operator=(Time const& src) {
 
 inline Time::Time(double r) {
     // convert given second amount to microseconds
-    rep = sys_time<microseconds>{ microseconds{int(r * 1000000)} };
+    rep = sys_time<microseconds>{ microseconds{(long long)(r * 1000000)} };
 }
 
 inline Time::Time(sys_time<microseconds> t) {

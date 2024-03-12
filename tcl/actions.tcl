@@ -615,6 +615,11 @@ action ical_toggle_todo witem {Make item a todo item} {} {
     $i todo [expr ![$i todo]]
 }
 
+action ical_toggle_important witem {Mark item as important} {} {
+    if ![ical_with_mod_single_item i] return
+    $i important [expr ![$i important]]
+}
+
 action ical_toggle_done witem {Mark todo item as done} {} {
     if ![ical_with_mod_item i] return
     if [catch {set cal [$i calendar]}] return
@@ -776,6 +781,98 @@ action ical_itemwidth writable {Change the default width of the notice and appt 
             5 15 0 $w w] {
         cal option ItemWidth $w
         trigger fire reconfig
+    }
+}
+
+action ical_autopurgesettings writable {Choose if and when items in the delete history will be automatically cleaned out} {} {
+    if [cal readonly] {return}
+
+    set d [cal option AutoPurgeDelay] 
+    set s [cal option AutoPurgeSafe]
+    if [get_autopurge_settings [ical_leader] $d d $s s] {
+                cal option AutoPurgeDelay $d
+                cal option AutoPurgeSafe $s
+                trigger fire reconfig
+            }
+}
+
+# deletes all items in a list
+# the list is a list of pairs, with the first element being the item and the second being the date
+proc delete_item_list {items} {
+    set historymode $::ical_state(historymode)
+    foreach elem $items {
+        lassign $elem i d
+        if {$historymode} {
+            if {[$i repeats]} {
+                # if item repeats, permanently delete this occurrence
+                $i deleteon $d
+            } else {
+                cal remove $i
+            }
+        } else {
+            if {[$i repeats]} {
+                # if softdeleting a repeating item, make a new non-repeating copy
+                # and put it in the delete history, then remove that date from the repeating item
+                set c [$i clone]
+                $c date $d
+                cal add $c [$i calendar]
+                cal softremove $c
+                $i deleteon $d
+            } else {
+                cal softremove $i
+            }
+        }
+    }
+}
+
+# given a date, asks the user if they would like to delete all items before that date
+proc ask_to_deleteallbefore {d} {
+    set count 0
+    set items {}
+    cal query 0 $d item item_date {
+        # don't mass delete important items
+        if {[$item important]} {continue}
+        incr count
+        lappend items [list $item $item_date]
+    }
+
+    if {$count == 0} {
+        ical_error "No items to delete before that date."
+        return
+    }
+
+    set user_choice [yes_no_cancel [ical_leader] "This will delete $count item(s). Are you sure?" "List items" "Delete" "Cancel"] 
+
+    if {$user_choice == "yes"} { # yes to seeing a listing
+        set l [ItemListing]
+        # last argument of 0 to hide important items
+        $l fromlist $items
+        tkwait window .$l
+        if {[yes_or_no [ical_leader] "Delete those items?"]} {
+            delete_item_list $items
+        } else { return }
+    } elseif {$user_choice == "no"} { # no to seeing a listing (delete immediately)
+        delete_item_list $items
+    } else {
+        # user cancelled, do nothing
+        return
+    }
+}
+
+action ical_deleteallbefore writable {Delete all items in the calendar before the chosen date} {} {
+    if [cal readonly] {return}
+
+    set historymode $::ical_state(historymode)
+    if {!$historymode} {
+        set message {Give a date. All items before this date will be deleted. They can be recovered from the delete history. (DD/MM/YYYY)}
+    } else {
+        set message {Give a date. All items before this date will be permanently cleared from the delete history. (DD/MM/YYYY)}
+    }
+
+    # d holds the date the user gives
+    set d 0 
+    if [get_date [ical_leader] {Delete all items before date} $message $d d] {
+        ask_to_deleteallbefore $d
     }
 }
 

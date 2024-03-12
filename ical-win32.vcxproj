@@ -44,6 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -115,7 +116,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>lib/IronTcl/lib/tcl86t.lib;lib/IronTcl/lib/tk86t.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -327,6 +328,8 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <None Include="tcl\tcllib\dg_bug.tcl">
       <FileType>Document</FileType>
     </None>
+    <None Include="tcl\tcllib\dg_date.tcl" />
+    <None Include="tcl\tcllib\dg_duration.tcl" />
     <None Include="tcl\tcllib\dg_error.tcl">
       <FileType>Document</FileType>
     </None>
