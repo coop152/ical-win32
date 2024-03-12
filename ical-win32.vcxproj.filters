@@ -227,6 +227,8 @@
     <None Include="tcl\tcllib\textwin.tcl" />
     <None Include="tcl\timerange.tcl" />
     <None Include="tcl\trigger.tcl" />
+    <None Include="README.md" />
+    <None Include="license.terms" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ical-win32.rc">

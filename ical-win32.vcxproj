@@ -220,6 +220,8 @@ xcopy /Y /I "$(ProjectDir)lib\IronTcl\bin\tk86t.dll" "$(TargetDir)"</Command>
     <None Include="bitmaps\sleft.xbm" />
     <None Include="bitmaps\sright.xbm" />
     <None Include="bitmaps\todo.xbm" />
+    <None Include="license.terms" />
+    <None Include="README.md" />
     <None Include="tcl\actions.tcl">
       <FileType>Document</FileType>
     </None>
