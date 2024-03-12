@@ -1,11 +1,13 @@
 /* Copyright (c) 1994 Sanjay Ghemawat */
 #include "misc.h"
 #include <fstream>
+#include <cstring>
 
 #ifdef _WIN32
 #include <Windows.h>
 #else
 #include <unistd.h>
+#include <stdarg.h>
 #endif
 
 #define MAXUNLENGTH 256 + 1

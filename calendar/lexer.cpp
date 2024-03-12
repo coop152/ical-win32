@@ -1,6 +1,7 @@
 /* Copyright (c) 1996  by Sanjay Ghemawat */
 #include <fstream>
 #include <sstream>
+#include <cstring>
 
 #include "lexer.h"
 
