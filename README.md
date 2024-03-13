@@ -33,27 +33,29 @@ and an installation of Tcl/Tk 8.6. On Ubuntu you can use these packages:
 ```bash
 sudo apt install tcl-dev tk-dev
 ```
-A configure script is included. To compile and install, first run the configure script:
+
+Use autoreconf to generate a configure script:
+```bash
+autoreconf -ivf
+```
+
+Run the configure script:
 ```bash
 ./configure --prefix=/home/username/.local
 ```
 Where the prefix is the base directory to install to.
 Your user must have write permissions to this directory,
-so somewhere in your home directory is advisable. The `~/.local` folder on Ubuntu
-is appropriate.
+so somewhere in your home directory (e.g. `~/.local` on Ubuntu) is advisable.
 
-Then run `make`:
+Then, to compile and install:
 ```bash
 make install
 ```
-And the program is installed in the prefix.
+And the program will be installed in the prefix.
+
 If you installed to `~/.local` on Ubuntu as in the example, then the program will already be on the PATH
 and you can run it with `ical`. Otherwise, the executable is located in `$(prefix)/bin`.
 
-If you need to recreate the configure script for whatever reason, use autoreconf:
-```bash
-autoreconf -ivf
-```
 
 
 Copyrights
