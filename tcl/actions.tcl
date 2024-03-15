@@ -200,9 +200,8 @@ action ical_historymode writable {Toggle delete history mode} {} {
     cal historymode $ical_state(historymode)
 
     # update GUI to reflect change
-    global dayview_id ical_view
-    set n .dayview$dayview_id
-    $ical_view($n) update_statusbar_warning
+    set n [ical_view]
+    $n update_statusbar_warning
 }
 
 action ical_cut witem {Delete selected item even if owned by another user} {} {
@@ -385,11 +384,8 @@ action ical_switchcalendar writable {Load a different calendar} {} {
         ical_error $error
     }
     # change window title to indicate current main calendar
-    global dayview_id
-    set n .dayview$dayview_id
-
     set title [string cat "Calendar (" [cal main] ")"]
-    wm title $n $title
+    wm title [ical_focus] $title
 }
 
 action ical_removeinc writable {Remove included calendar} {calendar} {
